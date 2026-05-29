@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Itim&family=Quicksand:wght@300..700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f0f9ff; /* Soft sky blue */
+  --foreground: #1e293b; /* Friendly dark slate */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Fredoka', 'Itim', 'Quicksand', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Soft and Kids-friendly Animations */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(-1.5deg);
+  }
+}
+
+@keyframes wave-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+}
+
+@keyframes mouth-speak {
+  0%, 100% {
+    transform: scaleY(0.1);
+  }
+  20% {
+    transform: scaleY(0.8);
+  }
+  40% {
+    transform: scaleY(0.3);
+  }
+  60% {
+    transform: scaleY(1);
+  }
+  80% {
+    transform: scaleY(0.4);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-wave-pulse {
+  animation: wave-pulse 1.5s ease-in-out infinite;
+}
+
+.animate-mouth-speak {
+  animation: mouth-speak 0.4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+}
+
+/* Kid-friendly scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0f2fe;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bae6fd;
+  border-radius: 100px;
+  border: 2px solid #e0f2fe;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7dd3fc;
+}
+
+/* Glassmorphism kids cards */
+.kids-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 25px -5px rgba(186, 230, 253, 0.5), 
+              0 8px 10px -6px rgba(186, 230, 253, 0.3),
+              inset 0 -6px 0px rgba(0, 0, 0, 0.05); /* 3D bottom shade */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kids-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 30px -5px rgba(186, 230, 253, 0.7), 
+              0 10px 15px -6px rgba(186, 230, 253, 0.4),
+              inset 0 -6px 0px rgba(0, 0, 0, 0.05);
+}
+
+/* 3D button styling */
+.btn-3d {
+  position: relative;
+  transition: all 0.1s ease;
+  box-shadow: 0 4px 0px currentColor, 0 8px 15px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0px currentColor, 0 4px 6px rgba(0, 0, 0, 0.08);
+}
