@@ -1,20 +1,26 @@
 /**
- * Thai Speech Similarity and Diff Utilities
+ * Thai & English Speech Similarity and Diff Utilities
  */
 
-// Normalize Thai text by removing spaces, punctuation, and optionally tone marks for more lenient matching
-export function normalizeThaiText(text: string, removeTones: boolean = false): string {
+// Normalize text by removing spaces, punctuation, and optionally tone marks
+export function normalizeText(text: string, removeTones: boolean = false): string {
   if (!text) return '';
   let normalized = text
     .toLowerCase()
-    .replace(/[\s\s+\u200B-\u200D\uFEFF]/g, '') // Remove spaces and zero-width spaces
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, ''); // Remove punctuation
+    .replace(/[\s\s+\u200B-\u200D\uFEFF]/g, ' ') // Standardize spaces
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '') // Remove punctuation
+    .trim();
 
   if (removeTones) {
-    // Remove Thai tone marks (่ ้ ๊ ๋) and other diacritics like ็ (ไม้ไต่คู้), ์ (ทัณฑฆาต)
+    // Remove Thai tone marks
     normalized = normalized.replace(/[\u0e48-\u0e4c\u0e47]/g, '');
   }
   return normalized;
+}
+
+// Keep original for backwards compatibility
+export function normalizeThaiText(text: string, removeTones: boolean = false): string {
+  return normalizeText(text, removeTones);
 }
 
 /**
@@ -49,29 +55,24 @@ export function getLevenshteinDistance(s1: string, s2: string): number {
  * Calculates string similarity percentage based on Levenshtein Distance
  */
 export function calculateSimilarity(target: string, spoken: string): number {
-  const cleanTarget = normalizeThaiText(target, false);
-  const cleanSpoken = normalizeThaiText(spoken, false);
+  const cleanTarget = normalizeText(target, false).replace(/\s+/g, '');
+  const cleanSpoken = normalizeText(spoken, false).replace(/\s+/g, '');
 
   if (!cleanTarget && !cleanSpoken) return 100;
   if (!cleanTarget || !cleanSpoken) return 0;
 
-  // Let's also do a second check removing tones, and take the highest score.
-  // This is highly beneficial for children whose tones might not be picked up perfectly by the microphone
-  const distWithTones = getLevenshteinDistance(cleanTarget, cleanSpoken);
-  const maxLenWithTones = Math.max(cleanTarget.length, cleanSpoken.length);
-  const scoreWithTones = ((maxLenWithTones - distWithTones) / maxLenWithTones) * 100;
+  const dist = getLevenshteinDistance(cleanTarget, cleanSpoken);
+  const maxLen = Math.max(cleanTarget.length, cleanSpoken.length);
+  const score = ((maxLen - dist) / maxLen) * 100;
 
-  const cleanTargetNoTones = normalizeThaiText(target, true);
-  const cleanSpokenNoTones = normalizeThaiText(spoken, true);
+  // For Thai checks
+  const cleanTargetNoTones = normalizeText(target, true).replace(/\s+/g, '');
+  const cleanSpokenNoTones = normalizeText(spoken, true).replace(/\s+/g, '');
   const distNoTones = getLevenshteinDistance(cleanTargetNoTones, cleanSpokenNoTones);
   const maxLenNoTones = Math.max(cleanTargetNoTones.length, cleanSpokenNoTones.length);
   const scoreNoTones = maxLenNoTones > 0 ? ((maxLenNoTones - distNoTones) / maxLenNoTones) * 100 : 0;
 
-  // We will blend or take the maximum to be generous to the kid, but keeping a realistic balance.
-  // Take maximum score but cap it or return the best matching.
-  const finalScore = Math.max(scoreWithTones, scoreNoTones);
-  
-  return Math.round(finalScore);
+  return Math.round(Math.max(score, scoreNoTones));
 }
 
 export interface DiffSegment {
@@ -79,32 +80,30 @@ export interface DiffSegment {
   isMatched: boolean;
 }
 
+export interface WordDiffSegment {
+  word: string;
+  isMatched: boolean;
+}
+
 /**
  * Computes a character-level match mapping for the target string.
- * This determines which characters in the target string are correctly spoken,
- * allowing us to highlight exactly what the child got right (green) vs missed (gray/red).
- * We use a Longest Common Subsequence (LCS) approach to find alignment.
  */
 export function computeThaiDiff(target: string, spoken: string): DiffSegment[] {
   const cleanTarget = target.trim();
   const cleanSpoken = spoken.trim();
 
-  // Find LCS of characters (ignoring spaces for alignment index, but mapping back to original)
   const tArr = Array.from(cleanTarget);
   const sArr = Array.from(cleanSpoken);
 
-  // We want to align them. Let's do LCS on arrays of characters.
   const m = tArr.length;
   const n = sArr.length;
   const lcsMatrix: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
-      // Normalize character comparison slightly to be more forgiving (e.g. ignore case, tone check)
-      const tCharClean = normalizeThaiText(tArr[i - 1], true);
-      const sCharClean = normalizeThaiText(sArr[j - 1], true);
+      const tCharClean = normalizeText(tArr[i - 1], true);
+      const sCharClean = normalizeText(sArr[j - 1], true);
       
-      // If characters are identical, or clean versions match (and they are not empty spaces)
       if (tArr[i - 1] === sArr[j - 1] || (tCharClean && sCharClean && tCharClean === sCharClean)) {
         lcsMatrix[i][j] = lcsMatrix[i - 1][j - 1] + 1;
       } else {
@@ -113,14 +112,13 @@ export function computeThaiDiff(target: string, spoken: string): DiffSegment[] {
     }
   }
 
-  // Backtrack to find which characters in target are matched
   const matchedTargetIndices = new Set<number>();
   let i = m;
   let j = n;
   
   while (i > 0 && j > 0) {
-    const tCharClean = normalizeThaiText(tArr[i - 1], true);
-    const sCharClean = normalizeThaiText(sArr[j - 1], true);
+    const tCharClean = normalizeText(tArr[i - 1], true);
+    const sCharClean = normalizeText(sArr[j - 1], true);
 
     if (tArr[i - 1] === sArr[j - 1] || (tCharClean && sCharClean && tCharClean === sCharClean)) {
       matchedTargetIndices.add(i - 1);
@@ -133,14 +131,65 @@ export function computeThaiDiff(target: string, spoken: string): DiffSegment[] {
     }
   }
 
-  // Create visual segments from target characters
   return tArr.map((char, index) => {
-    // Spaces are always considered "matched" or styled neutrally, but let's count them as matched for aesthetics
     if (char === ' ') {
       return { char, isMatched: true };
     }
     return {
       char,
+      isMatched: matchedTargetIndices.has(index)
+    };
+  });
+}
+
+/**
+ * Computes a word-level match mapping for English sentences.
+ * This is much cleaner for English where highlighting word by word makes more sense!
+ */
+export function computeEnglishWordDiff(target: string, spoken: string): WordDiffSegment[] {
+  // Normalize and split by spaces
+  const tWords = target.trim().split(/\s+/);
+  const sWords = spoken.trim().split(/\s+/);
+
+  const m = tWords.length;
+  const n = sWords.length;
+  const lcsMatrix: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const tWordClean = normalizeText(tWords[i - 1]);
+      const sWordClean = normalizeText(sWords[j - 1]);
+
+      if (tWordClean === sWordClean) {
+        lcsMatrix[i][j] = lcsMatrix[i - 1][j - 1] + 1;
+      } else {
+        lcsMatrix[i][j] = Math.max(lcsMatrix[i - 1][j], lcsMatrix[i][j - 1]);
+      }
+    }
+  }
+
+  const matchedTargetIndices = new Set<number>();
+  let i = m;
+  let j = n;
+
+  while (i > 0 && j > 0) {
+    const tWordClean = normalizeText(tWords[i - 1]);
+    const sWordClean = normalizeText(sWords[j - 1]);
+
+    if (tWordClean === sWordClean) {
+      matchedTargetIndices.add(i - 1);
+      i--;
+      j--;
+    } else if (lcsMatrix[i - 1][j] >= lcsMatrix[i][j - 1]) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+
+  return tWords.map((word, index) => {
+    return {
+      word,
       isMatched: matchedTargetIndices.has(index)
     };
   });

@@ -9,9 +9,10 @@ interface CartoonCharacterProps {
   type: CharacterType;
   state: CharacterState;
   onClick?: () => void;
+  className?: string;
 }
 
-export default function CartoonCharacter({ type, state, onClick }: CartoonCharacterProps) {
+export default function CartoonCharacter({ type, state, onClick, className = 'w-40 h-40 md:w-64 md:h-64' }: CartoonCharacterProps) {
   // Common style classes based on states
   const getBodyClass = () => {
     switch (state) {
@@ -91,7 +92,7 @@ export default function CartoonCharacter({ type, state, onClick }: CartoonCharac
 
   return (
     <div 
-      className={`relative w-64 h-64 mx-auto cursor-pointer select-none transition-all duration-300 ${getBodyClass()}`}
+      className={`relative mx-auto cursor-pointer select-none transition-all duration-300 ${className} ${getBodyClass()}`}
       onClick={onClick}
     >
       {/* Background Speech Bubble Ring when speaking */}
