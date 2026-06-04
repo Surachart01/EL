@@ -40,107 +40,146 @@ interface LessonData {
 const LESSONS: LessonData[] = [
   {
     id: 1,
-    title: 'การแนะนำตนเอง',
-    englishTitle: 'Introducing Oneself',
+    title: 'Hello!',
+    englishTitle: 'Hello Friends, Welcome to Trang',
     emoji: '👋',
-    description: 'เรียนรู้ทักษะการทักทายและบอกชื่อของตนเอง',
+    description: 'ทักทายเพื่อนใหม่และยินดีต้อนรับสู่จังหวัดตรัง',
     color: 'emerald',
     borderColor: 'border-emerald-300',
     vocab: [
-      { word: 'Hello', phonetic: 'เฮล-โล', translation: 'สวัสดี', emoji: '👋' },
+      { word: 'Hello', phonetic: 'เฮลโล', translation: 'สวัสดี', emoji: '👋' },
+      { word: 'Friend', phonetic: 'เฟรนด์', translation: 'เพื่อน', emoji: '🧑‍🤝‍🧑' },
       { word: 'Name', phonetic: 'เนม', translation: 'ชื่อ', emoji: '📛' },
-      { word: 'Nice', phonetic: 'ไนซ์', translation: 'ดี / ยินดี', emoji: '😊' },
-      { word: 'Meet', phonetic: 'มีท', translation: 'พบ / เจอ', emoji: '🤝' },
+      { word: 'Boy', phonetic: 'บอย', translation: 'เด็กผู้ชาย', emoji: '👦' },
+      { word: 'Girl', phonetic: 'เกิร์ล', translation: 'เด็กผู้หญิง', emoji: '👧' },
+      { word: 'City', phonetic: 'ซิตี้', translation: 'เมือง', emoji: '🏙️' },
+      { word: 'Trang', phonetic: 'ตรัง', translation: 'จังหวัดตรัง', emoji: '🏛️' },
+      { word: 'Thailand', phonetic: 'ไทยแลนด์', translation: 'ประเทศไทย', emoji: '🇹🇭' },
+      { word: 'From', phonetic: 'ฟรอม', translation: 'มาจาก', emoji: '🛫' },
+      { word: 'Live', phonetic: 'ลิฟ', translation: 'อาศัยอยู่', emoji: '🏠' },
+      { word: 'Si Trang flower', phonetic: 'สี ตรัง ฟลาวเวอร์', translation: 'ดอกศรีตรัง', emoji: '🌸' },
+      { word: 'Rubber tree', phonetic: 'รับเบอร์ ทรี', translation: 'ต้นยางพารา', emoji: '🌳' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'Hello! What is your name?', phonetic: 'เฮลโล! ว็อท อีส ยัว เนม?', translation: 'สวัสดีครับ! คุณชื่ออะไรหรอครับ?' },
-      { speaker: 'B', character: 'bear', text: 'My name is Aom. Nice to meet you.', phonetic: 'มาย เนม อีส ออม. ไนซ์ ทู มีท ยู.', translation: 'ฉันชื่อออมค่ะ ยินดีที่ได้รู้จักนะคะ' },
-      { speaker: 'A', character: 'dino', text: 'Nice to meet you, too.', phonetic: 'ไนซ์ ทู มีท ยู, ทู.', translation: 'ยินดีที่ได้รู้จักเช่นกันครับ' }
+      { speaker: 'A', character: 'dino', text: 'Hello! Welcome to Trang.', phonetic: 'เฮลโล! เวลคัม ทู ตรัง.', translation: 'สวัสดีครับ! ยินดีต้อนรับสู่ตรังนะครับ' },
+      { speaker: 'B', character: 'bear', text: 'Hello friend! My name is Aom.', phonetic: 'เฮลโล เฟรนด์! มาย เนม อีส ออม.', translation: 'สวัสดีเพื่อน! ฉันชื่อออมค่ะ' },
+      { speaker: 'A', character: 'dino', text: 'I am a boy from Thailand. I live in this city.', phonetic: 'ไอ แอม อะ บอย ฟรอม ไทยแลนด์. ไอ ลิฟ อิน ดิส ซิตี้.', translation: 'ผมเป็นเด็กผู้ชายมาจากประเทศไทยครับ ผมอาศัยอยู่ในเมืองนี้' }
     ],
     tip: 'อย่าลืมยิ้มแย้มและสบตากับเพื่อนคู่สนทนาขณะทักทายนะจ๊ะคนเก่ง!'
   },
   {
     id: 2,
-    title: 'ครอบครัวของฉัน',
-    englishTitle: 'My Family',
-    emoji: '👨‍👩‍👧‍👦',
-    description: 'พูดแนะนำบุคคลในครอบครัวแสนอบอุ่น',
-    color: 'orange',
-    borderColor: 'border-orange-300',
-    vocab: [
-      { word: 'Father', phonetic: 'ฟาร์-เธอร์', translation: 'คุณพ่อ', emoji: '👨' },
-      { word: 'Mother', phonetic: 'มาร์-เธอร์', translation: 'คุณแม่', emoji: '👩' },
-      { word: 'Brother', phonetic: 'บรา-เธอร์', translation: 'พี่ชาย / น้องชาย', emoji: '👦' },
-      { word: 'Sister', phonetic: 'ซิส-เตอร์', translation: 'พี่สาว / น้องสาว', emoji: '👧' },
-    ],
-    dialogue: [
-      { speaker: 'A', character: 'bear', text: 'Who is this?', phonetic: 'ฮู อีส ดิส?', translation: 'นี่คือใครหรอครับ?' },
-      { speaker: 'B', character: 'dino', text: 'This is my mother. She is beautiful.', phonetic: 'ดิส อีส มาย มาร์เธอร์. ชี อีส บิวตี้ฟูล.', translation: 'นี่คือคุณแม่ของฉันเองค่ะ ท่านสวยมากๆ เลยค่ะ' },
-      { speaker: 'A', character: 'bear', text: 'She is very wonderful.', phonetic: 'ชี อีส เวรี่ วันเดอร์ฟูล.', translation: 'ท่านดูวิเศษยอดเยี่ยมจริงๆ เลยครับ' }
-    ],
-    tip: 'พูดคำว่า "Mother" และ "Father" โดยเอาปลายลิ้นแตะฟันบนเบาๆ นะจ๊ะ!'
-  },
-  {
-    id: 3,
-    title: 'ห้องเรียนแสนสุข',
-    englishTitle: 'My School & Classroom',
+    title: 'School',
+    englishTitle: 'My Classroom & Food at School',
     emoji: '🏫',
-    description: 'พูดคุยเกี่ยวกับสิ่งที่พบเจอในโรงเรียน',
+    description: 'เรียนรู้คำศัพท์ในห้องเรียนและของกินแสนอร่อยที่โรงเรียน',
     color: 'sky',
     borderColor: 'border-sky-300',
     vocab: [
-      { word: 'Teacher', phonetic: 'ทีช-เชอร์', translation: 'คุณครู', emoji: '👩‍🏫' },
-      { word: 'Student', phonetic: 'สติว-เดนท์', translation: 'นักเรียน', emoji: '🎒' },
-      { word: 'Book', phonetic: 'บุ๊ค', translation: 'หนังสือ', emoji: '📖' },
-      { word: 'Pencil', phonetic: 'เพ็น-ซิล', translation: 'ดินสอ', emoji: '✏️' },
+      { word: 'School', phonetic: 'สคูล', translation: 'โรงเรียน', emoji: '🏫' },
+      { word: 'Classroom', phonetic: 'คลาสรูม', translation: 'ห้องเรียน', emoji: '📖' },
+      { word: 'Teacher', phonetic: 'ทีเชอร์', translation: 'ครู', emoji: '👩‍🏫' },
+      { word: 'Student', phonetic: 'สตูเดนท์', translation: 'นักเรียน', emoji: '🎒' },
+      { word: 'Book', phonetic: 'บุ๊ก', translation: 'หนังสือ', emoji: '📚' },
+      { word: 'Pencil', phonetic: 'เพนซิล', translation: 'ดินสอ', emoji: '✏️' },
+      { word: 'Lunch', phonetic: 'ลันช์', translation: 'อาหารกลางวัน', emoji: '🍱' },
+      { word: 'Food', phonetic: 'ฟูด', translation: 'อาหาร', emoji: '🍽️' },
+      { word: 'Roasted pork', phonetic: 'โรสเต็ด พอร์ก', translation: 'หมูย่างตรัง', emoji: '🥩' },
+      { word: 'Cake', phonetic: 'เค้ก', translation: 'เค้กเมืองตรัง', emoji: '🍰' },
+      { word: 'Dim sum', phonetic: 'ติ่มซำ', translation: 'ติ่มซำ', emoji: '🥟' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'I love my school. It is big.', phonetic: 'ไอ ลัฟ มาย สคูล. อิท อีส บิก.', translation: 'ฉันรักโรงเรียนของฉันจัง มันใหญ่โตมากเลยครับ' },
-      { speaker: 'B', character: 'bear', text: 'My classroom is clean and nice.', phonetic: 'มาย คลาสรูม อีส คลีน แอนด์ ไนซ์.', translation: 'ห้องเรียนของหนูก็สะอาดและน่าเรียนมากเหมือนกันค่ะ' }
+      { speaker: 'A', character: 'dino', text: 'Look at my book and pencil in the classroom.', phonetic: 'ลุค แอท มาย บุ๊ก แอนด์ เพนซิล อิน เดอะ คลาสรูม.', translation: 'ดูหนังสือและดินสอของผมในห้องเรียนสิครับ' },
+      { speaker: 'B', character: 'bear', text: 'It is time for lunch. I love dim sum and roasted pork!', phonetic: 'อิท อีส ไทม์ ฟอร์ ลันช์. ไอ ลัฟ ติ่มซำ แอนด์ โรสเต็ด พอร์ก!', translation: 'ถึงเวลาอาหารกลางวันแล้วค่ะ ฉันชอบติ่มซำและหมูย่างมากเลยค่ะ!' }
     ],
     tip: 'ออกเสียงตัว L ในคำว่า "School" และ "Pencil" ให้ปลายลิ้นยกแตะเพดานปากท้ายเสียงนะคนเก่ง!'
   },
   {
+    id: 3,
+    title: 'Family',
+    englishTitle: 'Family Members, My Hometown & Trang Landmarks',
+    emoji: '👨‍👩‍👧‍👦',
+    description: 'แนะนำคนในครอบครัวและสถานที่ท่องเที่ยวชื่อดังในตรัง',
+    color: 'orange',
+    borderColor: 'border-orange-300',
+    vocab: [
+      { word: 'Family', phonetic: 'แฟมิลี', translation: 'ครอบครัว', emoji: '👨‍👩‍👧‍👦' },
+      { word: 'Father', phonetic: 'ฟาเธอร์', translation: 'พ่อ', emoji: '👨' },
+      { word: 'Mother', phonetic: 'มัทเธอร์', translation: 'แม่', emoji: '👩' },
+      { word: 'Brother', phonetic: 'บราเธอร์', translation: 'พี่ชาย/น้องชาย', emoji: '👦' },
+      { word: 'Sister', phonetic: 'ซิสเทอร์', translation: 'พี่สาว/น้องสาว', emoji: '👧' },
+      { word: 'Hometown', phonetic: 'โฮมทาวน์', translation: 'บ้านเกิด', emoji: '🏡' },
+      { word: 'Clock tower', phonetic: 'คล็อก ทาวเวอร์', translation: 'หอนาฬิกา', emoji: '🗼' },
+      { word: 'Island', phonetic: 'ไอแลนด์', translation: 'เกาะ', emoji: '🏝️' },
+      { word: 'Cave', phonetic: 'เคฟ', translation: 'ถ้ำ', emoji: '🕳️' },
+      { word: 'Waterfall', phonetic: 'วอเทอร์ฟอล', translation: 'น้ำตก', emoji: '🌊' },
+      { word: 'Phraya Ratsadanupradit', phonetic: 'พระยา รัษฎานุประดิษฐ์', translation: 'พระยารัษฎานุประดิษฐ์', emoji: '🎖️' },
+      { word: 'Koh Kradan', phonetic: 'เกาะ กระดาน', translation: 'เกาะกระดาน', emoji: '🏝️' },
+      { word: 'Emerald Cave', phonetic: 'เอมเมอรัลด์ เคฟ', translation: 'ถ้ำมรกต', emoji: '🧗' },
+      { word: 'Ton Te Waterfall', phonetic: 'ต้นเตะ วอเทอร์ฟอล', translation: 'น้ำตกโตนเตะ', emoji: '⛲' }
+    ],
+    dialogue: [
+      { speaker: 'A', character: 'dino', text: 'This is my mother and father. Trang is our hometown.', phonetic: 'ดิส อีส มาย มัทเธอร์ แอนด์ ฟาเธอร์. ตรัง อีส เอาเออร์ โฮมทาวน์.', translation: 'นี่คือคุณแม่และคุณพ่อของผมครับ ตรังคือบ้านเกิดของเรา' },
+      { speaker: 'B', character: 'bear', text: "Let's visit the clock tower and Emerald Cave!", phonetic: 'เล็ทส์ วิสิท เดอะ คล็อก ทาวเวอร์ แอนด์ เอมเมอรัลด์ เคฟ!', translation: 'ไปเที่ยวหอนาฬิกาและถ้ำมรกตกันเถอะค่ะ!' }
+    ],
+    tip: 'พูดคำว่า "Mother" และ "Father" โดยเอาปลายลิ้นแตะฟันบนเบาๆ นะจ๊ะ!'
+  },
+  {
     id: 4,
-    title: 'สีสันรอบตัว',
-    englishTitle: 'Colors Around Me',
+    title: 'Colour',
+    englishTitle: 'What Colour Is It? & Fruits',
     emoji: '🎨',
-    description: 'เรียนรู้สีสันและการบอกสีที่ตนเองชื่นชอบ',
+    description: 'บอกสีสันต่างๆ รอบตัวและผลไม้รสชาติหวานอร่อย',
     color: 'purple',
     borderColor: 'border-purple-300',
     vocab: [
       { word: 'Red', phonetic: 'เรด', translation: 'สีแดง', emoji: '🔴' },
       { word: 'Blue', phonetic: 'บลู', translation: 'สีน้ำเงิน', emoji: '🔵' },
       { word: 'Green', phonetic: 'กรีน', translation: 'สีเขียว', emoji: '🟢' },
-      { word: 'Yellow', phonetic: 'เยล-โล่', translation: 'สีเหลือง', emoji: '🟡' },
+      { word: 'Yellow', phonetic: 'เยลโล', translation: 'สีเหลือง', emoji: '🟡' },
+      { word: 'Purple', phonetic: 'เพอร์เพิล', translation: 'สีม่วง', emoji: '🟣' },
+      { word: 'Apple', phonetic: 'แอปเปิล', translation: 'แอปเปิล', emoji: '🍎' },
+      { word: 'Banana', phonetic: 'บานานา', translation: 'กล้วย', emoji: '🍌' },
+      { word: 'Mango', phonetic: 'แมงโก', translation: 'มะม่วง', emoji: '🥭' },
+      { word: 'Watermelon', phonetic: 'วอเทอร์เมลอน', translation: 'แตงโม', emoji: '🍉' },
+      { word: 'Fruit', phonetic: 'ฟรุต', translation: 'ผลไม้', emoji: '🍎' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'bear', text: 'What is your favorite color?', phonetic: 'ว็อท อีส ยัว เฟเวอริท คัลเลอร์?', translation: 'คุณชอบสีอะไรมากที่สุดหรอครับ?' },
-      { speaker: 'B', character: 'dino', text: 'My favorite color is blue. Like the sky!', phonetic: 'มาย เฟเวอริท คัลเลอร์ อีส บลู. ไลค์ เดอะ สกาย!', translation: 'ฉันชอบสีน้ำเงินที่สุดค่ะ เหมือนสีของท้องฟ้าเลย!' }
+      { speaker: 'A', character: 'dino', text: 'Look! This red apple is a sweet fruit.', phonetic: 'ลุค! ดิส เรด แอปเปิล อีส อะ สวีท ฟรุต.', translation: 'ดูสิ! แอปเปิลสีแดงผลนี้เป็นผลไม้รสหวานนะ' },
+      { speaker: 'B', character: 'bear', text: 'I like green mango and yellow banana.', phonetic: 'ไอ ไลค์ กรีน แมงโก แอนด์ เยลโล บานานา.', translation: 'หนูชอบมะม่วงสีเขียวและกล้วยสีเหลืองค่ะ' }
     ],
     tip: 'ฝึกม้วนลิ้นออกเสียงตัว R ในคำว่า "Red" โดยระวังอย่าให้ริมฝีปากแตะกันนะจ๊ะ!'
   },
   {
     id: 5,
-    title: 'ของเล่นของฉัน',
-    englishTitle: 'My Toys',
+    title: 'Toys',
+    englishTitle: 'Fun with Toys & Trang Look Lom Festival',
     emoji: '🧸',
-    description: 'พูดคุยเกี่ยวกับของเล่นสุดโปรด',
+    description: 'สนุกสนานกับของเล่นและเทศกาลลูกลมเมืองตรัง',
     color: 'pink',
     borderColor: 'border-pink-300',
     vocab: [
+      { word: 'Toy', phonetic: 'ทอย', translation: 'ของเล่น', emoji: '🧸' },
       { word: 'Ball', phonetic: 'บอล', translation: 'ลูกบอล', emoji: '⚽' },
-      { word: 'Doll', phonetic: 'ดอล', translation: 'ตุ๊กตา', emoji: '🧸' },
-      { word: 'Robot', phonetic: 'โร-บอท', translation: 'หุ่นยนต์', emoji: '🤖' },
-      { word: 'Toy car', phonetic: 'ทอย คาร์', translation: 'รถของเล่น', emoji: '🚗' },
+      { word: 'Doll', phonetic: 'ดอล', translation: 'ตุ๊กตา', emoji: '🪆' },
+      { word: 'Kite', phonetic: 'ไคท์', translation: 'ว่าว', emoji: '🪁' },
+      { word: 'Robot', phonetic: 'โรบอท', translation: 'หุ่นยนต์', emoji: '🤖' },
+      { word: 'Game', phonetic: 'เกม', translation: 'เกม', emoji: '🎮' },
+      { word: 'Festival', phonetic: 'เฟสติวัล', translation: 'เทศกาล', emoji: '🎉' },
+      { word: 'Seed', phonetic: 'ซีด', translation: 'เมล็ด', emoji: '🌱' },
+      { word: 'Whistle', phonetic: 'วิสเซิล', translation: 'เป่านกหวีด', emoji: '📣' },
+      { word: 'Fun', phonetic: 'ฟัน', translation: 'ความสนุก', emoji: '🥳' },
+      { word: 'Underwater Wedding Festival', phonetic: 'อันเดอร์วอเทอร์ เวดดิง เฟสติวัล', translation: 'งานวิวาห์ใต้สมุทร', emoji: '🤿' },
+      { word: 'Look Lom Festival', phonetic: 'ลุค ลม เฟสติวัล', translation: 'เทศกาลลูกลม', emoji: '🌀' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'Look! This is my new robot.', phonetic: 'ลุค! ดิส อีส มาย นิว โรบอท.', translation: 'ดูนี่สิ! นี่คือหุ่นยนต์ตัวใหม่ของผมครับ' },
-      { speaker: 'B', character: 'bear', text: 'Wow! It is very cool.', phonetic: 'ว้าว! อิท อีส เวรี่ คูล.', translation: 'ว้าว! มันดูเท่และสุดยอดมากเลยจ้า' }
+      { speaker: 'A', character: 'dino', text: "I have a robot and a kite. Let's play a game!", phonetic: 'ไอ แฮฟ อะ โรบอท แอนด์ อะ ไคท์. เล็ทส์ เพลย์ อะ เกม!', translation: 'ผมมีหุ่นยนต์และว่าวครับ มาเล่นเกมกันเถอะ' },
+      { speaker: 'B', character: 'bear', text: 'We can whistle and have fun at the Look Lom Festival!', phonetic: 'วี แคน วิสเซิล แอนด์ แฮฟ ฟัน แอท เดอะ ลุค ลม เฟสติวัล!', translation: 'เราสามารถเป่านกหวีดและสนุกสนานกันในเทศกาลลูกลมได้ค่ะ!' }
     ],
     tip: 'คำว่า "Cool" ออกเสียงท้ายสั้นด้วยเสียง "ล" เบาๆ เพื่อให้ถูกต้องสมบูรณ์แบบ!'
   }
 ];
+
 
 interface SubmissionRecord {
   id: number;
@@ -152,6 +191,13 @@ interface SubmissionRecord {
 }
 
 export default function TrangKidsSpeakApp() {
+  // Student Auth states
+  const [student, setStudent] = useState<{ studentId: string; name: string; classroom: string } | null>(null);
+  const [loginId, setLoginId] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   // Navigation tabs: 'home' | 'knowledge' | 'flashcards' | 'animation' | 'roleplay' | 'submission'
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedLesson, setSelectedLesson] = useState<LessonData>(LESSONS[0]);
@@ -166,19 +212,104 @@ export default function TrangKidsSpeakApp() {
   const [micPermissionState, setMicPermissionState] = useState<'prompt' | 'granted' | 'denied'>('prompt');
   const [errorMessage, setErrorMessage] = useState('');
   
-  // Dashboard states - identical to the mockup table values
-  const [submissions, setSubmissions] = useState<SubmissionRecord[]>([
-    { id: 1, topic: 'แนะนำตนเอง', type: 'วิดีโอ', date: '20 พ.ค. 67', status: 'ตรวจแล้ว', score: 95 },
-    { id: 2, topic: 'ครอบครัวของฉัน', type: 'เสียง', date: '18 พ.ค. 67', status: 'ตรวจแล้ว', score: 88 },
-    { id: 3, topic: 'สีที่ฉันชอบ', type: 'วิดีโอ', date: '16 พ.ค. 67', status: 'กำลังตรวจ' },
-    { id: 4, topic: 'ของเล่นของฉัน', type: 'เสียง', date: '15 พ.ค. 67', status: 'รอส่ง' },
-  ]);
+  // Dashboard states
+  const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
 
   // Flashcards state
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
   const [flashcardScores, setFlashcardScores] = useState<Record<string, number>>({});
   const [activeCardMic, setActiveCardMic] = useState<string | null>(null);
   const [activeFlashcardIndex, setActiveFlashcardIndex] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [completedRoleplays, setCompletedRoleplays] = useState<Record<string, boolean>>({});
+
+  // Helper to save progress to DB
+  const saveProgressToDB = async (
+    studentId: string,
+    update: {
+      flashcardScores?: Record<string, number>;
+      completedRoleplays?: Record<string, boolean>;
+      submission?: { lessonId: number; score: number; mediaType: 'audio' | 'video'; status: string; date: string };
+    }
+  ) => {
+    try {
+      await fetch('/api/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, ...update }),
+      });
+    } catch (e) {
+      console.error('Error saving progress to DB:', e);
+    }
+  };
+
+  // Helper to fetch student progress from DB with Local Storage fallback
+  const fetchStudentProgress = async (studentId: string) => {
+    try {
+      const res = await fetch(`/api/progress?studentId=${studentId}`);
+      const data = await res.json();
+      if (data.success && data.progress) {
+        const dbScores = data.progress.flashcardScores || {};
+        if (Object.keys(dbScores).length > 0) {
+          setFlashcardScores(dbScores);
+        } else {
+          const storedScores = localStorage.getItem('trang_kids_speak_flashcard_scores');
+          if (storedScores) {
+            const parsed = JSON.parse(storedScores);
+            setFlashcardScores(parsed);
+            await saveProgressToDB(studentId, { flashcardScores: parsed });
+          }
+        }
+        const dbRoleplays = data.progress.completedRoleplays || {};
+        if (Object.keys(dbRoleplays).length > 0) {
+          setCompletedRoleplays(dbRoleplays);
+        } else {
+          const storedRoleplays = localStorage.getItem('trang_kids_speak_completed_roleplays');
+          if (storedRoleplays) {
+            const parsed = JSON.parse(storedRoleplays);
+            setCompletedRoleplays(parsed);
+            await saveProgressToDB(studentId, { completedRoleplays: parsed });
+          }
+        }
+        if (data.progress.submissions && data.progress.submissions.length > 0) {
+          const localSubs = data.progress.submissions.map((sub: any, sIdx: number) => {
+            const lesson = LESSONS.find(l => l.id === sub.lessonId);
+            return {
+              id: sIdx + 1,
+              topic: lesson ? lesson.title : `บทเรียนที่ ${sub.lessonId}`,
+              type: sub.mediaType === 'audio' ? 'เสียง' : 'วิดีโอ',
+              date: sub.date,
+              status: sub.status as any,
+              score: sub.score,
+            };
+          });
+          setSubmissions(localSubs);
+        } else {
+          setSubmissions([]);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching progress:', e);
+    }
+  };
+
+  // Load student session from localStorage on Mount (Client-side only)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedStudent = localStorage.getItem('el_student');
+      if (savedStudent) {
+        try {
+          const parsed = JSON.parse(savedStudent);
+          setStudent(parsed);
+          const isGirl = parsed.name.includes('เด็กหญิง') || parsed.name.includes('หญิง');
+          setGender(isGirl ? 'girl' : 'boy');
+          fetchStudentProgress(parsed.studentId);
+        } catch (e) {
+          console.error('Error loading saved student session', e);
+        }
+      }
+    }
+  }, []);
 
   // Animation simulator state
   const [simPlaying, setSimPlaying] = useState(false);
@@ -215,34 +346,60 @@ export default function TrangKidsSpeakApp() {
   // References for Web Speech API
   const recognitionRef = useRef<any>(null);
 
-  // Initialize Speech Recognition on Mount
+  // Helper to create a fresh SpeechRecognition instance each time (prevents 'already started' errors)
+  const createRecognition = (): any | null => {
+    if (typeof window === 'undefined') return null;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return null;
+    const rec = new SpeechRecognition();
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.lang = 'en-US';
+    return rec;
+  };
+
+  // Check Speech Recognition support on Mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const SpeechRecognition =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         setSpeechSupported(false);
         setErrorMessage('เบราว์เซอร์นี้ไม่รองรับการจำเสียงพูดจ้า แนะนำให้เปิดใน Google Chrome นะจ๊ะ');
-      } else {
-        const rec = new SpeechRecognition();
-        rec.continuous = false;
-        rec.interimResults = false;
-        rec.lang = 'en-US'; // We are assessing English!
-        recognitionRef.current = rec;
       }
-
-      // Query microphone permission state
       if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({ name: 'microphone' as PermissionName })
           .then((permissionStatus) => {
             setMicPermissionState(permissionStatus.state as any);
-            permissionStatus.onchange = () => {
-              setMicPermissionState(permissionStatus.state as any);
-            };
+            permissionStatus.onchange = () => { setMicPermissionState(permissionStatus.state as any); };
           })
           .catch(() => console.log('Permission query not supported'));
       }
+    }
+  }, []);
+
+  // Pre-load Web Speech Synthesis voices on mount to prevent first-click silence/wrong voice issues in Chrome/Edge
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      // First call triggers voice loading in Chromium browsers
+      window.speechSynthesis.getVoices();
+      
+      const handleVoicesChanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+      
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+      } else {
+        window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+      }
+      
+      return () => {
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = null;
+        } else {
+          window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+        }
+      };
     }
   }, []);
 
@@ -324,41 +481,33 @@ export default function TrangKidsSpeakApp() {
 
   // Start micro-recording for one Flashcard
   const recordFlashcard = async (vocabWord: string, indexKey: string) => {
-    if (!speechSupported || !recognitionRef.current) {
+    if (!speechSupported) {
       alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่พร้อมทำงานบนบราวเซอร์นี้');
       return;
     }
+    // Abort any existing session and create a fresh instance
+    if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
+    const rec = createRecognition();
+    if (!rec) { alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่รองรับบนบราวเซอร์นี้'); return; }
+    recognitionRef.current = rec;
 
     audioSynth.playPop();
     setActiveCardMic(indexKey);
-    const rec = recognitionRef.current;
-    
-    rec.onstart = () => {};
 
     rec.onresult = (event: any) => {
       const resultText = event.results[0][0].transcript;
-      const targetClean = vocabWord.toLowerCase().trim();
-      const spokenClean = resultText.toLowerCase().trim();
-      
-      const cardScore = calculateSimilarity(targetClean, spokenClean);
-      setFlashcardScores(prev => ({ ...prev, [indexKey]: cardScore }));
-
-      if (cardScore >= 80) {
-        audioSynth.playSuccess();
-        setConfettiActive(true);
-      } else {
-        audioSynth.playTryAgain();
-      }
+      const cardScore = calculateSimilarity(vocabWord.toLowerCase().trim(), resultText.toLowerCase().trim());
+      setFlashcardScores(prev => {
+        const next = { ...prev, [indexKey]: cardScore };
+        if (student) saveProgressToDB(student.studentId, { flashcardScores: { [indexKey]: cardScore } });
+        return next;
+      });
+      if (cardScore >= 80) { audioSynth.playSuccess(); setConfettiActive(true); }
+      else { audioSynth.playTryAgain(); }
       setActiveCardMic(null);
     };
-
-    rec.onerror = () => {
-      setActiveCardMic(null);
-    };
-
-    rec.onend = () => {
-      setActiveCardMic(null);
-    };
+    rec.onerror = () => { setActiveCardMic(null); };
+    rec.onend = () => { setActiveCardMic(null); };
 
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -435,26 +584,25 @@ export default function TrangKidsSpeakApp() {
   };
 
   const recordRolePlayLine = async () => {
-    if (!speechSupported || !recognitionRef.current) {
+    if (!speechSupported) {
       alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่พร้อมทำงานบนบราวเซอร์นี้');
       return;
     }
-
     const lines = selectedLesson.dialogue;
     const targetLine = lines[rolePlayStep];
-    
-    if (targetLine.character !== userRole) {
-      alert('ตาของคู่หูคุณพูดอยู่จ้า รอแป๊บน้า!');
-      return;
-    }
+    if (targetLine.character !== userRole) { alert('ตาของคู่หูคุณพูดอยู่จ้า รอแป๊บน้า!'); return; }
+
+    // Abort any existing session and create a fresh instance
+    if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
+    const rec = createRecognition();
+    if (!rec) { alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่รองรับบนบราวเซอร์นี้'); return; }
+    recognitionRef.current = rec;
 
     audioSynth.playPop();
     setIsRolePlayListening(true);
     setRolePlayScore(null);
     setRolePlayTranscript('');
-    
-    const rec = recognitionRef.current;
-    
+
     rec.onstart = () => {
       if (userRole === 'dino') setDinoRoleState('speaking');
       else setBearRoleState('speaking');
@@ -463,65 +611,49 @@ export default function TrangKidsSpeakApp() {
     rec.onresult = (event: any) => {
       const spokenText = event.results[0][0].transcript;
       setRolePlayTranscript(spokenText);
-
-      // Perform evaluation
       const similarityScore = calculateSimilarity(targetLine.text, spokenText);
       setRolePlayScore(similarityScore);
-
-      const wordSegments = computeEnglishWordDiff(targetLine.text, spokenText);
-      setRolePlayDiff(wordSegments);
+      setRolePlayDiff(computeEnglishWordDiff(targetLine.text, spokenText));
 
       if (similarityScore >= 80) {
-        if (userRole === 'dino') setDinoRoleState('celebrating');
-        else setBearRoleState('celebrating');
+        if (userRole === 'dino') setDinoRoleState('celebrating'); else setBearRoleState('celebrating');
         audioSynth.playSuccess();
         setConfettiActive(true);
         setRolePlayFeedback('เก่งมากๆ เลยคนเก่ง! ผ่านฉลุยจ้า 🌟');
-
-        // Proceed to next step after short delay
         setTimeout(() => {
           const nextStep = rolePlayStep + 1;
           setRolePlayStep(nextStep);
           setRolePlayScore(null);
           setRolePlayDiff([]);
           setRolePlayTranscript('');
-
           if (nextStep < lines.length) {
             triggerRolePlayComputerTurn(nextStep, selectedLesson);
           } else {
             setRolePlayFeedback('🎉 ว้าว! คุณทำกิจกรรมบทบาทสมมติเสร็จสมบูรณ์แล้ว ยอดเยี่ยมมากจ้า!');
             audioSynth.playSuccess();
             setConfettiActive(true);
+            setCompletedRoleplays(prev => {
+              const next = { ...prev, [selectedLesson.id]: true };
+              if (student) saveProgressToDB(student.studentId, { completedRoleplays: { [selectedLesson.id]: true } });
+              return next;
+            });
           }
         }, 3000);
       } else {
-        if (userRole === 'dino') setDinoRoleState('sad');
-        else setBearRoleState('sad');
+        if (userRole === 'dino') setDinoRoleState('sad'); else setBearRoleState('sad');
         audioSynth.playTryAgain();
         setRolePlayFeedback('ออกเสียงผิดเพี้ยนไปนิดนึงจ้า ลองกดไมค์พยายามใหม่อีกครั้งนะสู้ๆ! 💪');
-        setTimeout(() => {
-          setDinoRoleState('idle');
-          setBearRoleState('idle');
-        }, 2500);
+        setTimeout(() => { setDinoRoleState('idle'); setBearRoleState('idle'); }, 2500);
       }
     };
-
     rec.onerror = () => {
       setIsRolePlayListening(false);
       setRolePlayFeedback('ไม่ได้ยินเสียงพูดเลยจ้า ลองพูดใกล้ขึ้นอีกนิดนึงน้า 🎙️');
-      if (userRole === 'dino') setDinoRoleState('sad');
-      else setBearRoleState('sad');
+      if (userRole === 'dino') setDinoRoleState('sad'); else setBearRoleState('sad');
       audioSynth.playTryAgain();
-      setTimeout(() => {
-        setDinoRoleState('idle');
-        setBearRoleState('idle');
-      }, 2500);
+      setTimeout(() => { setDinoRoleState('idle'); setBearRoleState('idle'); }, 2500);
     };
-
-    rec.onend = () => {
-      setIsRolePlayListening(false);
-    };
-
+    rec.onend = () => { setIsRolePlayListening(false); };
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       rec.start();
@@ -533,10 +665,15 @@ export default function TrangKidsSpeakApp() {
 
   // Custom AI speaking assessment in Submission console
   const recordSubmissionSpeech = async () => {
-    if (!speechSupported || !recognitionRef.current) {
+    if (!speechSupported) {
       alert('ขออภัยด้วยจ้า ระบบไมโครโฟนจำคำพูดไม่รองรับบนเบราว์เซอร์นี้');
       return;
     }
+    // Abort any existing session and create a fresh instance
+    if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
+    const rec = createRecognition();
+    if (!rec) { alert('ขออภัยด้วยจ้า ระบบไมโครโฟนจำคำพูดไม่รองรับบนเบราว์เซอร์นี้'); return; }
+    recognitionRef.current = rec;
 
     audioSynth.playPop();
     setIsSubmissionListening(true);
@@ -545,27 +682,17 @@ export default function TrangKidsSpeakApp() {
     setSubmittedDiff([]);
     setSubmissionFeedback('🎙️ กำลังอัดเสียงประเมิน... ออกเสียงตามบทสนทนาได้เลย!');
 
-    // Let's assemble target text from dialogue
     const targetText = submitSelectedLesson.dialogue
-      .filter(line => line.speaker === 'B') // speaking for the student's parts
+      .filter(line => line.speaker === 'B')
       .map(line => line.text)
       .join(' ');
-
-    const rec = recognitionRef.current;
-    
-    rec.onstart = () => {};
 
     rec.onresult = (event: any) => {
       const resultText = event.results[0][0].transcript;
       setSubmittedTranscript(resultText);
-
-      // Perform calculations
       const similarityScore = calculateSimilarity(targetText, resultText);
       setSubmittedScore(similarityScore);
-
-      const wordSegments = computeEnglishWordDiff(targetText, resultText);
-      setSubmittedDiff(wordSegments);
-
+      setSubmittedDiff(computeEnglishWordDiff(targetText, resultText));
       if (similarityScore >= 80) {
         audioSynth.playSuccess();
         setConfettiActive(true);
@@ -575,16 +702,8 @@ export default function TrangKidsSpeakApp() {
         setSubmissionFeedback('เกือบถูกแล้วคนเก่ง! ดูจุดสะกดไฮไลท์สีแดง แล้วพยายามฝึกออกเสียงใหม่อีกครั้งนะจ๊ะ 💪');
       }
     };
-
-    rec.onerror = () => {
-      setIsSubmissionListening(false);
-      setSubmissionFeedback('⚠️ เอ๊ะ...ไม่ได้ยินเสียงเลยจ้า ลองขยับไมค์และพูดใหม่อีกครั้งนะ');
-    };
-
-    rec.onend = () => {
-      setIsSubmissionListening(false);
-    };
-
+    rec.onerror = () => { setIsSubmissionListening(false); setSubmissionFeedback('⚠️ เอ๊ะ...ไม่ได้ยินเสียงเลยจ้า ลองขยับไมค์และพูดใหม่อีกครั้งนะ'); };
+    rec.onend = () => { setIsSubmissionListening(false); };
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       rec.start();
@@ -594,36 +713,125 @@ export default function TrangKidsSpeakApp() {
     }
   };
 
+  // Keypad login handlers
+  const handleKeyPress = (num: string) => { audioSynth.playPop(); if (loginId.length < 10) setLoginId(prev => prev + num); };
+  const handleBackspace = () => { audioSynth.playPop(); setLoginId(prev => prev.slice(0, -1)); };
+  const handleClear = () => { audioSynth.playPop(); setLoginId(''); };
+  const handleLoginSubmit = async () => {
+    if (!loginId.trim()) { setLoginError('กรุณากรอกรหัสนักเรียนจ้า'); return; }
+    setIsLoggingIn(true);
+    setLoginError('');
+    try {
+      const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studentId: loginId }) });
+      const data = await res.json();
+      if (data.success) {
+        audioSynth.playSuccess();
+        setConfettiActive(true);
+        setStudent(data.student);
+        localStorage.setItem('el_student', JSON.stringify(data.student));
+        setGender(data.student.name.includes('เด็กหญิง') || data.student.name.includes('หญิง') ? 'girl' : 'boy');
+        fetchStudentProgress(data.student.studentId);
+      } else {
+        audioSynth.playTryAgain();
+        setLoginError(data.error || 'ไม่พบรหัสนักเรียนนี้ในระบบ');
+      }
+    } catch {
+      audioSynth.playTryAgain();
+      setLoginError('เกิดข้อผิดพลาดในการเชื่อมต่อระบบ');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
   // Submit speaking score dynamically to dashboard submissions list
   const submitToTeacher = () => {
     if (submittedScore === null) return;
-    
     setIsSubmittingRecord(true);
-    
     setTimeout(() => {
       audioSynth.playSuccess();
       setConfettiActive(true);
-
+      const today = new Date();
+      const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+      const formattedDate = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${String(today.getFullYear()+543).slice(-2)}`;
       const newSub: SubmissionRecord = {
         id: submissions.length + 1,
         topic: submitSelectedLesson.title,
         type: submitMediaType === 'audio' ? 'เสียง' : 'วิดีโอ',
-        date: 'วันนี้',
+        date: formattedDate,
         status: 'ตรวจแล้ว',
         score: submittedScore
       };
-
       setSubmissions([newSub, ...submissions]);
       setIsSubmittingRecord(false);
+      if (student) {
+        saveProgressToDB(student.studentId, { submission: { lessonId: submitSelectedLesson.id, score: submittedScore, mediaType: submitMediaType, status: 'ตรวจแล้ว', date: formattedDate } });
+      }
       alert('ส่งผลงานการพูดของหนูให้คุณครูตรวจผ่านระบบออนไลน์สำเร็จแล้วจ้า! เก่งมากเลยลูก! ⭐');
-      
-      // Clear and redirect home
       setSubmittedScore(null);
       setSubmittedTranscript('');
       setSubmittedDiff([]);
       setActiveTab('home');
     }, 1200);
   };
+
+  if (!student) {
+    return (
+      <div className="min-h-screen bg-[#f3f9fc] flex items-center justify-center py-6 px-4 relative overflow-hidden select-none">
+        <Confetti active={confettiActive} onComplete={() => setConfettiActive(false)} />
+        <div className="absolute top-16 left-6 text-6xl opacity-20 pointer-events-none animate-float-slow hidden md:block">☁️</div>
+        <div className="absolute top-32 right-12 text-7xl opacity-20 pointer-events-none animate-float hidden md:block">☁️</div>
+        <div className="max-w-md w-full bg-white rounded-[32px] shadow-[0_12px_40px_rgba(203,213,225,0.4)] border-4 border-white p-6 text-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 flex items-center justify-center shrink-0 animate-bounce-gentle">
+              <svg viewBox="0 0 64 64" className="w-full h-full">
+                <rect x="22" y="10" width="20" height="44" rx="2" fill="#bae6fd" stroke="#0284c7" strokeWidth="2" />
+                <rect x="25" y="16" width="14" height="14" rx="7" fill="#ffffff" stroke="#0284c7" strokeWidth="2" />
+                <path d="M 32 23 L 32 20 M 32 23 L 35 23" stroke="#0284c7" strokeWidth="2" strokeLinecap="round" />
+                <polygon points="32,2 20,10 44,10" fill="#fca5a5" stroke="#e11d48" strokeWidth="2" />
+                <rect x="28" y="36" width="8" height="14" rx="4" fill="#60a5fa" stroke="#0284c7" strokeWidth="1.5" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-black font-kids tracking-wide leading-none mt-2">
+              <span className="text-[#0284c7]">Trang</span>{' '}<span className="text-[#f97316]">Kids</span>{' '}<span className="text-[#8b5cf6]">Speak</span>
+            </h1>
+            <p className="text-xs font-bold text-slate-400 mt-1">ยินดีต้อนรับสู่แดนกิจกรรมภาษาอังกฤษ ป.2 🌟</p>
+            <div className="w-full bg-[#f8fafc] rounded-2xl border-2 border-slate-100 p-4 mt-4">
+              <div className="text-3xl font-black tracking-widest text-[#1e293b] font-mono min-h-[45px] flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-inner px-4 py-2">
+                {loginId || <span className="text-slate-300 text-base select-none">ใส่รหัสนักเรียน</span>}
+              </div>
+              {loginError && <div className="text-xs font-black text-rose-500 mt-2">⚠️ {loginError}</div>}
+            </div>
+            <div className="grid grid-cols-3 gap-3 w-full mt-4">
+              {[1,2,3,4,5,6,7,8,9].map(num => (
+                <button key={num} type="button" onClick={() => handleKeyPress(String(num))}
+                  className="bg-white border-2 border-slate-200 border-b-4 hover:border-b-2 active:border-b-0 hover:bg-slate-50 text-slate-700 active:translate-y-[2px] rounded-2xl py-3 font-black text-2xl font-kids shadow-sm transition-all duration-75">
+                  {num}
+                </button>
+              ))}
+              <button type="button" onClick={handleClear}
+                className="bg-rose-50 border-2 border-rose-200 border-b-4 hover:border-b-2 active:border-b-0 text-rose-600 active:translate-y-[2px] rounded-2xl py-3 font-black text-lg font-kids shadow-sm transition-all duration-75">
+                ล้าง
+              </button>
+              <button type="button" onClick={() => handleKeyPress('0')}
+                className="bg-white border-2 border-slate-200 border-b-4 hover:border-b-2 active:border-b-0 hover:bg-slate-50 text-slate-700 active:translate-y-[2px] rounded-2xl py-3 font-black text-2xl font-kids shadow-sm transition-all duration-75">
+                0
+              </button>
+              <button type="button" onClick={handleBackspace}
+                className="bg-orange-50 border-2 border-orange-200 border-b-4 hover:border-b-2 active:border-b-0 text-orange-600 active:translate-y-[2px] rounded-2xl py-3 font-black text-xl font-kids shadow-sm transition-all duration-75 flex items-center justify-center">
+                ⌫
+              </button>
+            </div>
+            <button type="button" disabled={isLoggingIn} onClick={handleLoginSubmit}
+              className={`w-full text-white font-black text-lg font-kids py-3 rounded-2xl mt-4 shadow-md transition-all flex items-center justify-center gap-2 border-b-4 active:translate-y-[2px] ${
+                isLoggingIn ? 'bg-emerald-400 border-emerald-500 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-400 border-emerald-600'
+              }`}>
+              {isLoggingIn ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />กำลังเข้าสู่ระบบ...</>) : <>เข้าสู่ระบบ 🚀</>}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f3f9fc] py-2 px-2 sm:py-4 sm:px-4 md:px-8 relative overflow-hidden select-none pb-20 md:pb-6">
@@ -729,21 +937,71 @@ export default function TrangKidsSpeakApp() {
             ))}
           </nav>
 
-          {/* User Profile Avatar Card - Dynamic toggle */}
-          <div 
-            className="flex items-center gap-1.5 sm:gap-2.5 bg-sky-50 border border-sky-200/60 rounded-xl sm:rounded-2xl px-2 sm:px-4 py-1 cursor-pointer hover:scale-105 active:scale-95 transition select-none shrink-0" 
-            onClick={() => { audioSynth.playPop(); setGender(gender === 'girl' ? 'boy' : 'girl'); }} 
-            title="คลิกเพื่อสลับรูป เด็กผู้ชาย / เด็กผู้หญิง"
-          >
-            <div className="w-6 h-6 sm:w-8 h-8 rounded-full bg-white flex items-center justify-center border border-sky-200 shadow-sm text-lg">
-              {gender === 'girl' ? '👧' : '👦'}
+          {/* User Profile Avatar Card + Logout Button */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div
+              className="flex items-center gap-1.5 sm:gap-2.5 bg-sky-50 border border-sky-200/60 rounded-xl sm:rounded-2xl px-2 sm:px-4 py-1 cursor-pointer hover:scale-105 active:scale-95 transition select-none"
+              onClick={() => { audioSynth.playPop(); setGender(gender === 'girl' ? 'boy' : 'girl'); }}
+              title="คลิกเพื่อสลับรูป เด็กผู้ชาย / เด็กผู้หญิง"
+            >
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center border border-sky-200 shadow-sm text-lg">
+                {gender === 'girl' ? '👧' : '👦'}
+              </div>
+              <div className="text-left hidden sm:block">
+                <p className="text-[10px] font-black text-slate-400 leading-none">สวัสดี {student?.name || 'น้อง'}</p>
+                <p className="text-xs font-black text-sky-600 mt-1">{student?.classroom || 'ป.2'} 🌟</p>
+              </div>
             </div>
-            <div className="text-left hidden sm:block">
-              <p className="text-[10px] font-black text-slate-400 leading-none">สวัสดี น้องออม</p>
-              <p className="text-xs font-black text-sky-600 mt-1">ผู้เรียน ป.2 🌟</p>
-            </div>
+            {/* Logout button */}
+            <button
+              onClick={() => { audioSynth.playPop(); setShowLogoutConfirm(true); }}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-500 hover:bg-rose-100 hover:text-rose-600 transition text-[10px] sm:text-xs font-black active:scale-95 shrink-0"
+              title="ออกจากระบบ"
+            >
+              <span>🚪</span>
+              <span className="hidden sm:inline">ออกจากระบบ</span>
+            </button>
           </div>
         </header>
+
+        {/* Logout Confirmation Modal */}
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-[28px] shadow-2xl border-4 border-white max-w-sm w-full p-6 text-center animate-bounce-in">
+              <div className="text-5xl mb-3">🚪</div>
+              <h3 className="text-xl font-black text-slate-800 font-kids">ออกจากระบบ?</h3>
+              <p className="text-sm font-bold text-slate-400 mt-2">
+                ต้องการออกจากระบบใช่ไหมจ้า?<br/>
+                <span className="text-slate-500 font-black">{student?.name}</span>
+              </p>
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => { audioSynth.playPop(); setShowLogoutConfirm(false); }}
+                  className="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-sm border-2 border-slate-200 border-b-4 active:translate-y-[2px] transition-all"
+                >
+                  ยังอยู่ต่อ 😊
+                </button>
+                <button
+                  onClick={() => {
+                    audioSynth.playPop();
+                    localStorage.removeItem('el_student');
+                    setStudent(null);
+                    setLoginId('');
+                    setLoginError('');
+                    setShowLogoutConfirm(false);
+                    setFlashcardScores({});
+                    setCompletedRoleplays({});
+                    setSubmissions([]);
+                    setActiveTab('home');
+                  }}
+                  className="flex-1 py-3 rounded-2xl bg-rose-500 hover:bg-rose-400 text-white font-black text-sm border-2 border-rose-600 border-b-4 active:translate-y-[2px] transition-all"
+                >
+                  ออกจากระบบ 🚪
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ==================================== TABS SWITCHER ==================================== */}
         
@@ -1376,7 +1634,23 @@ export default function TrangKidsSpeakApp() {
                       
                       {/* FRONT CARD */}
                       <div className="flip-card-front absolute w-full h-full flex flex-col justify-between p-5 items-center border-4 border-orange-200 rounded-3xl shadow-md bg-white">
-                        <span className="text-[10px] font-black text-orange-400 self-start uppercase tracking-wider">Flashcard Front 🧭</span>
+                        <div className="w-full flex justify-between items-center">
+                          <span className="text-[10px] font-black text-orange-400 self-start uppercase tracking-wider">Flashcard Front 🧭</span>
+                          {/* Status badge visible on front */}
+                          {scoreVal !== undefined ? (
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                              scoreVal >= 80
+                                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                                : 'bg-rose-100 text-rose-700 border-rose-300'
+                            }`}>
+                              {scoreVal >= 80 ? '✅ ผ่าน' : `🔄 ${scoreVal}%`}
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full border bg-slate-100 text-slate-400 border-slate-200">
+                              🎤 ยังไม่ได้พูด
+                            </span>
+                          )}
+                        </div>
                         
                         <div className="flex flex-col items-center gap-2">
                           <span className="text-6xl animate-bounce-gentle">{v.emoji}</span>
@@ -1467,7 +1741,23 @@ export default function TrangKidsSpeakApp() {
                         
                         {/* FRONT */}
                         <div className="flip-card-front absolute w-full h-full flex flex-col justify-between p-5 items-center border-4 border-orange-200 rounded-3xl shadow-md bg-white">
-                          <span className="text-[10px] font-black text-orange-400 self-start uppercase tracking-wider">บัตรคำศัพท์ ด้านหน้า 🧭</span>
+                          <div className="w-full flex justify-between items-center">
+                            <span className="text-[10px] font-black text-orange-400 uppercase tracking-wider">บัตรคำศัพท์ ด้านหน้า 🧭</span>
+                            {/* Status badge visible on front */}
+                            {scoreVal !== undefined ? (
+                              <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
+                                scoreVal >= 80
+                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                                  : 'bg-rose-100 text-rose-700 border-rose-300'
+                              }`}>
+                                {scoreVal >= 80 ? '✅ ผ่าน' : `🔄 ${scoreVal}%`}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-black px-2 py-0.5 rounded-full border bg-slate-100 text-slate-400 border-slate-200">
+                                🎤 ยังไม่ได้พูด
+                              </span>
+                            )}
+                          </div>
                           
                           <div className="flex flex-col items-center gap-2">
                             <span className="text-7xl animate-bounce-gentle">{v.emoji}</span>
