@@ -52,25 +52,67 @@ export function getLevenshteinDistance(s1: string, s2: string): number {
 }
 
 /**
+ * Checks if targetWords is a subsequence of spokenWords
+ */
+function isSubsequence(targetWords: string[], spokenWords: string[]): boolean {
+  let tIdx = 0;
+  for (let sIdx = 0; sIdx < spokenWords.length; sIdx++) {
+    if (targetWords[tIdx] === spokenWords[sIdx]) {
+      tIdx++;
+      if (tIdx === targetWords.length) return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Calculates string similarity percentage based on Levenshtein Distance
+ * with added leniency rules for kids (subsequence matching and minor typo tolerance).
  */
 export function calculateSimilarity(target: string, spoken: string): number {
-  const cleanTarget = normalizeText(target, false).replace(/\s+/g, '');
-  const cleanSpoken = normalizeText(spoken, false).replace(/\s+/g, '');
+  const normTarget = normalizeText(target, false);
+  const normSpoken = normalizeText(spoken, false);
 
-  if (!cleanTarget && !cleanSpoken) return 100;
-  if (!cleanTarget || !cleanSpoken) return 0;
+  if (!normTarget && !normSpoken) return 100;
+  if (!normTarget || !normSpoken) return 0;
+
+  const targetWords = normTarget.split(/\s+/);
+  const spokenWords = normSpoken.split(/\s+/);
+
+  // 1. Subsequence match (e.g. if child says "this is an apple" for target "apple", it's 100%)
+  if (isSubsequence(targetWords, spokenWords)) {
+    return 100;
+  }
+
+  // 2. Character-level Levenshtein distance
+  const cleanTarget = normTarget.replace(/\s+/g, '');
+  const cleanSpoken = normSpoken.replace(/\s+/g, '');
 
   const dist = getLevenshteinDistance(cleanTarget, cleanSpoken);
   const maxLen = Math.max(cleanTarget.length, cleanSpoken.length);
-  const score = ((maxLen - dist) / maxLen) * 100;
+  let score = ((maxLen - dist) / maxLen) * 100;
 
-  // For Thai checks
+  // Leniency rules for young kids:
+  // - If only 1 character is different in a short word (length <= 5), give them 85% (passing)
+  // - If only 2 characters are different in a medium word (length 6-8), give them 80% (passing)
+  if (dist === 1 && maxLen <= 5) {
+    score = Math.max(score, 85);
+  } else if (dist <= 2 && maxLen >= 6 && maxLen <= 8) {
+    score = Math.max(score, 80);
+  }
+
+  // For Thai checks (if any)
   const cleanTargetNoTones = normalizeText(target, true).replace(/\s+/g, '');
   const cleanSpokenNoTones = normalizeText(spoken, true).replace(/\s+/g, '');
   const distNoTones = getLevenshteinDistance(cleanTargetNoTones, cleanSpokenNoTones);
   const maxLenNoTones = Math.max(cleanTargetNoTones.length, cleanSpokenNoTones.length);
-  const scoreNoTones = maxLenNoTones > 0 ? ((maxLenNoTones - distNoTones) / maxLenNoTones) * 100 : 0;
+  let scoreNoTones = maxLenNoTones > 0 ? ((maxLenNoTones - distNoTones) / maxLenNoTones) * 100 : 0;
+
+  if (distNoTones === 1 && maxLenNoTones <= 5) {
+    scoreNoTones = Math.max(scoreNoTones, 85);
+  } else if (distNoTones <= 2 && maxLenNoTones >= 6 && maxLenNoTones <= 8) {
+    scoreNoTones = Math.max(scoreNoTones, 80);
+  }
 
   return Math.round(Math.max(score, scoreNoTones));
 }

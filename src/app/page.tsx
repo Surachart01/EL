@@ -61,9 +61,22 @@ const LESSONS: LessonData[] = [
       { word: 'Rubber tree', phonetic: 'รับเบอร์ ทรี', translation: 'ต้นยางพารา', emoji: '🌳' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'Hello! Welcome to Trang.', phonetic: 'เฮลโล! เวลคัม ทู ตรัง.', translation: 'สวัสดีครับ! ยินดีต้อนรับสู่ตรังนะครับ' },
-      { speaker: 'B', character: 'bear', text: 'Hello friend! My name is Aom.', phonetic: 'เฮลโล เฟรนด์! มาย เนม อีส ออม.', translation: 'สวัสดีเพื่อน! ฉันชื่อออมค่ะ' },
-      { speaker: 'A', character: 'dino', text: 'I am a boy from Thailand. I live in this city.', phonetic: 'ไอ แอม อะ บอย ฟรอม ไทยแลนด์. ไอ ลิฟ อิน ดิส ซิตี้.', translation: 'ผมเป็นเด็กผู้ชายมาจากประเทศไทยครับ ผมอาศัยอยู่ในเมืองนี้' }
+      { speaker: 'A', character: 'dino', text: 'What is your name?', phonetic: 'วอท อิส ยัวร์ เนม', translation: 'คุณชื่ออะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'Hello. My name is Ben.', phonetic: 'เฮลโล มาย เนม อิส เบน', translation: 'สวัสดี ฉันชื่อเบน' },
+      { speaker: 'A', character: 'dino', text: 'What is your nickname?', phonetic: 'วอท อิส ยัวร์ นิกเนม', translation: 'คุณชื่อเล่นว่าอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'My nickname is Ben.', phonetic: 'มาย นิกเนม อิส เบน', translation: 'ชื่อเล่นของฉันคือเบน' },
+      { speaker: 'A', character: 'dino', text: 'How old are you?', phonetic: 'ฮาว โอลด์ อาร์ ยู', translation: 'คุณอายุเท่าไหร่ครับ' },
+      { speaker: 'B', character: 'bear', text: 'I am eight years old.', phonetic: 'ไอ แอม เอท เยียร์ส โอลด์', translation: 'ฉันอายุ 8 ปี' },
+      { speaker: 'A', character: 'dino', text: 'Where are you from?', phonetic: 'แวร์ อาร์ ยู ฟรอม', translation: 'คุณมาจากที่ไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'I am from Trang.', phonetic: 'ไอ แอม ฟรอม ตรัง', translation: 'ฉันมาจากจังหวัดตรัง' },
+      { speaker: 'A', character: 'dino', text: 'Where do you live?', phonetic: 'แวร์ ดู ยู ลิฟ', translation: 'คุณอาศัยอยู่ที่ไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'I live in Trang.', phonetic: 'ไอ ลิฟ อิน ตรัง', translation: 'ฉันอาศัยอยู่ในจังหวัดตรัง' },
+      { speaker: 'A', character: 'dino', text: 'Who is this?', phonetic: 'ฮู อิส ดิส', translation: 'นี่คือใครครับ' },
+      { speaker: 'B', character: 'bear', text: 'This is my friend.', phonetic: 'ดิส อิส มาย เฟรนด์', translation: 'นี่คือเพื่อนของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'Nice to meet you.', phonetic: 'ไนซ์ ทู มีท ยู', translation: 'ยินดีที่ได้รู้จักครับ' },
+      { speaker: 'B', character: 'bear', text: 'Nice to meet you.', phonetic: 'ไนซ์ ทู มีท ยู', translation: 'ยินดีที่ได้รู้จัก' },
+      { speaker: 'A', character: 'dino', text: 'Where are we now?', phonetic: 'แวร์ อาร์ วี นาว', translation: 'ตอนนี้พวกเราอยู่ที่ไหนกันครับ' },
+      { speaker: 'B', character: 'bear', text: 'Welcome to Trang.', phonetic: 'เวลคัม ทู ตรัง', translation: 'ยินดีต้อนรับสู่จังหวัดตรัง' }
     ],
     tip: 'อย่าลืมยิ้มแย้มและสบตากับเพื่อนคู่สนทนาขณะทักทายนะจ๊ะคนเก่ง!'
   },
@@ -89,8 +102,22 @@ const LESSONS: LessonData[] = [
       { word: 'Dim sum', phonetic: 'ติ่มซำ', translation: 'ติ่มซำ', emoji: '🥟' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'Look at my book and pencil in the classroom.', phonetic: 'ลุค แอท มาย บุ๊ก แอนด์ เพนซิล อิน เดอะ คลาสรูม.', translation: 'ดูหนังสือและดินสอของผมในห้องเรียนสิครับ' },
-      { speaker: 'B', character: 'bear', text: 'It is time for lunch. I love dim sum and roasted pork!', phonetic: 'อิท อีส ไทม์ ฟอร์ ลันช์. ไอ ลัฟ ติ่มซำ แอนด์ โรสเต็ด พอร์ก!', translation: 'ถึงเวลาอาหารกลางวันแล้วค่ะ ฉันชอบติ่มซำและหมูย่างมากเลยค่ะ!' }
+      { speaker: 'A', character: 'dino', text: 'Where do you study?', phonetic: 'แวร์ ดู ยู สตัดดี้', translation: 'คุณเรียนที่ไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'This is my classroom.', phonetic: 'ดิส อิส มาย คลาสรูม', translation: 'นี่คือห้องเรียนของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'What grade are you in?', phonetic: 'วอท เกรด อาร์ ยู อิน', translation: 'คุณเรียนอยู่ชั้นไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'I am in Grade Two.', phonetic: 'ไอ แอม อิน เกรด ทู', translation: 'ฉันเรียนอยู่ชั้นประถมศึกษาปีที่ 2' },
+      { speaker: 'A', character: 'dino', text: 'How is your teacher?', phonetic: 'ฮาว อิส ยัวร์ ทีเชอร์', translation: 'คุณครูของคุณเป็นอย่างไรบ้างครับ' },
+      { speaker: 'B', character: 'bear', text: 'My teacher is kind.', phonetic: 'มาย ทีเชอร์ อิส ไคน์ด', translation: 'คุณครูของฉันใจดี' },
+      { speaker: 'A', character: 'dino', text: 'Do you like your school?', phonetic: 'ดู ยู ไลก์ ยัวร์ สคูล', translation: 'คุณชอบโรงเรียนของคุณไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'I like my school.', phonetic: 'ไอ ไลก์ มาย สคูล', translation: 'ฉันชอบโรงเรียนของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'What do you have?', phonetic: 'วอท ดู ยู แฮฟ', translation: 'คุณมีอะไรบ้างครับ' },
+      { speaker: 'B', character: 'bear', text: 'I have a book and a pencil.', phonetic: 'ไอ แฮฟ อะ บุ๊ก แอนด์ อะ เพนซิล', translation: 'ฉันมีหนังสือและดินสอ' },
+      { speaker: 'A', character: 'dino', text: 'What time is it?', phonetic: 'วอท ไทม์ อิส อิท', translation: 'ตอนนี้กี่โมงแล้วครับ' },
+      { speaker: 'B', character: 'bear', text: 'It is time for lunch.', phonetic: 'อิท อีส ไทม์ ฟอร์ ลันช์', translation: 'ได้เวลาอาหารกลางวันแล้ว' },
+      { speaker: 'A', character: 'dino', text: 'What is your favorite food?', phonetic: 'วอท อิส ยัวร์ เฟเวอริท ฟูด', translation: 'อาหารโปรดของคุณคืออะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'I like roasted pork.', phonetic: 'ไอ ไลก์ โรสเต็ด พอร์ก', translation: 'ฉันชอบหมูย่าง' },
+      { speaker: 'A', character: 'dino', text: 'What do you eat for dessert?', phonetic: 'วอท ดู ยู อีท ฟอร์ ดิสเสิร์ท', translation: 'คุณทานอะไรเป็นของหวานครับ' },
+      { speaker: 'B', character: 'bear', text: 'I eat Trang cake.', phonetic: 'ไอ อีท ตรัง เค้ก', translation: 'ฉันกินเค้กเมืองตรัง' }
     ],
     tip: 'ออกเสียงตัว L ในคำว่า "School" และ "Pencil" ให้ปลายลิ้นยกแตะเพดานปากท้ายเสียงนะคนเก่ง!'
   },
@@ -119,8 +146,22 @@ const LESSONS: LessonData[] = [
       { word: 'Ton Te Waterfall', phonetic: 'ต้นเตะ วอเทอร์ฟอล', translation: 'น้ำตกโตนเตะ', emoji: '⛲' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'This is my mother and father. Trang is our hometown.', phonetic: 'ดิส อีส มาย มัทเธอร์ แอนด์ ฟาเธอร์. ตรัง อีส เอาเออร์ โฮมทาวน์.', translation: 'นี่คือคุณแม่และคุณพ่อของผมครับ ตรังคือบ้านเกิดของเรา' },
-      { speaker: 'B', character: 'bear', text: "Let's visit the clock tower and Emerald Cave!", phonetic: 'เล็ทส์ วิสิท เดอะ คล็อก ทาวเวอร์ แอนด์ เอมเมอรัลด์ เคฟ!', translation: 'ไปเที่ยวหอนาฬิกาและถ้ำมรกตกันเถอะค่ะ!' }
+      { speaker: 'A', character: 'dino', text: 'Who are they?', phonetic: 'ฮู อาร์ เดย์', translation: 'พวกเขาคือใครครับ' },
+      { speaker: 'B', character: 'bear', text: 'This is my family.', phonetic: 'ดิส อิส มาย แฟมิลี', translation: 'นี่คือครอบครัวของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'Who is this?', phonetic: 'ฮู อิส ดิส', translation: 'นี่คือใครครับ' },
+      { speaker: 'B', character: 'bear', text: 'This is my father and mother.', phonetic: 'ดิส อิส มาย ฟาเธอร์ แอนด์ มัทเธอร์', translation: 'นี่คือพ่อและแม่ของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'Do you have siblings?', phonetic: 'ดู ยู แฮฟ ซิบลึงส์', translation: 'คุณมีพี่น้องไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'I have a brother and a sister.', phonetic: 'ไอ แฮฟ อะ บราเธอร์ แอนด์ อะ ซิสเทอร์', translation: 'ฉันมีพี่ชายและน้องสาว' },
+      { speaker: 'A', character: 'dino', text: 'What is your hometown?', phonetic: 'วอท อิส ยัวร์ โฮมทาวน์', translation: 'บ้านเกิดของคุณคือที่ไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'Trang is my hometown.', phonetic: 'ตรัง อิส มาย โฮมทาวน์', translation: 'ตรังคือบ้านเกิดของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'What is in the city?', phonetic: 'วอท อิส อิน เดอะ ซิตี้', translation: 'ในเมืองมีอะไรน่าสนใจครับ' },
+      { speaker: 'B', character: 'bear', text: 'Look at the clock tower.', phonetic: 'ลุค แอท เดอะ คล็อก ทาวเวอร์', translation: 'ดูที่หอนาฬิกานั่นสิ' },
+      { speaker: 'A', character: 'dino', text: 'Where do you go in summer?', phonetic: 'แวร์ ดู ยู โก อิน ซัมเมอร์', translation: 'คุณไปเที่ยวไหนในฤดูร้อนครับ' },
+      { speaker: 'B', character: 'bear', text: 'I visit Koh Kradan.', phonetic: 'ไอ วิสิท เกาะ กระดาน', translation: 'ฉันไปเที่ยวเกาะกระดาน' },
+      { speaker: 'A', character: 'dino', text: 'What do you do at the island?', phonetic: 'วอท ดู ยู ดู แอท ดิ ไอแลนด์', translation: 'คุณทำอะไรที่เกาะบ้างครับ' },
+      { speaker: 'B', character: 'bear', text: 'We swim in the Emerald Cave.', phonetic: 'วี สวิม อิน ดิ เอมเมอรัลด์ เคฟ', translation: 'พวกเราว่ายน้ำในถ้ำมรกต' },
+      { speaker: 'A', character: 'dino', text: 'Where is the big waterfall?', phonetic: 'แวร์ อิส เดอะ บิ๊ก วอเทอร์ฟอล', translation: 'น้ำตกใหญ่อยู่ที่ไหนครับ' },
+      { speaker: 'B', character: 'bear', text: 'We go to Ton Te Waterfall.', phonetic: 'วี โก ทู ต้นเตะ วอเทอร์ฟอล', translation: 'พวกเราไปน้ำตกโตนเตะ' }
     ],
     tip: 'พูดคำว่า "Mother" และ "Father" โดยเอาปลายลิ้นแตะฟันบนเบาๆ นะจ๊ะ!'
   },
@@ -145,8 +186,22 @@ const LESSONS: LessonData[] = [
       { word: 'Fruit', phonetic: 'ฟรุต', translation: 'ผลไม้', emoji: '🍎' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: 'Look! This red apple is a sweet fruit.', phonetic: 'ลุค! ดิส เรด แอปเปิล อีส อะ สวีท ฟรุต.', translation: 'ดูสิ! แอปเปิลสีแดงผลนี้เป็นผลไม้รสหวานนะ' },
-      { speaker: 'B', character: 'bear', text: 'I like green mango and yellow banana.', phonetic: 'ไอ ไลค์ กรีน แมงโก แอนด์ เยลโล บานานา.', translation: 'หนูชอบมะม่วงสีเขียวและกล้วยสีเหลืองค่ะ' }
+      { speaker: 'A', character: 'dino', text: 'What fruit do you like?', phonetic: 'วอท ฟรุต ดู ยู ไลก์', translation: 'คุณชอบผลไม้อะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'I like red apple.', phonetic: 'ไอ ไลก์ เรด แอปเปิล', translation: 'ฉันชอบแอปเปิลสีแดง' },
+      { speaker: 'A', character: 'dino', text: 'What color is the banana?', phonetic: 'วอท คัลเลอร์ อิส เดอะ บานานา', translation: 'กล้วยมีสีอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'The banana is yellow.', phonetic: 'เดอะ บานานา อิส เยลโล', translation: 'กล้วยมีสีเหลือง' },
+      { speaker: 'A', character: 'dino', text: 'Is the mango green?', phonetic: 'อิส เดอะ แมงโก กรีน', translation: 'มะม่วงมีสีเขียวใช่ไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'The mango is green.', phonetic: 'เดอะ แมงโก อิส กรีน', translation: 'มะม่วงมีสีเขียว' },
+      { speaker: 'A', character: 'dino', text: 'What color is the watermelon?', phonetic: 'วอท คัลเลอร์ อิส เดอะ วอเทอร์เมลอน', translation: 'แตงโมมีสีอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'The watermelon is red.', phonetic: 'เดอะ วอเทอร์เมลอน อิส เรด', translation: 'แตงโมมีสีแดง' },
+      { speaker: 'A', character: 'dino', text: 'Do you like sweet fruit?', phonetic: 'ดู ยู ไลก์ สวีท ฟรุต', translation: 'คุณชอบผลไม้หวานไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'I like sweet fruit.', phonetic: 'ไอ ไลก์ สวีท ฟรุต', translation: 'ฉันชอบผลไม้รสหวาน' },
+      { speaker: 'A', character: 'dino', text: 'What color is this balloon?', phonetic: 'วอท คัลเลอร์ อิส ดิส บัลลูน', translation: 'ลูกโป่งนี้มีสีอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'This balloon is blue.', phonetic: 'ดิส บัลลูน อิส บลู', translation: 'ลูกโป่งนี้มีสีน้ำเงิน' },
+      { speaker: 'A', character: 'dino', text: 'What color is the Si Trang flower?', phonetic: 'วอท คัลเลอร์ อิส เดอะ สี ตรัง ฟลาวเวอร์', translation: 'ดอกศรีตรังมีสีอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'The flower is purple.', phonetic: 'เดอะ ฟลาวเวอร์ อิส เพอร์เพิล', translation: 'ดอกไม้มีสีม่วง' },
+      { speaker: 'A', character: 'dino', text: 'What color do you like?', phonetic: 'วอท คัลเลอร์ ดู ยู ไลก์', translation: 'คุณชอบสีอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'My favorite color is purple.', phonetic: 'มาย เฟเวอริท คัลเลอร์ อิส เพอร์เพิล', translation: 'สีที่ฉันชอบที่สุดคือสีม่วง' }
     ],
     tip: 'ฝึกม้วนลิ้นออกเสียงตัว R ในคำว่า "Red" โดยระวังอย่าให้ริมฝีปากแตะกันนะจ๊ะ!'
   },
@@ -173,8 +228,22 @@ const LESSONS: LessonData[] = [
       { word: 'Look Lom Festival', phonetic: 'ลุค ลม เฟสติวัล', translation: 'เทศกาลลูกลม', emoji: '🌀' }
     ],
     dialogue: [
-      { speaker: 'A', character: 'dino', text: "I have a robot and a kite. Let's play a game!", phonetic: 'ไอ แฮฟ อะ โรบอท แอนด์ อะ ไคท์. เล็ทส์ เพลย์ อะ เกม!', translation: 'ผมมีหุ่นยนต์และว่าวครับ มาเล่นเกมกันเถอะ' },
-      { speaker: 'B', character: 'bear', text: 'We can whistle and have fun at the Look Lom Festival!', phonetic: 'วี แคน วิสเซิล แอนด์ แฮฟ ฟัน แอท เดอะ ลุค ลม เฟสติวัล!', translation: 'เราสามารถเป่านกหวีดและสนุกสนานกันในเทศกาลลูกลมได้ค่ะ!' }
+      { speaker: 'A', character: 'dino', text: 'What do you play?', phonetic: 'วอท ดู ยู เพลย์', translation: 'คุณเล่นอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'I have a ball.', phonetic: 'ไอ แฮฟ อะ บอล', translation: 'ฉันมีลูกบอล' },
+      { speaker: 'A', character: 'dino', text: 'Do you have a doll?', phonetic: 'ดู ยู แฮฟ อะ ดอล', translation: 'คุณมีตุ๊กตาไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'I have a doll.', phonetic: 'ไอ แฮฟ อะ ดอล', translation: 'ฉันมีตุ๊กตา' },
+      { speaker: 'A', character: 'dino', text: 'What do you do on a windy day?', phonetic: 'วอท ดู ยู ดู ออน อะ วินดี้ เดย์', translation: 'คุณทำอะไรในวันที่มีลมแรงครับ' },
+      { speaker: 'B', character: 'bear', text: 'I fly a kite.', phonetic: 'ไอ ฟลาย อะ ไคท์', translation: 'ฉันเล่นว่าว' },
+      { speaker: 'A', character: 'dino', text: 'What do you do in your room?', phonetic: 'วอท ดู ยู ดู อิน ยัวร์ รูม', translation: 'คุณทำอะไรในห้องของคุณครับ' },
+      { speaker: 'B', character: 'bear', text: 'I play with my toys.', phonetic: 'ไอ เพลย์ วิธ มาย ทอยส์', translation: 'ฉันเล่นของเล่นของฉัน' },
+      { speaker: 'A', character: 'dino', text: 'Do you like your toys?', phonetic: 'ดู ยู ไลก์ ยัวร์ ทอยส์', translation: 'คุณชอบของเล่นของคุณไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'Toys are fun.', phonetic: 'ทอยส์ อาร์ ฟัน', translation: 'ของเล่นสนุก' },
+      { speaker: 'A', character: 'dino', text: 'What is in your town?', phonetic: 'วอท อิส อิน ยัวร์ ทาวน์', translation: 'ในเมืองของคุณมีงานเทศกาลอะไรครับ' },
+      { speaker: 'B', character: 'bear', text: 'I like the Look Lom Festival.', phonetic: 'ไอ ไลก์ เดอะ ลุค ลม เฟสติวัล', translation: 'ฉันชอบเทศกาลลูกลม' },
+      { speaker: 'A', character: 'dino', text: 'Who do you play with?', phonetic: 'ฮู ดู ยู เพลย์ วิธ', translation: 'คุณเล่นกับใครครับ' },
+      { speaker: 'B', character: 'bear', text: 'We play together.', phonetic: 'วี เพลย์ ทูเกเธอร์', translation: 'พวกเราเล่นด้วยกัน' },
+      { speaker: 'A', character: 'dino', text: 'Do you like the festival?', phonetic: 'ดู ยู ไลก์ เดอะ เฟสติวัล', translation: 'คุณชอบเทศกาลนี้ไหมครับ' },
+      { speaker: 'B', character: 'bear', text: 'We enjoy the festival.', phonetic: 'วี เอนจอย เดอะ เฟสติวัล', translation: 'พวกเราสนุกกับเทศกาล' }
     ],
     tip: 'คำว่า "Cool" ออกเสียงท้ายสั้นด้วยเสียง "ล" เบาๆ เพื่อให้ถูกต้องสมบูรณ์แบบ!'
   }
@@ -345,6 +414,7 @@ export default function TrangKidsSpeakApp() {
 
   // References for Web Speech API
   const recognitionRef = useRef<any>(null);
+  const rolePlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper to create a fresh SpeechRecognition instance each time (prevents 'already started' errors)
   const createRecognition = (): any | null => {
@@ -408,6 +478,30 @@ export default function TrangKidsSpeakApp() {
     setActiveFlashcardIndex(0);
   }, [selectedLesson]);
 
+  // Stop speaking and clear role-play states when changing tab or lesson
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    
+    // Clear any active timeout
+    if (rolePlayTimeoutRef.current) {
+      clearTimeout(rolePlayTimeoutRef.current);
+    }
+
+    if (activeTab === 'roleplay') {
+      startRolePlay(selectedLesson, userRole);
+    } else {
+      setRolePlayStep(0);
+      setRolePlayScore(null);
+      setRolePlayDiff([]);
+      setRolePlayTranscript('');
+      setRolePlayFeedback('');
+      setDinoRoleState('idle');
+      setBearRoleState('idle');
+    }
+  }, [activeTab, selectedLesson]);
+
   // Web Camera stream controller
   useEffect(() => {
     if (activeTab === 'submission' && submitMediaType === 'video') {
@@ -438,7 +532,7 @@ export default function TrangKidsSpeakApp() {
   };
 
   // Speaks any English phrase using Web Speech Synthesis
-  const speakText = (text: string, isDino: boolean = true) => {
+  const speakText = (text: string, isDino: boolean = true, onEnd?: () => void) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -473,6 +567,9 @@ export default function TrangKidsSpeakApp() {
         setSimBearState('idle');
         setDinoRoleState('idle');
         setBearRoleState('idle');
+        if (onEnd) {
+          onEnd();
+        }
       };
 
       window.speechSynthesis.speak(utterance);
@@ -552,8 +649,18 @@ export default function TrangKidsSpeakApp() {
   };
 
   // Role Play Step logic
-  const startRolePlay = (topic: LessonData) => {
+  const startRolePlay = (topic: LessonData, roleOverride?: 'dino' | 'bear') => {
     audioSynth.playPop();
+
+    // Clear any active timeout
+    if (rolePlayTimeoutRef.current) {
+      clearTimeout(rolePlayTimeoutRef.current);
+    }
+    // Cancel active speech
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+
     setSelectedLesson(topic);
     setRolePlayStep(0);
     setRolePlayScore(null);
@@ -563,23 +670,55 @@ export default function TrangKidsSpeakApp() {
     setDinoRoleState('idle');
     setBearRoleState('idle');
     
+    const activeRole = roleOverride || userRole;
+    
     // Automatically trigger the first line if computer goes first
-    setTimeout(() => {
-      triggerRolePlayComputerTurn(0, topic);
-    }, 400);
+    const lines = topic.dialogue;
+    if (lines.length > 0) {
+      const firstLine = lines[0];
+      const otherRole = activeRole === 'dino' ? 'bear' : 'dino';
+      if (firstLine.character === otherRole) {
+        rolePlayTimeoutRef.current = setTimeout(() => {
+          triggerRolePlayComputerTurn(0, topic, activeRole);
+        }, 500);
+      } else {
+        setRolePlayFeedback('ตาของหนูแล้วคนเก่ง! กดปุ่มไมค์เพื่อพูดเลยจ้า 🎙️');
+      }
+    }
   };
 
-  const triggerRolePlayComputerTurn = (stepIndex: number, lesson: LessonData) => {
+  const triggerRolePlayComputerTurn = (stepIndex: number, lesson: LessonData, roleOverride?: 'dino' | 'bear') => {
     const lines = lesson.dialogue;
     if (stepIndex >= lines.length) return;
 
     const currentLine = lines[stepIndex];
-    const otherRole = userRole === 'dino' ? 'bear' : 'dino';
+    const activeRole = roleOverride || userRole;
+    const otherRole = activeRole === 'dino' ? 'bear' : 'dino';
 
     // If it is the computer's role
     if (currentLine.character === otherRole) {
       setRolePlayFeedback(`${currentLine.character === 'dino' ? 'น้องไดโน 🦖' : 'พี่หมี 🐻'} กำลังพูด...`);
-      speakText(currentLine.text, currentLine.character === 'dino');
+      speakText(currentLine.text, currentLine.character === 'dino', () => {
+        // When speech finishes, advance rolePlayStep if it has not been modified elsewhere
+        setRolePlayStep(prev => {
+          if (prev === stepIndex) {
+            const nextStep = stepIndex + 1;
+            setRolePlayFeedback('ตาของหนูแล้วคนเก่ง! กดปุ่มไมค์เพื่อพูดเลยจ้า 🎙️');
+            
+            // If the next turn is also computer's turn (which shouldn't happen in alternating role-play, but just in case), trigger it
+            if (nextStep < lines.length) {
+              const nextLine = lines[nextStep];
+              if (nextLine.character === otherRole) {
+                rolePlayTimeoutRef.current = setTimeout(() => {
+                  triggerRolePlayComputerTurn(nextStep, lesson, activeRole);
+                }, 1000);
+              }
+            }
+            return nextStep;
+          }
+          return prev;
+        });
+      });
     }
   };
 
@@ -627,13 +766,16 @@ export default function TrangKidsSpeakApp() {
           setRolePlayDiff([]);
           setRolePlayTranscript('');
           if (nextStep < lines.length) {
-            triggerRolePlayComputerTurn(nextStep, selectedLesson);
+            triggerRolePlayComputerTurn(nextStep, selectedLesson, userRole);
           } else {
             setRolePlayFeedback('🎉 ว้าว! คุณทำกิจกรรมบทบาทสมมติเสร็จสมบูรณ์แล้ว ยอดเยี่ยมมากจ้า!');
             audioSynth.playSuccess();
             setConfettiActive(true);
             setCompletedRoleplays(prev => {
               const next = { ...prev, [selectedLesson.id]: true };
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('trang_kids_speak_completed_roleplays', JSON.stringify(next));
+              }
               if (student) saveProgressToDB(student.studentId, { completedRoleplays: { [selectedLesson.id]: true } });
               return next;
             });
@@ -1171,8 +1313,13 @@ export default function TrangKidsSpeakApp() {
                   <div className="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center font-black text-xs">4</div>
                   <h3 className="font-black text-slate-700 text-xs md:text-sm">กิจกรรมบทบาทสมมติ (Role-Play Activity)</h3>
                 </div>
-                <p className="text-[10px] text-slate-400 font-bold mb-4 leading-relaxed h-[36px]">ฝึกพูดจากสถานการณ์จริง เป็นคู่หรือรายบุคคล</p>
+                <p className="text-[10px] text-slate-400 font-bold mb-2 leading-relaxed h-[36px]">ฝึกพูดจากสถานการณ์จริง เป็นคู่หรือรายบุคคล</p>
                 
+                {/* Progress Badge */}
+                <div className="bg-purple-50 border border-purple-200 text-purple-700 text-[10px] font-black px-3 py-1 rounded-full mb-3 inline-block shadow-sm">
+                  ผ่านแล้ว: {Object.values(completedRoleplays).filter(val => val === true).length} / {LESSONS.length} บทเรียน 🏆
+                </div>
+
                 {/* Illustration replica: Role play bubbles */}
                 <div className="w-full h-24 bg-purple-50/50 border border-purple-100 rounded-2xl flex items-center justify-around p-2 mb-4 relative overflow-hidden">
                   <div className="flex flex-col items-center text-3xl">👦</div>
@@ -2022,61 +2169,46 @@ export default function TrangKidsSpeakApp() {
             <div className="bg-purple-50/50 p-4 rounded-2xl border-2 border-purple-100 mb-6 flex flex-wrap justify-between items-center gap-4">
               
               {/* Choose Topic */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-black text-purple-900">เลือกบทสนทนา:</span>
                 <select
                   value={selectedLesson.id}
                   onChange={(e) => {
                     const l = LESSONS.find(lesson => lesson.id === parseInt(e.target.value));
-                    if (l) startRolePlay(l);
+                    if (l) startRolePlay(l, userRole);
                   }}
                   className="bg-white border-2 border-purple-200 text-purple-900 text-xs font-black rounded-xl px-3 py-1 outline-none cursor-pointer"
                 >
-                  {LESSONS.map(l => (
-                    <option key={l.id} value={l.id}>{l.emoji} บทเรียนที่ {l.id}: {l.title}</option>
-                  ))}
+                  {LESSONS.map(l => {
+                    const isDone = completedRoleplays[String(l.id)] || completedRoleplays[l.id];
+                    return (
+                      <option key={l.id} value={l.id}>
+                        {l.emoji} บทเรียนที่ {l.id}: {l.title} {isDone ? ' (ผ่านแล้ว ✅)' : ''}
+                      </option>
+                    );
+                  })}
                 </select>
+
+                {/* Completion Status Badge */}
+                {(completedRoleplays[String(selectedLesson.id)] || completedRoleplays[selectedLesson.id]) && (
+                  <span className="bg-amber-100 text-amber-800 border-2 border-amber-300 text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse shadow-sm">
+                    🏆 ด่านดาวทองคำสำเร็จแล้ว!
+                  </span>
+                )}
               </div>
 
               {/* Choose Role */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black text-purple-900">สวมบทบาทเป็น:</span>
-                <div className="flex bg-white p-0.5 rounded-xl border border-purple-200 shadow-inner">
-                  <button
-                    onClick={() => {
-                      audioSynth.playPop();
-                      setUserRole('dino');
-                      setRolePlayStep(0);
-                    }}
-                    className={`px-3 py-1 rounded-lg text-xs font-black transition ${
-                      userRole === 'dino'
-                        ? 'bg-emerald-500 text-white shadow'
-                        : 'text-emerald-700 hover:bg-emerald-50'
-                    }`}
-                  >
-                    น้องไดโน 🦖
-                  </button>
-                  <button
-                    onClick={() => {
-                      audioSynth.playPop();
-                      setUserRole('bear');
-                      setRolePlayStep(0);
-                    }}
-                    className={`px-3 py-1 rounded-lg text-xs font-black transition ${
-                      userRole === 'bear'
-                        ? 'bg-amber-600 text-white shadow'
-                        : 'text-amber-800 hover:bg-amber-50'
-                    }`}
-                  >
-                    พี่หมี 🐻
-                  </button>
-                </div>
+                <span className="text-xs font-black text-purple-900">บทบาทของนักเรียน:</span>
+                <span className="px-3.5 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-black shadow border border-amber-700 flex items-center gap-1.5 active:scale-95 transition-all">
+                  พี่หมี 🐻 (Nong Bear)
+                </span>
               </div>
 
               {/* Restart button */}
               <button
-                onClick={() => startRolePlay(selectedLesson)}
-                className="px-4 py-1 bg-purple-600 text-white text-xs font-black rounded-xl border-2 border-purple-700 active:scale-95"
+                onClick={() => startRolePlay(selectedLesson, userRole)}
+                className="px-4 py-1.5 bg-purple-600 text-white text-xs font-black rounded-xl border-2 border-purple-700 active:scale-95 transition-all"
               >
                 เริ่มเล่นใหม่ 🔄
               </button>
@@ -2084,44 +2216,40 @@ export default function TrangKidsSpeakApp() {
             </div>
 
             {/* Game Screen Area */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
-              {/* Left Column: Visual Characters Stage */}
-              <div className="lg:col-span-5 bg-gradient-to-b from-purple-100 to-purple-50 rounded-3xl p-6 flex flex-col justify-between items-center border-4 border-white shadow-sm min-h-[360px]">
-                <h4 className="text-xs font-black text-purple-700 bg-purple-100/60 px-3 py-1 rounded-full">เวทีกิจกรรมโต้ตอบสด 🎭</h4>
+              {/* Left Column: Visual Characters Stage - Sticky floating on desktop */}
+              <div className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-purple-100 to-purple-50 rounded-3xl p-4 sm:p-6 flex flex-col justify-between items-center border-4 border-white shadow-sm min-h-[220px] sm:min-h-[300px] lg:min-h-[360px] h-fit">
+                <h4 className="text-[10px] sm:text-xs font-black text-purple-700 bg-purple-100/60 px-3 py-1 rounded-full">เวทีกิจกรรมโต้ตอบสด 🎭</h4>
                 
-                <div className="flex w-full justify-around items-end mt-4">
+                <div className="flex w-full justify-around items-end mt-2.5 sm:mt-4">
                   {/* Dino character */}
-                  <div className={`flex flex-col items-center transition ${
-                    userRole === 'dino' ? 'border-b-4 border-emerald-400 pb-1' : ''
-                  }`}>
-                    <span className="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full mb-1">
-                      🦖 Dino {userRole === 'dino' ? '(หนูเอง)' : '(คู่หู)'}
+                  <div className="flex flex-col items-center">
+                    <span className="bg-emerald-500 text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full mb-1">
+                      🦖 Dino (คู่หู)
                     </span>
-                    <CartoonCharacter type="dino" state={dinoRoleState} className="w-24 h-24 sm:w-32 sm:h-32 md:w-56 md:h-56" />
+                    <CartoonCharacter type="dino" state={dinoRoleState} className="w-20 h-20 sm:w-28 sm:h-28 md:w-44 md:h-44 lg:w-56 lg:h-56" />
                   </div>
 
                   {/* Bear character */}
-                  <div className={`flex flex-col items-center transition ${
-                    userRole === 'bear' ? 'border-b-4 border-amber-500 pb-1' : ''
-                  }`}>
-                    <span className="bg-amber-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full mb-1">
-                      🐻 Bear {userRole === 'bear' ? '(หนูเอง)' : '(คู่หู)'}
+                  <div className="flex flex-col items-center">
+                    <span className="bg-amber-600 text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full mb-1">
+                      🐻 Bear (หนูเอง)
                     </span>
-                    <CartoonCharacter type="bear" state={bearRoleState} className="w-24 h-24 sm:w-32 sm:h-32 md:w-56 md:h-56" />
+                    <CartoonCharacter type="bear" state={bearRoleState} className="w-20 h-20 sm:w-28 sm:h-28 md:w-44 md:h-44 lg:w-56 lg:h-56" />
                   </div>
                 </div>
 
-                <div className="bg-white/80 border border-purple-200 rounded-2xl p-2.5 w-full text-center mt-4">
-                  <p className="text-[11px] font-black text-purple-900">{rolePlayFeedback || 'เกมพร้อมแล้ว! กดอ่านบรรทัดของหนูเลยคนเก่ง'}</p>
+                <div className="bg-white/80 border border-purple-200 rounded-2xl p-2 sm:p-2.5 w-full text-center mt-2.5 sm:mt-4">
+                  <p className="text-[10px] sm:text-[11px] font-black text-purple-900">{rolePlayFeedback || 'เกมพร้อมแล้ว! กดอ่านบรรทัดของหนูเลยคนเก่ง'}</p>
                 </div>
               </div>
 
-              {/* Right Column: Game Dialog lines flow */}
-              <div className="lg:col-span-7 bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm flex flex-col justify-between">
+              {/* Right Column: Game Dialog lines flow with fixed height & scrolling */}
+              <div className="lg:col-span-7 bg-white p-4 sm:p-6 rounded-3xl border-2 border-slate-100 shadow-sm flex flex-col justify-between max-h-[520px] sm:max-h-[600px] lg:max-h-[680px]">
                 
                 {/* Dialogue Progress Stream */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4 overflow-y-auto pr-2 max-h-[360px] sm:max-h-[440px] lg:max-h-[500px]">
                   {selectedLesson.dialogue.map((line, idx) => {
                     const isUserTurn = line.character === userRole;
                     const isCurrentStep = idx === rolePlayStep;
@@ -2130,7 +2258,7 @@ export default function TrangKidsSpeakApp() {
                     return (
                       <div
                         key={idx}
-                        className={`p-3.5 rounded-2xl border-2 transition-all flex justify-between items-center ${
+                        className={`p-2.5 sm:p-3.5 rounded-2xl border-2 transition-all flex justify-between items-center ${
                           isCurrentStep
                             ? 'bg-purple-100/60 border-purple-400 shadow-md ring-4 ring-purple-100 scale-[1.01]'
                             : isPassed
@@ -2138,27 +2266,38 @@ export default function TrangKidsSpeakApp() {
                             : 'bg-slate-50 border-slate-200 opacity-30 pointer-events-none'
                         }`}
                       >
-                        <div className="flex gap-3 items-center">
-                          <span className="text-2xl">{line.character === 'dino' ? '🦖' : '🐻'}</span>
+                        <div className="flex gap-2 sm:gap-3 items-center">
+                          <span className="text-xl sm:text-2xl">{line.character === 'dino' ? '🦖' : '🐻'}</span>
                           <div className="text-left">
-                            <p className="text-[10px] font-black text-slate-400">
+                            <p className="text-[9px] sm:text-[10px] font-black text-slate-400">
                               {line.character === 'dino' ? 'Dino' : 'Bear'} {isUserTurn ? '(ตาหนูพูด)' : '(คู่หูพูด)'}
                             </p>
-                            <p className="text-sm font-black text-slate-800 my-0.5">{line.text}</p>
-                            <p className="text-[10px] text-slate-400 font-extrabold">{line.phonetic}</p>
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                              <p className="text-xs sm:text-sm font-black text-slate-800 my-0.5">{line.text}</p>
+                              {isUserTurn && (
+                                <button
+                                  onClick={() => speakText(line.text, false)}
+                                  className="p-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 rounded-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center text-[9px] sm:text-[10px] shadow-sm cursor-pointer"
+                                  title="ฟังการออกเสียง"
+                                >
+                                  🔊
+                                </button>
+                              )}
+                            </div>
+                            <p className="text-[9px] sm:text-[10px] text-slate-400 font-extrabold">{line.phonetic}</p>
                           </div>
                         </div>
 
                         {/* Interactive action logic */}
-                        <div>
+                        <div className="flex-shrink-0">
                           {isPassed ? (
-                            <span className="text-emerald-500 font-black text-xs">ผ่านแล้ว! ✅</span>
+                            <span className="text-emerald-500 font-black text-[10px] sm:text-xs">ผ่านแล้ว! ✅</span>
                           ) : isCurrentStep ? (
                             isUserTurn ? (
                               <button
                                 onClick={recordRolePlayLine}
                                 disabled={isRolePlayListening}
-                                className={`btn-3d px-3.5 py-1.5 rounded-xl text-xs font-black border-2 transition ${
+                                className={`btn-3d px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-black border-2 transition ${
                                   isRolePlayListening
                                     ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
                                     : 'bg-emerald-400 hover:bg-emerald-500 text-white border-emerald-500 shadow-emerald-400'
@@ -2169,13 +2308,13 @@ export default function TrangKidsSpeakApp() {
                             ) : (
                               <button
                                 onClick={() => speakText(line.text, line.character === 'dino')}
-                                className="px-3.5 py-1.5 bg-purple-400 hover:bg-purple-500 text-white rounded-xl text-xs font-black border-2 border-purple-500 shadow active:scale-95"
+                                className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 bg-purple-400 hover:bg-purple-500 text-white rounded-xl text-[10px] sm:text-xs font-black border-2 border-purple-500 shadow active:scale-95"
                               >
                                 🔊 ฟังเสียงคู่หู
                               </button>
                             )
                           ) : (
-                            <span className="text-slate-400 font-black text-xs">🔒 ล็อค</span>
+                            <span className="text-slate-400 font-black text-[10px] sm:text-xs">🔒 ล็อค</span>
                           )}
                         </div>
                       </div>
