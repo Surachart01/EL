@@ -69,7 +69,7 @@ export function standardizeEnglishSpeech(text: string): string {
 // Normalize text by removing spaces, punctuation, and optionally tone marks
 export function normalizeText(text: string, removeTones: boolean = false): string {
   if (!text) return '';
-  let standardized = standardizeEnglishSpeech(text);
+  const standardized = standardizeEnglishSpeech(text);
   let normalized = standardized
     .replace(/[\s\s+\u200B-\u200D\uFEFF]/g, ' ') // Standardize spaces
     .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '') // Remove punctuation
