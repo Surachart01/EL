@@ -21,6 +21,8 @@ export async function GET(request: Request) {
         completedRoleplays: {},
         activeRoleplaySteps: {},
         roleplayScores: {},
+        flashcardTranscripts: {},
+        roleplayTranscripts: {},
         submissions: [],
       });
     }
@@ -33,6 +35,8 @@ export async function GET(request: Request) {
         completedRoleplays: Object.fromEntries(progress.completedRoleplays || new Map()),
         activeRoleplaySteps: Object.fromEntries(progress.activeRoleplaySteps || new Map()),
         roleplayScores: Object.fromEntries(progress.roleplayScores || new Map()),
+        flashcardTranscripts: Object.fromEntries(progress.flashcardTranscripts || new Map()),
+        roleplayTranscripts: Object.fromEntries(progress.roleplayTranscripts || new Map()),
         submissions: progress.submissions || [],
       },
     });
@@ -46,7 +50,7 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { studentId, flashcardScores, completedRoleplays, activeRoleplaySteps, roleplayScores, submission } = body;
+    const { studentId, flashcardScores, completedRoleplays, activeRoleplaySteps, roleplayScores, flashcardTranscripts, roleplayTranscripts, submission } = body;
 
     if (!studentId) {
       return NextResponse.json({ success: false, error: 'Missing studentId' }, { status: 400 });
@@ -60,6 +64,8 @@ export async function POST(request: Request) {
         completedRoleplays: {},
         activeRoleplaySteps: {},
         roleplayScores: {},
+        flashcardTranscripts: {},
+        roleplayTranscripts: {},
         submissions: [],
       });
     }
@@ -88,6 +94,18 @@ export async function POST(request: Request) {
       }
     }
 
+    if (flashcardTranscripts) {
+      for (const [key, value] of Object.entries(flashcardTranscripts)) {
+        progress.flashcardTranscripts.set(key, value as string);
+      }
+    }
+
+    if (roleplayTranscripts) {
+      for (const [key, value] of Object.entries(roleplayTranscripts)) {
+        progress.roleplayTranscripts.set(key, value as string);
+      }
+    }
+
     if (submission) {
       progress.submissions.push({
         lessonId: submission.lessonId,
@@ -108,6 +126,8 @@ export async function POST(request: Request) {
         completedRoleplays: Object.fromEntries(progress.completedRoleplays),
         activeRoleplaySteps: Object.fromEntries(progress.activeRoleplaySteps),
         roleplayScores: Object.fromEntries(progress.roleplayScores),
+        flashcardTranscripts: Object.fromEntries(progress.flashcardTranscripts || new Map()),
+        roleplayTranscripts: Object.fromEntries(progress.roleplayTranscripts || new Map()),
         submissions: progress.submissions,
       },
     });

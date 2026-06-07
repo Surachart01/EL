@@ -7,6 +7,8 @@ export interface IProgress extends Document {
   completedRoleplays: Map<string, boolean>;
   activeRoleplaySteps: Map<string, number>;
   roleplayScores: Map<string, number>;
+  flashcardTranscripts: Map<string, string>;
+  roleplayTranscripts: Map<string, string>;
   submissions: Array<{
     lessonId: number;
     score: number;
@@ -23,6 +25,8 @@ const ProgressSchema: Schema = new Schema(
     completedRoleplays: { type: Map, of: Boolean, default: {} },
     activeRoleplaySteps: { type: Map, of: Number, default: {} },
     roleplayScores: { type: Map, of: Number, default: {} },
+    flashcardTranscripts: { type: Map, of: String, default: {} },
+    roleplayTranscripts: { type: Map, of: String, default: {} },
     submissions: [
       {
         lessonId: { type: Number, required: true },

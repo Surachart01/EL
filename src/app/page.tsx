@@ -45,7 +45,20 @@ export default function TrangKidsSpeakApp() {
   });
   const [activeCardMic, setActiveCardMic] = useState<string | null>(null);
   const [activeFlashcardIndex, setActiveFlashcardIndex] = useState<number>(0);
-  const [flashcardTranscripts, setFlashcardTranscripts] = useState<Record<string, string>>({});
+  const [flashcardTranscripts, setFlashcardTranscripts] = useState<Record<string, string>>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('trang_kids_speak_flashcard_transcripts');
+      return stored ? JSON.parse(stored) : {};
+    }
+    return {};
+  });
+  const [roleplayTranscripts, setRoleplayTranscripts] = useState<Record<string, string>>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('trang_kids_speak_roleplay_transcripts');
+      return stored ? JSON.parse(stored) : {};
+    }
+    return {};
+  });
   const [completedRoleplays, setCompletedRoleplays] = useState<Record<string, boolean>>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('trang_kids_speak_completed_roleplays');
@@ -76,6 +89,8 @@ export default function TrangKidsSpeakApp() {
       completedRoleplays?: Record<string, boolean>;
       activeRoleplaySteps?: Record<string, number>;
       roleplayScores?: Record<string, number>;
+      flashcardTranscripts?: Record<string, string>;
+      roleplayTranscripts?: Record<string, string>;
       submission?: { lessonId: number; score: number; mediaType: 'audio' | 'video'; status: string; date: string };
     }
   ) => {
@@ -138,6 +153,28 @@ export default function TrangKidsSpeakApp() {
             const parsed = JSON.parse(storedRoleplayScores);
             setRoleplayScores(parsed);
             await saveProgressToDB(studentId, { roleplayScores: parsed });
+          }
+        }
+        const dbFlashcardTranscripts = data.progress.flashcardTranscripts || {};
+        if (Object.keys(dbFlashcardTranscripts).length > 0) {
+          setFlashcardTranscripts(dbFlashcardTranscripts);
+        } else {
+          const storedTranscripts = localStorage.getItem('trang_kids_speak_flashcard_transcripts');
+          if (storedTranscripts) {
+            const parsed = JSON.parse(storedTranscripts);
+            setFlashcardTranscripts(parsed);
+            await saveProgressToDB(studentId, { flashcardTranscripts: parsed });
+          }
+        }
+        const dbRoleplayTranscripts = data.progress.roleplayTranscripts || {};
+        if (Object.keys(dbRoleplayTranscripts).length > 0) {
+          setRoleplayTranscripts(dbRoleplayTranscripts);
+        } else {
+          const storedTranscripts = localStorage.getItem('trang_kids_speak_roleplay_transcripts');
+          if (storedTranscripts) {
+            const parsed = JSON.parse(storedTranscripts);
+            setRoleplayTranscripts(parsed);
+            await saveProgressToDB(studentId, { roleplayTranscripts: parsed });
           }
         }
 
@@ -415,14 +452,25 @@ export default function TrangKidsSpeakApp() {
 
     rec.onresult = (event: any) => {
       const resultText = event.results[0][0].transcript;
-      setFlashcardTranscripts(prev => ({ ...prev, [indexKey]: resultText }));
+      setFlashcardTranscripts(prev => {
+        const next = { ...prev, [indexKey]: resultText };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('trang_kids_speak_flashcard_transcripts', JSON.stringify(next));
+        }
+        return next;
+      });
       const cardScore = calculateSimilarity(vocabWord.toLowerCase().trim(), resultText.toLowerCase().trim());
       setFlashcardScores(prev => {
         const next = { ...prev, [indexKey]: cardScore };
         if (typeof window !== 'undefined') {
           localStorage.setItem('trang_kids_speak_flashcard_scores', JSON.stringify(next));
         }
-        if (student) saveProgressToDB(student.studentId, { flashcardScores: { [indexKey]: cardScore } });
+        if (student) {
+          saveProgressToDB(student.studentId, {
+            flashcardScores: { [indexKey]: cardScore },
+            flashcardTranscripts: { [indexKey]: resultText }
+          });
+        }
         return next;
       });
       if (cardScore >= 80) { audioSynth.playSuccess(); setConfettiActive(true); }
@@ -645,6 +693,15 @@ export default function TrangKidsSpeakApp() {
       setRolePlayDiff(computeEnglishWordDiff(targetLine.text, spokenText));
 
       const scoreKey = `${selectedLesson.id}_${activeTopicIdx}_${rolePlayStep}`;
+
+      setRoleplayTranscripts(prev => {
+        const next = { ...prev, [scoreKey]: spokenText };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('trang_kids_speak_roleplay_transcripts', JSON.stringify(next));
+        }
+        return next;
+      });
+
       setRoleplayScores(prev => {
         const currentScore = prev[scoreKey] || 0;
         const nextScore = Math.max(currentScore, similarityScore);
@@ -652,7 +709,12 @@ export default function TrangKidsSpeakApp() {
         if (typeof window !== 'undefined') {
           localStorage.setItem('trang_kids_speak_roleplay_scores', JSON.stringify(next));
         }
-        if (student) saveProgressToDB(student.studentId, { roleplayScores: { [scoreKey]: nextScore } });
+        if (student) {
+          saveProgressToDB(student.studentId, {
+            roleplayScores: { [scoreKey]: nextScore },
+            roleplayTranscripts: { [scoreKey]: spokenText }
+          });
+        }
         return next;
       });
 
@@ -2214,6 +2276,7 @@ export default function TrangKidsSpeakApp() {
                     const isUserTurn = line.character === userRole;
                     const isCurrentStep = idx === rolePlayStep;
                     const isPassed = idx < rolePlayStep;
+                    const lineScoreKey = `${selectedLesson.id}_${activeRoleplayTopicIdx}_${idx}`;
 
                     return (
                       <div
@@ -2245,6 +2308,18 @@ export default function TrangKidsSpeakApp() {
                               )}
                             </div>
                             <p className="text-[9px] sm:text-[10px] text-slate-400 font-extrabold">{line.phonetic}</p>
+                            {isUserTurn && roleplayTranscripts[lineScoreKey] && (
+                              <div className="mt-1 text-[9px] sm:text-[10px] font-bold text-slate-500 leading-normal">
+                                เสียงที่ระบบได้ยิน: <span className="text-purple-600 font-black italic bg-purple-50 border border-purple-100 rounded px-1.5 py-0.5">&ldquo;{roleplayTranscripts[lineScoreKey]}&rdquo;</span>
+                                {roleplayScores[lineScoreKey] !== undefined && (
+                                  <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[8px] sm:text-[9px] font-black border ${
+                                    roleplayScores[lineScoreKey] >= 80 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-orange-50 text-orange-750 border-orange-200'
+                                  }`}>
+                                    คะแนน: {roleplayScores[lineScoreKey]}%
+                                  </span>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
 

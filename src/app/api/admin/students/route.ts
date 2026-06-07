@@ -18,6 +18,9 @@ export async function GET() {
       progressMap.set(prog.studentId, {
         flashcardScores: prog.flashcardScores ? Object.fromEntries(prog.flashcardScores instanceof Map ? prog.flashcardScores : new Map(Object.entries(prog.flashcardScores))) : {},
         completedRoleplays: prog.completedRoleplays ? Object.fromEntries(prog.completedRoleplays instanceof Map ? prog.completedRoleplays : new Map(Object.entries(prog.completedRoleplays))) : {},
+        roleplayScores: prog.roleplayScores ? Object.fromEntries(prog.roleplayScores instanceof Map ? prog.roleplayScores : new Map(Object.entries(prog.roleplayScores))) : {},
+        flashcardTranscripts: prog.flashcardTranscripts ? Object.fromEntries(prog.flashcardTranscripts instanceof Map ? prog.flashcardTranscripts : new Map(Object.entries(prog.flashcardTranscripts))) : {},
+        roleplayTranscripts: prog.roleplayTranscripts ? Object.fromEntries(prog.roleplayTranscripts instanceof Map ? prog.roleplayTranscripts : new Map(Object.entries(prog.roleplayTranscripts))) : {},
         submissions: prog.submissions || [],
       });
     }
@@ -26,6 +29,9 @@ export async function GET() {
       const prog = progressMap.get(std.studentId) || {
         flashcardScores: {},
         completedRoleplays: {},
+        roleplayScores: {},
+        flashcardTranscripts: {},
+        roleplayTranscripts: {},
         submissions: [],
       };
       return {
@@ -76,6 +82,7 @@ export async function POST(request: Request) {
       studentId,
       flashcardScores: {},
       completedRoleplays: {},
+      roleplayScores: {},
       submissions: [],
     });
 

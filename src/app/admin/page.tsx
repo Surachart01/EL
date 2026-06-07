@@ -1,4 +1,5 @@
 'use client';
+// Force recompile to clear cached SWC hot-reload issues
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -20,6 +21,8 @@ interface StudentProgressData {
     flashcardScores: Record<string, number>;
     completedRoleplays: Record<string, boolean>;
     roleplayScores?: Record<string, number>;
+    flashcardTranscripts?: Record<string, string>;
+    roleplayTranscripts?: Record<string, string>;
     submissions: StudentSubmission[];
   };
 }
@@ -307,6 +310,7 @@ export default function AdminDashboard() {
   const totalStudents = students.length;
 
   const activeStudents = students.filter((student) => {
+    if (!student.progress) return false;
     const hasScores = student.progress.flashcardScores && Object.values(student.progress.flashcardScores).some(score => score >= 80);
     const hasRoleplays = student.progress.completedRoleplays && Object.values(student.progress.completedRoleplays).some(val => val === true);
     const hasSubmissions = student.progress.submissions && student.progress.submissions.length > 0;
@@ -1000,25 +1004,25 @@ export default function AdminDashboard() {
 
               {/* Detailed Speaking Progress History */}
               <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-4">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="flex flex-col gap-3.5 border-b border-slate-100 pb-4">
                   <div>
                     <h4 className="font-black text-slate-800 text-sm">รายละเอียดประวัติการพูดราย Unit & Topic</h4>
                     <p className="text-[10px] text-slate-400 mt-0.5 font-bold">ตรวจสอบระดับคะแนนแยกรายคำศัพท์และประโยคบทบาทสมมติ</p>
                   </div>
                   
                   {/* Select Lesson to inspect */}
-                  <div className="flex gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-none">
+                  <div className="flex gap-2 overflow-x-auto max-w-full pb-2 scrollbar-none snap-x snap-mandatory">
                     {LESSONS.map((l) => (
                       <button
                         key={l.id}
                         onClick={() => setViewedDetailLessonId(l.id)}
-                        className={`px-3 py-1 rounded-xl text-[10px] font-black border transition ${
+                        className={`px-3 py-1.5 rounded-xl text-[10px] font-black border transition shrink-0 whitespace-nowrap snap-start ${
                           viewedDetailLessonId === l.id
-                            ? 'bg-indigo-500 text-white border-indigo-500'
+                            ? 'bg-indigo-500 text-white border-indigo-500 shadow-md shadow-indigo-100'
                             : 'bg-white text-slate-650 border-slate-200 hover:bg-slate-50'
                         }`}
                       >
-                        Unit {l.id}
+                        {l.emoji} บทที่ {l.id}: {l.title}
                       </button>
                     ))}
                   </div>
@@ -1048,6 +1052,11 @@ export default function AdminDashboard() {
                                 <div>
                                   <p className="text-slate-800 font-black">{v.word}</p>
                                   <p className="text-[9px] text-slate-400">{v.translation} ({v.phonetic})</p>
+                                  {selectedStudent.progress.flashcardTranscripts && selectedStudent.progress.flashcardTranscripts[cardKey] && (
+                                    <p className="text-[9px] text-slate-400 mt-0.5">
+                                      พูดว่า: <span className="text-indigo-650 font-black italic bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100">&ldquo;{selectedStudent.progress.flashcardTranscripts[cardKey]}&rdquo;</span>
+                                    </p>
+                                  )}
                                 </div>
                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-black shrink-0 ${
                                   score > 0
@@ -1110,6 +1119,11 @@ export default function AdminDashboard() {
                                           <div>
                                             <p className="text-purple-900 font-black">Bear 🐻: {line.text}</p>
                                             <p className="text-[8px] text-slate-400 font-bold">{line.translation}</p>
+                                            {selectedStudent.progress.roleplayTranscripts && selectedStudent.progress.roleplayTranscripts[scoreKey] && (
+                                              <p className="text-[9px] text-slate-450 mt-0.5 font-bold">
+                                                พูดว่า: <span className="text-purple-700 font-black italic bg-purple-50 px-1.5 py-0.2 rounded border border-purple-100">&ldquo;{selectedStudent.progress.roleplayTranscripts[scoreKey]}&rdquo;</span>
+                                              </p>
+                                            )}
                                           </div>
                                           <span className={`px-2 py-0.5 rounded-full text-[9px] font-black shrink-0 ${
                                             score > 0

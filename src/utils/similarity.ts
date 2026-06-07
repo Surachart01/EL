@@ -2,11 +2,75 @@
  * Thai & English Speech Similarity and Diff Utilities
  */
 
+// Standardize English numbers and contractions for leniency
+export function standardizeEnglishSpeech(text: string): string {
+  let result = text.toLowerCase();
+  
+  // 1. Map digits (0-20) to word representation
+  const digitMap: Record<string, string> = {
+    '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
+    '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine',
+    '10': 'ten', '11': 'eleven', '12': 'twelve', '13': 'thirteen',
+    '14': 'fourteen', '15': 'fifteen', '16': 'sixteen', '17': 'seventeen',
+    '18': 'eighteen', '19': 'nineteen', '20': 'twenty'
+  };
+  
+  for (const [digit, word] of Object.entries(digitMap)) {
+    const regex = new RegExp(`\\b${digit}\\b`, 'g');
+    result = result.replace(regex, word);
+  }
+
+  // 2. Expand common contractions
+  const contractionsMap: Record<string, string> = {
+    "i'm": "i am",
+    "im": "i am",
+    "what's": "what is",
+    "whats": "what is",
+    "it's": "it is",
+    "its": "it is",
+    "don't": "do not",
+    "dont": "do not",
+    "can't": "cannot",
+    "cant": "cannot",
+    "let's": "let us",
+    "lets": "let us",
+    "you're": "you are",
+    "youre": "you are",
+    "we're": "we are",
+    "they're": "they are",
+    "theyre": "they are",
+    "he's": "he is",
+    "hes": "he is",
+    "she's": "she is",
+    "shes": "she is",
+    "didn't": "did not",
+    "didnt": "did not",
+    "isn't": "is not",
+    "isnt": "is not",
+    "aren't": "are not",
+    "arent": "are not",
+    "wasn't": "was not",
+    "wasnt": "was not",
+    "weren't": "were not",
+    "werent": "were not"
+  };
+
+  for (const [contraction, expansion] of Object.entries(contractionsMap)) {
+    if (contraction.includes("'")) {
+      result = result.replace(new RegExp(contraction.replace("'", "['’]"), 'g'), expansion);
+    } else {
+      result = result.replace(new RegExp(`\\b${contraction}\\b`, 'g'), expansion);
+    }
+  }
+
+  return result;
+}
+
 // Normalize text by removing spaces, punctuation, and optionally tone marks
 export function normalizeText(text: string, removeTones: boolean = false): string {
   if (!text) return '';
-  let normalized = text
-    .toLowerCase()
+  let standardized = standardizeEnglishSpeech(text);
+  let normalized = standardized
     .replace(/[\s\s+\u200B-\u200D\uFEFF]/g, ' ') // Standardize spaces
     .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '') // Remove punctuation
     .trim();
@@ -189,9 +253,15 @@ export function computeThaiDiff(target: string, spoken: string): DiffSegment[] {
  * This is much cleaner for English where highlighting word by word makes more sense!
  */
 export function computeEnglishWordDiff(target: string, spoken: string): WordDiffSegment[] {
-  // Normalize and split by spaces
-  const tWords = target.trim().split(/\s+/);
-  const sWords = spoken.trim().split(/\s+/);
+  // Normalize and split by spaces, expanding contractions/digits first to align correctly
+  const cleanTarget = target.trim();
+  const cleanSpoken = spoken.trim();
+
+  const stdTarget = standardizeEnglishSpeech(cleanTarget);
+  const stdSpoken = standardizeEnglishSpeech(cleanSpoken);
+
+  const tWords = stdTarget.split(/\s+/);
+  const sWords = stdSpoken.split(/\s+/);
 
   const m = tWords.length;
   const n = sWords.length;
