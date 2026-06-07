@@ -19,6 +19,7 @@ interface StudentProgressData {
   progress: {
     flashcardScores: Record<string, number>;
     completedRoleplays: Record<string, boolean>;
+    roleplayScores?: Record<string, number>;
     submissions: StudentSubmission[];
   };
 }
@@ -43,6 +44,7 @@ export default function AdminDashboard() {
 
   // Detail Modal state
   const [selectedStudent, setSelectedStudent] = useState<StudentProgressData | null>(null);
+  const [viewedDetailLessonId, setViewedDetailLessonId] = useState<number>(1);
 
   // CRUD Modal states
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
@@ -133,7 +135,7 @@ export default function AdminDashboard() {
     const { progress } = student;
     if (!progress) return 0;
 
-    // 1. Flashcard progress (50% weight)
+    // 1. Flashcard progress
     const totalVocab = lesson.vocab.length;
     const passedFlashcards = lesson.vocab.filter((vocab, idx) => {
       const cardKey = `${lesson.id}-${idx}`;
@@ -142,15 +144,34 @@ export default function AdminDashboard() {
     }).length;
     const flashcardPct = totalVocab > 0 ? (passedFlashcards / totalVocab) * 100 : 0;
 
-    // 2. Roleplay progress (25% weight)
-    const roleplayPct = (progress.completedRoleplays && progress.completedRoleplays[String(lesson.id)]) ? 100 : 0;
+    // 2. Roleplay progress (percentage of dialogue user lines passed)
+    const topics = lesson.dialogueTopics || [];
+    let roleplayPct = 0;
+    if (topics.length > 0) {
+      const userRole = 'bear'; // Student is hardcoded to Bear 🐻 in page.tsx
+      let totalTopicPct = 0;
+      topics.forEach((topic, topicIdx) => {
+        const userLines = topic.dialogue.filter(line => line.character === userRole);
+        if (userLines.length === 0) {
+          totalTopicPct += 100;
+        } else {
+          const passedLines = topic.dialogue.filter((line, lineIdx) => {
+            if (line.character !== userRole) return false;
+            const scoreKey = `${lesson.id}_${topicIdx}_${lineIdx}`;
+            const score = (progress.roleplayScores && progress.roleplayScores[scoreKey]) || 0;
+            return score >= 80;
+          }).length;
+          totalTopicPct += (passedLines / userLines.length) * 100;
+        }
+      });
+      roleplayPct = totalTopicPct / topics.length;
+    } else {
+      // Fallback to old boolean check
+      roleplayPct = (progress.completedRoleplays && progress.completedRoleplays[String(lesson.id)]) ? 100 : 0;
+    }
 
-    // 3. Submission progress (25% weight)
-    const hasSubmission = progress.submissions && progress.submissions.some((sub) => sub.lessonId === lesson.id && sub.score >= 80);
-    const submissionPct = hasSubmission ? 100 : 0;
-
-    // Combined overall lesson progress
-    const overall = (flashcardPct * 0.5) + (roleplayPct * 0.25) + (submissionPct * 0.25);
+    // Combined overall lesson progress (50% vocab, 50% roleplay)
+    const overall = (flashcardPct + roleplayPct) / 2;
     return Math.round(overall);
   };
 
@@ -797,67 +818,7 @@ export default function AdminDashboard() {
               <div className="flex gap-3 justify-end pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-650 font-black rounded-xl border border-slate-200 transition text-xs"
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingForm}
-                  className="px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white font-black rounded-xl border-2 border-indigo-600 transition text-xs flex items-center gap-1.5 shadow-sm"
-                >
-                  {submittingForm && <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                  อัปเดตข้อมูล
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* --- DELETE CONFIRMATION MODAL --- */}
-      {showDeleteModal && studentToDelete && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl border-4 border-white shadow-2xl max-w-sm w-full overflow-hidden p-6 relative">
-            <h3 className="text-xl font-black text-rose-600 mb-2 flex items-center gap-2">
-              <span>⚠️</span> ลบข้อมูลนักเรียน
-            </h3>
-            <p className="text-slate-600 font-bold text-sm leading-relaxed text-left">
-              คุณต้องการลบข้อมูลของ <span className="font-black text-slate-800">&ldquo;{studentToDelete.name}&rdquo;</span> (รหัส {studentToDelete.studentId}) ใช่หรือไม่?
-            </p>
-            <p className="text-xs font-bold text-rose-500 mt-2 bg-rose-50 border border-rose-100 p-2.5 rounded-xl leading-normal text-left">
-              🚨 คำเตือน: ข้อมูลคะแนนและประวัติการเรียนรู้ (ความก้าวหน้าบัตรคำศัพท์ บทบาทสมมติ และคลิปเสียงผลงานทั้งหมด) จะถูกลบออกอย่างถาวรและไม่สามารถกู้คืนได้!
-            </p>
-
-            {formError && (
-              <p className="text-xs font-black text-rose-500 mt-3 animate-pulse bg-rose-50 border border-rose-100 rounded-xl py-2 px-3">
-                ⚠️ {formError}
-              </p>
-            )}
-
-            <div className="flex gap-3 justify-end pt-4 mt-2">
-              <button
-                type="button"
-                onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-650 font-black rounded-xl border border-slate-200 transition text-xs"
-              >
-                ยกเลิก
-              </button>
-              <button
-                onClick={handleDeleteStudent}
-                disabled={submittingForm}
-                className="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-black rounded-xl border-2 border-rose-600 transition text-xs flex items-center gap-1.5 shadow-sm"
-              >
-                {submittingForm && <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                ยืนยันการลบ
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* --- DETAIL MODAL --- */}
+                  onClick={() => setShowEditModa      {/* --- DETAIL MODAL --- */}
       {selectedStudent && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#f8fafc] rounded-[36px] border-4 border-white shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 relative flex flex-col">
@@ -887,7 +848,7 @@ export default function AdminDashboard() {
               <div className="bg-white rounded-3xl p-5 border border-slate-150 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <h4 className="font-black text-slate-800 text-sm">ความก้าวหน้ารวมในบทเรียนทั้งหมด</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">รวมสถิติจากทั้ง 6 บทเรียนหลักในระบบ</p>
+                  <p className="text-xs text-slate-400 mt-0.5">รวมสถิติจากทั้ง 5 บทเรียนหลักในระบบ</p>
                 </div>
                 <div className="flex items-center gap-3 w-full md:w-auto">
                   <div className="w-full md:w-48 bg-slate-100 h-3 rounded-full overflow-hidden border border-slate-200">
@@ -902,7 +863,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* 6 Lessons grid */}
+              {/* 5 Lessons grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {LESSONS.map((lesson) => {
                   const lessonProg = calculateLessonProgress(selectedStudent, lesson);
@@ -911,8 +872,29 @@ export default function AdminDashboard() {
                     const cardKey = `${lesson.id}-${idx}`;
                     return ((selectedStudent.progress.flashcardScores && selectedStudent.progress.flashcardScores[cardKey]) || 0) >= 80;
                   }).length;
-                  const roleplayDone = (selectedStudent.progress.completedRoleplays && selectedStudent.progress.completedRoleplays[String(lesson.id)]) ? true : false;
-                  const hasSub = selectedStudent.progress.submissions && selectedStudent.progress.submissions.some((s) => s.lessonId === lesson.id && s.score >= 80);
+                  
+                  // Roleplay progress percentage
+                  const topics = lesson.dialogueTopics || [];
+                  let roleplayPct = 0;
+                  if (topics.length > 0) {
+                    const userRole = 'bear';
+                    let totalTopicPct = 0;
+                    topics.forEach((topic, topicIdx) => {
+                      const userLines = topic.dialogue.filter(line => line.character === userRole);
+                      if (userLines.length === 0) {
+                        totalTopicPct += 100;
+                      } else {
+                        const passedLines = topic.dialogue.filter((line, lineIdx) => {
+                          if (line.character !== userRole) return false;
+                          const scoreKey = `${lesson.id}_${topicIdx}_${lineIdx}`;
+                          const score = (selectedStudent.progress.roleplayScores && selectedStudent.progress.roleplayScores[scoreKey]) || 0;
+                          return score >= 80;
+                        }).length;
+                        totalTopicPct += (passedLines / userLines.length) * 100;
+                      }
+                    });
+                    roleplayPct = totalTopicPct / topics.length;
+                  }
 
                   return (
                     <div
@@ -940,7 +922,173 @@ export default function AdminDashboard() {
                       <div className="space-y-1.5 bg-slate-50 p-2.5 rounded-2xl border border-slate-100 text-[10px] font-bold">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-500">🎴 บัตรคำศัพท์ (Flashcard)</span>
-                          <span className={passedVocab === totalVocab ? 'text-emerald-600' : 'text-slate-600'}>
+                          <span className={passedVocab === totalVocab ? 'text-emerald-600' : 'text-slate-650'}>
+                            {passedVocab === totalVocab ? '✅ ผ่านครบ' : `${passedVocab}/${totalVocab}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-slate-500">🎭 บทบาทสมมติ (Roleplay)</span>
+                          <span className={roleplayPct === 100 ? 'text-emerald-600' : 'text-slate-650'}>
+                            {roleplayPct === 100 ? '✅ สำเร็จ' : `⏳ ${Math.round(roleplayPct)}%`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Detailed Speaking Progress History */}
+              <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
+                  <div>
+                    <h4 className="font-black text-slate-800 text-sm">รายละเอียดประวัติการพูดราย Unit & Topic</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5 font-bold">ตรวจสอบระดับคะแนนแยกรายคำศัพท์และประโยคบทบาทสมมติ</p>
+                  </div>
+                  
+                  {/* Select Lesson to inspect */}
+                  <div className="flex gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-none">
+                    {LESSONS.map((l) => (
+                      <button
+                        key={l.id}
+                        onClick={() => setViewedDetailLessonId(l.id)}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black border transition ${
+                          viewedDetailLessonId === l.id
+                            ? 'bg-indigo-500 text-white border-indigo-500'
+                            : 'bg-white text-slate-650 border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        Unit {l.id}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Inspect Content */}
+                {(() => {
+                  const lesson = LESSONS.find((l) => l.id === viewedDetailLessonId);
+                  if (!lesson) return null;
+
+                  return (
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                      
+                      {/* Vocabulary list (Left) */}
+                      <div className="lg:col-span-5 bg-orange-50/20 p-4 rounded-3xl border border-orange-100 shadow-sm space-y-3">
+                        <div className="flex items-center gap-1.5 border-b border-orange-100 pb-2">
+                          <span className="text-xl">🎴</span>
+                          <h5 className="font-black text-xs text-orange-950">ประวัติการทดสอบคำศัพท์ (Vocabulary Scores)</h5>
+                        </div>
+                        <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 text-left">
+                          {lesson.vocab.map((v, vIdx) => {
+                            const cardKey = `${lesson.id}-${vIdx}`;
+                            const score = (selectedStudent.progress.flashcardScores && selectedStudent.progress.flashcardScores[cardKey]) || 0;
+                            const isPassed = score >= 80;
+                            return (
+                              <div key={vIdx} className="bg-white p-2.5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center text-[11px] font-bold">
+                                <div>
+                                  <p className="text-slate-800 font-black">{v.word}</p>
+                                  <p className="text-[9px] text-slate-400">{v.translation} ({v.phonetic})</p>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black shrink-0 ${
+                                  score > 0
+                                    ? isPassed
+                                      ? 'bg-emerald-100 text-emerald-850'
+                                      : 'bg-rose-100 text-rose-850'
+                                    : 'bg-slate-100 text-slate-400'
+                                }`}>
+                                  {score > 0 ? `${score}% ${isPassed ? '⭐ ผ่าน' : 'ไม่ผ่าน'}` : 'ยังไม่ได้ฝึก'}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Role-play dialogues (Right) */}
+                      <div className="lg:col-span-7 bg-purple-50/20 p-4 rounded-3xl border border-purple-100 shadow-sm space-y-3">
+                        <div className="flex items-center gap-1.5 border-b border-purple-100 pb-2">
+                          <span className="text-xl">🎭</span>
+                          <h5 className="font-black text-xs text-purple-950">ประวัติการทดสอบบทบาทสมมติ (Roleplay Dialogue Scores)</h5>
+                        </div>
+                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                          {lesson.dialogueTopics && lesson.dialogueTopics.length > 0 ? (
+                            lesson.dialogueTopics.map((topic, topicIdx) => {
+                              const userRole = 'bear'; // Student role
+                              const userLines = topic.dialogue.filter(line => line.character === userRole);
+                              const passedLinesCount = topic.dialogue.filter((line, lineIdx) => {
+                                if (line.character !== userRole) return false;
+                                const scoreKey = `${lesson.id}_${topicIdx}_${lineIdx}`;
+                                const score = (selectedStudent.progress.roleplayScores && selectedStudent.progress.roleplayScores[scoreKey]) || 0;
+                                return score >= 80;
+                              }).length;
+                              const topicPercent = userLines.length > 0 ? Math.round((passedLinesCount / userLines.length) * 100) : 100;
+
+                              return (
+                                <div key={topicIdx} className="bg-white p-3 rounded-2xl border border-slate-150 shadow-sm space-y-2">
+                                  <div className="flex justify-between items-center border-b border-slate-50 pb-1.5">
+                                    <h6 className="font-black text-[11px] text-purple-900 text-left">หัวข้อ: {topic.title}</h6>
+                                    <span className="text-[10px] font-black px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full">{topicPercent}% ผ่าน</span>
+                                  </div>
+                                  <div className="space-y-1.5 text-left">
+                                    {topic.dialogue.map((line, lineIdx) => {
+                                      const isUserLine = line.character === userRole;
+                                      const scoreKey = `${lesson.id}_${topicIdx}_${lineIdx}`;
+                                      const score = (selectedStudent.progress.roleplayScores && selectedStudent.progress.roleplayScores[scoreKey]) || 0;
+                                      const isPassed = score >= 80;
+                                      
+                                      if (!isUserLine) {
+                                        return (
+                                          <div key={lineIdx} className="bg-slate-50/50 p-2 rounded-xl text-[10px] text-slate-400 font-bold border border-slate-100/50 flex justify-between items-center">
+                                            <span>💬 {line.character === 'dino' ? 'Dino 🦖' : 'Bear 🐻'}: {line.text}</span>
+                                            <span className="text-[9px] text-slate-400">คู่หู</span>
+                                          </div>
+                                        );
+                                      }
+
+                                      return (
+                                        <div key={lineIdx} className="bg-purple-50/30 p-2 rounded-xl text-[10px] font-bold border border-purple-100 flex justify-between items-center">
+                                          <div>
+                                            <p className="text-purple-900 font-black">Bear 🐻: {line.text}</p>
+                                            <p className="text-[8px] text-slate-400 font-bold">{line.translation}</p>
+                                          </div>
+                                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-black shrink-0 ${
+                                            score > 0
+                                              ? isPassed
+                                                ? 'bg-emerald-100 text-emerald-850'
+                                                : 'bg-rose-100 text-rose-850'
+                                              : 'bg-slate-100 text-slate-400'
+                                          }`}>
+                                            {score > 0 ? `${score}% ${isPassed ? 'ผ่าน' : 'ไม่ผ่าน'}` : 'ยังไม่พูด'}
+                                          </span>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <p className="text-xs text-slate-400 font-bold text-center py-4 bg-slate-50 rounded-2xl">ไม่มีข้อมูลหัวข้อบทสนทนา</p>
+                          )}
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>-center py-4 bg-slate-50 rounded-2xl">ไม่มีข้อมูลหัวข้อบทสนทนา</p>
+                          )}
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })()}ld-600' : 'text-slate-600'}>
                             {passedVocab === totalVocab ? '✅ ผ่านครบ' : `${passedVocab}/${totalVocab}`}
                           </span>
                         </div>

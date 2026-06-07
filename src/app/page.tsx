@@ -19,7 +19,7 @@ export default function TrangKidsSpeakApp() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Navigation tabs: 'home' | 'knowledge' | 'flashcards' | 'animation' | 'roleplay' | 'submission'
+  // Navigation tabs: 'home' | 'knowledge' | 'flashcards' | 'animation' | 'roleplay'
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedLesson, setSelectedLesson] = useState<LessonData>(LESSONS[0]);
   const [gender, setGender] = useState<'boy' | 'girl'>('girl'); // default matching Nong Aom 👧
@@ -60,6 +60,13 @@ export default function TrangKidsSpeakApp() {
     }
     return {};
   });
+  const [roleplayScores, setRoleplayScores] = useState<Record<string, number>>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('trang_kids_speak_roleplay_scores');
+      return stored ? JSON.parse(stored) : {};
+    }
+    return {};
+  });
 
   // Helper to save progress to DB
   const saveProgressToDB = async (
@@ -68,6 +75,7 @@ export default function TrangKidsSpeakApp() {
       flashcardScores?: Record<string, number>;
       completedRoleplays?: Record<string, boolean>;
       activeRoleplaySteps?: Record<string, number>;
+      roleplayScores?: Record<string, number>;
       submission?: { lessonId: number; score: number; mediaType: 'audio' | 'video'; status: string; date: string };
     }
   ) => {
@@ -121,6 +129,17 @@ export default function TrangKidsSpeakApp() {
             await saveProgressToDB(studentId, { activeRoleplaySteps: parsed });
           }
         }
+        const dbRoleplayScores = data.progress.roleplayScores || {};
+        if (Object.keys(dbRoleplayScores).length > 0) {
+          setRoleplayScores(dbRoleplayScores);
+        } else {
+          const storedRoleplayScores = localStorage.getItem('trang_kids_speak_roleplay_scores');
+          if (storedRoleplayScores) {
+            const parsed = JSON.parse(storedRoleplayScores);
+            setRoleplayScores(parsed);
+            await saveProgressToDB(studentId, { roleplayScores: parsed });
+          }
+        }
 
       }
     } catch (e) {
@@ -147,6 +166,8 @@ export default function TrangKidsSpeakApp() {
   }, []);
 
   // Animation simulator state
+  const [activeAnimTopicIdx, setActiveAnimTopicIdx] = useState<number>(0);
+  const [activeRoleplayTopicIdx, setActiveRoleplayTopicIdx] = useState<number>(0);
   const [simPlaying, setSimPlaying] = useState(false);
   const [simStep, setSimStep] = useState<number>(-1);
   const [simDinoState, setSimDinoState] = useState<CharacterState>('idle');
@@ -164,12 +185,51 @@ export default function TrangKidsSpeakApp() {
   const [bearRoleState, setBearRoleState] = useState<CharacterState>('idle');
   const [rolePlayFeedback, setRolePlayFeedback] = useState<string>('');
 
+  // Helpers to calculate progress percentages
+  const getVocabProgress = (lesson: LessonData) => {
+    const totalVocab = lesson.vocab.length;
+    if (totalVocab === 0) return 100;
+    const passed = lesson.vocab.filter((_, idx) => {
+      const cardKey = `${lesson.id}-${idx}`;
+      return (flashcardScores[cardKey] || 0) >= 80;
+    }).length;
+    return Math.round((passed / totalVocab) * 100);
+  };
+
+  const getTopicProgress = (lesson: LessonData, topicIdx: number) => {
+    const topic = lesson.dialogueTopics?.[topicIdx];
+    if (!topic) return 0;
+    const userLines = topic.dialogue.filter(line => line.character === userRole);
+    if (userLines.length === 0) return 100;
+    const passed = topic.dialogue.filter((line, lineIdx) => {
+      if (line.character !== userRole) return false;
+      const scoreKey = `${lesson.id}_${topicIdx}_${lineIdx}`;
+      return (roleplayScores[scoreKey] || 0) >= 80;
+    }).length;
+    return Math.round((passed / userLines.length) * 100);
+  };
+
+  const getLessonOverallProgress = (lesson: LessonData) => {
+    const vocabProgress = getVocabProgress(lesson);
+    const topics = lesson.dialogueTopics || [];
+    if (topics.length === 0) return vocabProgress;
+    
+    let sumOfTopics = 0;
+    topics.forEach((_, idx) => {
+      sumOfTopics += getTopicProgress(lesson, idx);
+    });
+    
+    const average = (vocabProgress + sumOfTopics) / (1 + topics.length);
+    return Math.round(average);
+  };
+
 
   
 
   // References for Web Speech API
   const recognitionRef = useRef<any>(null);
   const rolePlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const simTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper to create a fresh SpeechRecognition instance each time (prevents 'already started' errors)
   const createRecognition = (): any | null => {
@@ -219,10 +279,22 @@ export default function TrangKidsSpeakApp() {
     }
   }, []);
 
-  // Reset flashcard index when topic changes
+  // Reset flashcard index and topic indices when lesson changes
   useEffect(() => {
     setActiveFlashcardIndex(0);
+    setActiveAnimTopicIdx(0);
+    setActiveRoleplayTopicIdx(0);
   }, [selectedLesson]);
+
+  // Auto-scroll to active dialogue line during simulation
+  useEffect(() => {
+    if (simPlaying && simStep !== -1) {
+      const activeEl = document.getElementById(`dialogue-line-${simStep}`);
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [simStep, simPlaying]);
 
   // Stop speaking and clear role-play states when changing tab or lesson
   useEffect(() => {
@@ -233,6 +305,10 @@ export default function TrangKidsSpeakApp() {
     // Clear any active timeout
     if (rolePlayTimeoutRef.current) {
       clearTimeout(rolePlayTimeoutRef.current);
+    }
+    if (simTimeoutRef.current) {
+      clearTimeout(simTimeoutRef.current);
+      simTimeoutRef.current = null;
     }
 
     if (activeTab === 'roleplay') {
@@ -369,10 +445,11 @@ export default function TrangKidsSpeakApp() {
   const runAnimationSimulation = () => {
     if (simPlaying) return;
     setSimPlaying(true);
-    setSimStep(0);
     
-    const lines = selectedLesson.dialogue;
-    let index = 0;
+    const lines = selectedLesson.dialogueTopics?.[activeAnimTopicIdx]?.dialogue || selectedLesson.dialogue;
+    
+    // Resume from current simStep if within range, otherwise start from 0
+    let index = (simStep >= 0 && simStep < lines.length) ? simStep : 0;
 
     const playNextLine = () => {
       if (index >= lines.length) {
@@ -392,14 +469,49 @@ export default function TrangKidsSpeakApp() {
       // Schedule next line
       const textDuration = line.text.length * 90 + 2000; // rough estimation of voice length
       index++;
-      setTimeout(playNextLine, textDuration);
+      simTimeoutRef.current = setTimeout(playNextLine, textDuration);
     };
 
     playNextLine();
   };
 
+  // Pause the dialogue interactive simulation
+  const pauseAnimationSimulation = () => {
+    if (simTimeoutRef.current) {
+      clearTimeout(simTimeoutRef.current);
+      simTimeoutRef.current = null;
+    }
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setSimPlaying(false);
+    setSimDinoState('idle');
+    setSimBearState('idle');
+  };
+
+  // Reset the dialogue interactive simulation to the beginning
+  const resetAnimationSimulation = () => {
+    if (simTimeoutRef.current) {
+      clearTimeout(simTimeoutRef.current);
+      simTimeoutRef.current = null;
+    }
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setSimPlaying(false);
+    setSimStep(-1);
+    setAnimationSubtitle('');
+    setSimDinoState('idle');
+    setSimBearState('idle');
+  };
+
+  // Stop the dialogue interactive simulation (alias for reset)
+  const stopAnimationSimulation = () => {
+    resetAnimationSimulation();
+  };
+
   // Role Play Step logic
-  const startRolePlay = (topic: LessonData, roleOverride?: 'dino' | 'bear', resetStep: boolean = false) => {
+  const startRolePlay = (topic: LessonData, roleOverride?: 'dino' | 'bear', resetStep: boolean = false, topicIdxOverride?: number) => {
     audioSynth.playPop();
 
     // Clear any active timeout
@@ -419,22 +531,24 @@ export default function TrangKidsSpeakApp() {
     setDinoRoleState('idle');
     setBearRoleState('idle');
 
+    const activeTopicIdx = topicIdxOverride !== undefined ? topicIdxOverride : activeRoleplayTopicIdx;
+    const progressKey = `${topic.id}_${activeTopicIdx}`;
     let savedStep = 0;
     if (!resetStep) {
-      savedStep = activeRoleplaySteps[String(topic.id)] || activeRoleplaySteps[topic.id] || 0;
+      savedStep = activeRoleplaySteps[progressKey] || 0;
     } else {
       setActiveRoleplaySteps(prev => {
-        const next = { ...prev, [topic.id]: 0 };
+        const next = { ...prev, [progressKey]: 0 };
         if (typeof window !== 'undefined') {
           localStorage.setItem('trang_kids_speak_active_roleplay_steps', JSON.stringify(next));
         }
-        if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: { [topic.id]: 0 } });
+        if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: next });
         return next;
       });
     }
 
     const activeRole = roleOverride || userRole;
-    const lines = topic.dialogue;
+    const lines = topic.dialogueTopics?.[activeTopicIdx]?.dialogue || topic.dialogue;
 
     if (savedStep >= lines.length) {
       // If completed previously, but click start again, let's reset to 0
@@ -448,7 +562,7 @@ export default function TrangKidsSpeakApp() {
       const otherRole = activeRole === 'dino' ? 'bear' : 'dino';
       if (currentLine.character === otherRole) {
         rolePlayTimeoutRef.current = setTimeout(() => {
-          triggerRolePlayComputerTurn(savedStep, topic, activeRole);
+          triggerRolePlayComputerTurn(savedStep, topic, activeRole, activeTopicIdx);
         }, 500);
       } else {
         setRolePlayFeedback('ตาของหนูแล้วคนเก่ง! กดปุ่มไมค์เพื่อพูดเลยจ้า 🎙️');
@@ -456,8 +570,9 @@ export default function TrangKidsSpeakApp() {
     }
   };
 
-  const triggerRolePlayComputerTurn = (stepIndex: number, lesson: LessonData, roleOverride?: 'dino' | 'bear') => {
-    const lines = lesson.dialogue;
+  const triggerRolePlayComputerTurn = (stepIndex: number, lesson: LessonData, roleOverride?: 'dino' | 'bear', topicIdxOverride?: number) => {
+    const activeTopicIdx = topicIdxOverride !== undefined ? topicIdxOverride : activeRoleplayTopicIdx;
+    const lines = lesson.dialogueTopics?.[activeTopicIdx]?.dialogue || lesson.dialogue;
     if (stepIndex >= lines.length) return;
 
     const currentLine = lines[stepIndex];
@@ -472,13 +587,14 @@ export default function TrangKidsSpeakApp() {
         setRolePlayStep(nextStep);
         setRolePlayFeedback('ตาของหนูแล้วคนเก่ง! กดปุ่มไมค์เพื่อพูดเลยจ้า 🎙️');
         
+        const progressKey = `${lesson.id}_${activeTopicIdx}`;
         // Save progress to state, localStorage, and DB
         setActiveRoleplaySteps(prevSteps => {
-          const next = { ...prevSteps, [lesson.id]: nextStep };
+          const next = { ...prevSteps, [progressKey]: nextStep };
           if (typeof window !== 'undefined') {
             localStorage.setItem('trang_kids_speak_active_roleplay_steps', JSON.stringify(next));
           }
-          if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: { [lesson.id]: nextStep } });
+          if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: next });
           return next;
         });
 
@@ -487,7 +603,7 @@ export default function TrangKidsSpeakApp() {
           const nextLine = lines[nextStep];
           if (nextLine.character === otherRole) {
             rolePlayTimeoutRef.current = setTimeout(() => {
-              triggerRolePlayComputerTurn(nextStep, lesson, activeRole);
+              triggerRolePlayComputerTurn(nextStep, lesson, activeRole, activeTopicIdx);
             }, 1000);
           }
         }
@@ -500,7 +616,8 @@ export default function TrangKidsSpeakApp() {
       alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่พร้อมทำงานบนบราวเซอร์นี้');
       return;
     }
-    const lines = selectedLesson.dialogue;
+    const activeTopicIdx = activeRoleplayTopicIdx;
+    const lines = selectedLesson.dialogueTopics?.[activeTopicIdx]?.dialogue || selectedLesson.dialogue;
     const targetLine = lines[rolePlayStep];
     if (targetLine.character !== userRole) { alert('ตาของคู่หูคุณพูดอยู่จ้า รอแป๊บน้า!'); return; }
 
@@ -527,6 +644,20 @@ export default function TrangKidsSpeakApp() {
       setRolePlayScore(similarityScore);
       setRolePlayDiff(computeEnglishWordDiff(targetLine.text, spokenText));
 
+      const scoreKey = `${selectedLesson.id}_${activeTopicIdx}_${rolePlayStep}`;
+      setRoleplayScores(prev => {
+        const currentScore = prev[scoreKey] || 0;
+        const nextScore = Math.max(currentScore, similarityScore);
+        const next = { ...prev, [scoreKey]: nextScore };
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('trang_kids_speak_roleplay_scores', JSON.stringify(next));
+        }
+        if (student) saveProgressToDB(student.studentId, { roleplayScores: { [scoreKey]: nextScore } });
+        return next;
+      });
+
+      const progressKey = `${selectedLesson.id}_${activeTopicIdx}`;
+
       if (similarityScore >= 80) {
         if (userRole === 'dino') setDinoRoleState('celebrating'); else setBearRoleState('celebrating');
         audioSynth.playSuccess();
@@ -541,26 +672,26 @@ export default function TrangKidsSpeakApp() {
 
           const stepToSave = nextStep < lines.length ? nextStep : 0;
           setActiveRoleplaySteps(prevSteps => {
-            const next = { ...prevSteps, [selectedLesson.id]: stepToSave };
+            const next = { ...prevSteps, [progressKey]: stepToSave };
             if (typeof window !== 'undefined') {
               localStorage.setItem('trang_kids_speak_active_roleplay_steps', JSON.stringify(next));
             }
-            if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: { [selectedLesson.id]: stepToSave } });
+            if (student) saveProgressToDB(student.studentId, { activeRoleplaySteps: next });
             return next;
           });
 
           if (nextStep < lines.length) {
-            triggerRolePlayComputerTurn(nextStep, selectedLesson, userRole);
+            triggerRolePlayComputerTurn(nextStep, selectedLesson, userRole, activeTopicIdx);
           } else {
             setRolePlayFeedback('🎉 ว้าว! คุณทำกิจกรรมบทบาทสมมติเสร็จสมบูรณ์แล้ว ยอดเยี่ยมมากจ้า!');
             audioSynth.playSuccess();
             setConfettiActive(true);
             setCompletedRoleplays(prev => {
-              const next = { ...prev, [selectedLesson.id]: true };
+              const next = { ...prev, [progressKey]: true };
               if (typeof window !== 'undefined') {
                 localStorage.setItem('trang_kids_speak_completed_roleplays', JSON.stringify(next));
               }
-              if (student) saveProgressToDB(student.studentId, { completedRoleplays: { [selectedLesson.id]: true } });
+              if (student) saveProgressToDB(student.studentId, { completedRoleplays: next });
               return next;
             });
           }
@@ -678,6 +809,9 @@ export default function TrangKidsSpeakApp() {
     );
   }
 
+  const activeAnimDialogue = selectedLesson.dialogueTopics?.[activeAnimTopicIdx]?.dialogue || selectedLesson.dialogue;
+  const activeRoleplayDialogue = selectedLesson.dialogueTopics?.[activeRoleplayTopicIdx]?.dialogue || selectedLesson.dialogue;
+
   return (
     <div className="min-h-screen bg-[#f3f9fc] py-2 px-2 sm:py-4 sm:px-4 md:px-8 relative overflow-hidden select-none pb-20 md:pb-6">
       
@@ -696,7 +830,7 @@ export default function TrangKidsSpeakApp() {
           { id: 'flashcards', label: 'บัตรคำ', emoji: '🎴' },
           { id: 'animation', label: 'อนิเมชัน', emoji: '🎬' },
           { id: 'roleplay', label: 'บทบาทสมมติ', emoji: '🎭' },
-          { id: 'submission', label: 'ส่งผลงาน', emoji: '💖' },
+
         ].map(tab => {
           const isActive = activeTab === tab.id;
           return (
@@ -762,7 +896,7 @@ export default function TrangKidsSpeakApp() {
               { id: 'flashcards', label: 'บัตรคำศัพท์', emoji: '🎴', activeBg: 'bg-orange-400 text-white border-orange-400' },
               { id: 'animation', label: 'สื่ออนิเมชัน', emoji: '🎬', activeBg: 'bg-sky-400 text-white border-sky-400' },
               { id: 'roleplay', label: 'กิจกรรมบทบาทสมมติ', emoji: '🎭', activeBg: 'bg-purple-400 text-white border-purple-400' },
-              { id: 'submission', label: 'ส่งผลงาน', emoji: '💖', activeBg: 'bg-pink-400 text-white border-pink-400' },
+
             ].map(tab => (
               <button
                 key={tab.id}
@@ -920,8 +1054,8 @@ export default function TrangKidsSpeakApp() {
 
             </div>
 
-            {/* MIDDLE: 5 ELEMENTS CARDS - EXACT VISUAL MATCH */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {/* MIDDLE: 4 ELEMENTS CARDS - EXACT VISUAL MATCH */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               
               {/* Card 1: ใบความรู้ */}
               <div className="kids-card rounded-3xl p-5 flex flex-col justify-between items-center text-center border-t-8 border-emerald-400 bg-white">
@@ -1045,27 +1179,7 @@ export default function TrangKidsSpeakApp() {
                 </button>
               </div>
 
-              {/* Card 5: ระบบส่งผลงาน */}
-              <div className="kids-card rounded-3xl p-4 sm:p-5 flex flex-col justify-between items-center text-center border-t-8 border-pink-400 bg-white col-span-2 md:col-span-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded-full bg-pink-500 text-white flex items-center justify-center font-black text-xs">5</div>
-                  <h3 className="font-black text-slate-700 text-xs md:text-sm">ส่งคลิปเสียงและวิดีโอ (Speaking Submission)</h3>
-                </div>
-                <p className="text-[10px] text-slate-400 font-bold mb-4 leading-relaxed h-[36px]">อัดคลิปเสียงหรือวิดีโอการพูด ส่งผ่านระบบออนไลน์</p>
-                
-                {/* Illustration replica: Mic & Cam Icons */}
-                <div className="w-full h-24 bg-pink-50/50 border border-pink-100 rounded-2xl flex items-center justify-center gap-4 p-2 mb-4 relative overflow-hidden">
-                  <div className="text-3xl bg-white p-3 rounded-full shadow-sm text-sky-500 border border-slate-100 shrink-0">🎙️</div>
-                  <div className="text-3xl bg-white p-3 rounded-full shadow-sm text-pink-500 border border-slate-100 shrink-0">📹</div>
-                </div>
 
-                <button
-                  onClick={() => { audioSynth.playPop(); setActiveTab('submission'); }}
-                  className="btn-3d w-full py-2 bg-pink-500 hover:bg-pink-600 text-white text-xs font-black rounded-2xl border-2 border-pink-600 shadow-pink-300"
-                >
-                  ส่งผลงาน
-                </button>
-              </div>
 
             </div>
 
@@ -1393,19 +1507,25 @@ export default function TrangKidsSpeakApp() {
 
               {/* Select Lesson dropdown */}
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none max-w-full -mx-2 px-2 snap-x snap-mandatory">
-                {LESSONS.map(lesson => (
-                  <button
-                    key={lesson.id}
-                    onClick={() => { audioSynth.playPop(); setSelectedLesson(lesson); }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 shrink-0 snap-start ${
-                      selectedLesson.id === lesson.id
-                        ? 'bg-orange-400 text-white border-orange-400'
-                        : 'bg-white text-slate-700 hover:bg-orange-50 border-slate-200'
-                    }`}
-                  >
-                    {lesson.emoji} {lesson.title.slice(0, 4)}...
-                  </button>
-                ))}
+                {LESSONS.map(lesson => {
+                  const vocabProg = getVocabProgress(lesson);
+                  return (
+                    <button
+                      key={lesson.id}
+                      onClick={() => { audioSynth.playPop(); setSelectedLesson(lesson); }}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black transition-all border-2 shrink-0 snap-start flex items-center gap-1.5 ${
+                        selectedLesson.id === lesson.id
+                          ? 'bg-orange-400 text-white border-orange-400 shadow-orange-200'
+                          : 'bg-white text-slate-700 hover:bg-orange-50 border-slate-200'
+                      }`}
+                    >
+                      <span>{lesson.emoji} {lesson.title.slice(0, 4)}...</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[8px] font-black ${
+                        selectedLesson.id === lesson.id ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-600 border border-orange-100'
+                      }`}>{vocabProg}%</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -1692,41 +1812,141 @@ export default function TrangKidsSpeakApp() {
 
         {/* TAB 4: DIALOGUE ANIMATION (สื่ออนิเมชันบทสนทนา) */}
         {activeTab === 'animation' && (
-          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left">
-            <div className="border-b border-slate-100 pb-4 mb-6">
-              <h2 className="text-2xl font-black text-sky-500 font-kids flex items-center gap-2">
-                <span>🎬</span> สื่ออนิเมชันบทสนทนา (Animation Room & Sample Video)
-              </h2>
-              <p className="text-xs font-extrabold text-slate-400 mt-1">รับชมสื่อวิดีโอตัวอย่าง พร้อมใช้งานระบบการ์ตูนอนิเมชันจำลองเพื่อออกเสียงตามได้ทันที!</p>
+          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left animate-fade-in">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <h2 className="text-2xl font-black text-sky-500 font-kids flex items-center gap-2">
+                  <span>🎬</span> สื่ออนิเมชันบทสนทนา (Animation Room & Sample Video)
+                </h2>
+                <p className="text-xs font-extrabold text-slate-400 mt-1">รับชมสื่อวิดีโอตัวอย่าง พร้อมใช้งานระบบการ์ตูนอนิเมชันจำลองเพื่อออกเสียงตามได้ทันที!</p>
+              </div>
+
+              {/* Select Lesson buttons */}
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none max-w-full -mx-2 px-2 snap-x snap-mandatory">
+                {LESSONS.map(lesson => (
+                  <button
+                    key={lesson.id}
+                    onClick={() => {
+                      audioSynth.playPop();
+                      setSelectedLesson(lesson);
+                      stopAnimationSimulation();
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 shrink-0 snap-start ${
+                      selectedLesson.id === lesson.id
+                        ? 'bg-sky-400 text-white border-sky-400'
+                        : 'bg-white text-slate-700 hover:bg-sky-50 border-slate-200'
+                    }`}
+                  >
+                    {lesson.emoji} {lesson.title.slice(0, 4)}...
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {/* Topic Selector Buttons */}
+            {selectedLesson.dialogueTopics && selectedLesson.dialogueTopics.length > 0 && (
+              <div className="mb-6 p-4 bg-sky-50/60 rounded-3xl border-2 border-sky-100">
+                <p className="text-xs font-black text-sky-950 mb-2 flex items-center gap-1.5 font-kids">
+                  <span>📌</span> เลือกหัวข้อบทสนทนา (Topics):
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedLesson.dialogueTopics.map((topic, idx) => {
+                    const isSelected = activeAnimTopicIdx === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          audioSynth.playPop();
+                          setActiveAnimTopicIdx(idx);
+                          stopAnimationSimulation();
+                        }}
+                        className={`px-4 py-2.5 text-xs font-black rounded-2xl border-2 transition active:scale-95 shadow-sm font-kids ${
+                          isSelected
+                            ? 'bg-sky-500 text-white border-sky-600 shadow-sky-200'
+                            : 'bg-white text-sky-850 hover:bg-sky-50/50 border-sky-200 hover:border-sky-300'
+                        }`}
+                      >
+                        {topic.title} 💬
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Split layout: Real cartoon Video Embed VS CSS Interactive Animation */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               
-              {/* Column 1: Video Player (Left Side) */}
-              <div className="lg:col-span-6 bg-slate-900 rounded-3xl p-4 flex flex-col justify-between border-4 border-slate-800 shadow-lg min-h-[280px] sm:min-h-[320px] lg:min-h-[420px] text-white">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 bg-white rounded-full animate-ping inline-block" />
-                    SAMPLE CARTOON VIDEO
-                  </span>
-                  <span className="text-xs font-bold text-slate-400">บทสนทนาแสนสนุก</span>
+              {/* Column 1: Dialogue Script Board (Left Side) */}
+              <div className="lg:col-span-6 bg-slate-50 border-4 border-slate-200 rounded-3xl p-5 flex flex-col justify-between shadow-md min-h-[360px] sm:min-h-[400px] lg:min-h-[420px] text-slate-700">
+                <div>
+                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <span className="bg-[#60a5fa] text-white text-[10px] font-black px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+                      📜 DIALOGUE SCRIPT
+                    </span>
+                    <span className="text-xs font-black text-slate-400">ด่านที่ {selectedLesson.id}: {selectedLesson.title}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-extrabold mb-4 leading-relaxed">
+                    อ่านและฟังคำพูดของ Dino 🦖 และ Ted 🐻 แล้วลองฝึกออกเสียงตามได้เลยนะจ๊ะ!
+                  </p>
+
+                  {/* Scrollable Dialogue List */}
+                  <div className="max-h-[280px] sm:max-h-[320px] lg:max-h-[330px] overflow-y-auto pr-1 space-y-3 scrollbar-thin scrollbar-thumb-slate-205 scrollbar-track-transparent">
+                    {activeAnimDialogue.map((line, idx) => {
+                      const isActive = simPlaying && simStep === idx;
+                      const isDino = line.character === 'dino';
+                      return (
+                        <div
+                          key={idx}
+                          id={`dialogue-line-${idx}`}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            speakText(line.text, isDino);
+                          }}
+                          className={`group cursor-pointer border-l-4 pl-3 py-2.5 px-3 rounded-r-2xl rounded-bl-2xl shadow-sm text-left flex items-start gap-2.5 transition-all duration-300 hover:scale-[1.01] ${
+                            isActive
+                              ? 'bg-yellow-100/90 border-yellow-500 ring-2 ring-yellow-350 ring-opacity-50 z-10 scale-[1.02] shadow-md'
+                              : isDino
+                              ? 'bg-emerald-50/50 hover:bg-emerald-50 text-emerald-950 border-emerald-400'
+                              : 'bg-amber-50/50 hover:bg-amber-50 text-amber-950 border-amber-500'
+                          }`}
+                        >
+                          {/* Avatar Circle */}
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-sm shadow-sm ${
+                            isActive 
+                              ? 'bg-yellow-200 text-yellow-800' 
+                              : isDino 
+                              ? 'bg-emerald-100 text-emerald-700' 
+                              : 'bg-amber-100 text-amber-850'
+                          }`}>
+                            {isDino ? '🦖' : '🐻'}
+                          </div>
+
+                          {/* Dialogue Content */}
+                          <div className="flex-1">
+                            <div className="flex items-center gap-1.5 justify-between">
+                              <span className="text-[10px] font-black tracking-wider uppercase opacity-80">
+                                {isDino ? 'Dino' : 'Ted'} {isActive && '🔊'}
+                              </span>
+                              <span className="text-[8px] font-black text-sky-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                กดเพื่อฟังเสียง 🔊
+                              </span>
+                            </div>
+                            <p className="font-kids font-black text-xs md:text-sm text-slate-800 tracking-wide mt-0.5 leading-snug">
+                              {line.text}
+                            </p>
+                            <p className="font-bold text-[9px] sm:text-[10px] text-slate-500 mt-0.5 leading-tight">
+                              {line.translation}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                {/* Embedded Kid English Video Sample */}
-                <div className="flex-1 rounded-2xl overflow-hidden bg-black relative flex items-center justify-center border border-slate-700 min-h-[200px] sm:min-h-[260px]">
-                  <iframe 
-                    className="w-full h-full absolute inset-0"
-                    src="https://www.youtube.com/embed/fD3MeejO46g?si=vP8Q3d2TqLd8yL7G" 
-                    title="English Conversation Greeting cartoon for kids" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowFullScreen
-                  />
-                </div>
-
-                <div className="text-center mt-3">
-                  <p className="text-xs text-slate-400 font-extrabold">📺 วิดีโอตัวอย่างบทสนทนาเบื้องต้น สามารถฝึกฟังสำเนียงและพูดโต้ตอบไปพร้อมกันได้นะจ๊ะ!</p>
+                <div className="text-center mt-3 pt-2 border-t border-slate-100">
+                  <p className="text-[9px] text-slate-400 font-extrabold">💡 น้องๆ สามารถกดคลิกที่กล่องคำพูดแต่ละกล่องเพื่อฝึกฟังเสียงพูดทีละประโยคได้ด้วยนะ!</p>
                 </div>
               </div>
 
@@ -1739,20 +1959,10 @@ export default function TrangKidsSpeakApp() {
                     🎮 Interactive Cartoon Live Simulator
                   </span>
                   
-                  {/* Select Lesson dropdown */}
-                  <select
-                    value={selectedLesson.id}
-                    onChange={(e) => {
-                      audioSynth.playPop();
-                      const lesson = LESSONS.find(l => l.id === parseInt(e.target.value));
-                      if (lesson) setSelectedLesson(lesson);
-                    }}
-                    className="bg-sky-600 text-white text-xs font-black border border-white/20 rounded-xl px-2 py-1 outline-none cursor-pointer"
-                  >
-                    {LESSONS.map(l => (
-                      <option key={l.id} value={l.id}>ด่านที่ {l.id}</option>
-                    ))}
-                  </select>
+                  {/* Active Lesson Badge */}
+                  <span className="bg-sky-600 text-white text-[10px] font-black border border-white/20 rounded-xl px-2.5 py-1 shadow-sm font-kids">
+                    {selectedLesson.emoji} {selectedLesson.title}
+                  </span>
                 </div>
 
                 {/* Subtitle Board overlay */}
@@ -1771,7 +1981,7 @@ export default function TrangKidsSpeakApp() {
 
                   {/* Character A: Dino */}
                   <div className={`transition-all duration-1000 transform ${
-                    simPlaying && simStep !== -1 && selectedLesson.dialogue[simStep].character === 'dino'
+                    simPlaying && simStep !== -1 && activeAnimDialogue[simStep]?.character === 'dino'
                       ? 'scale-110 shadow-lg'
                       : 'scale-90 opacity-80'
                   }`}>
@@ -1783,7 +1993,7 @@ export default function TrangKidsSpeakApp() {
 
                   {/* Character B: Bear */}
                   <div className={`transition-all duration-1000 transform ${
-                    simPlaying && simStep !== -1 && selectedLesson.dialogue[simStep].character === 'bear'
+                    simPlaying && simStep !== -1 && activeAnimDialogue[simStep]?.character === 'bear'
                       ? 'scale-110 shadow-lg'
                       : 'scale-90 opacity-80'
                   }`}>
@@ -1795,20 +2005,40 @@ export default function TrangKidsSpeakApp() {
                 </div>
 
                 {/* Control Panel */}
-                <div className="w-full text-center mt-3 z-10 flex gap-2 justify-center">
+                <div className="w-full text-center mt-3 z-10 flex gap-2 justify-center flex-wrap">
+                  {simPlaying ? (
+                    <button
+                      onClick={() => {
+                        audioSynth.playPop();
+                        pauseAnimationSimulation();
+                      }}
+                      className="btn-3d px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-black rounded-2xl border-2 border-amber-600 shadow-amber-300 font-kids"
+                    >
+                      ⏸️ หยุดชั่วคราว
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        audioSynth.playPop();
+                        runAnimationSimulation();
+                      }}
+                      className="btn-3d px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black rounded-2xl border-2 border-emerald-600 shadow-emerald-300 font-kids"
+                    >
+                      {simStep >= 0 ? '▶️ เล่นต่อ (Resume)' : '▶️ เล่นอนิเมชัน (Play)'}
+                    </button>
+                  )}
+
                   <button
                     onClick={() => {
                       audioSynth.playPop();
-                      runAnimationSimulation();
+                      resetAnimationSimulation();
                     }}
-                    disabled={simPlaying}
-                    className={`btn-3d px-6 py-2.5 text-xs font-black rounded-2xl border-2 transition ${
-                      simPlaying
-                        ? 'bg-sky-600 text-sky-300 border-sky-700'
-                        : 'bg-yellow-400 hover:bg-yellow-500 text-yellow-950 border-yellow-500 shadow-yellow-300'
+                    className={`btn-3d px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-black rounded-2xl border-2 border-rose-600 shadow-rose-300 transition-all font-kids ${
+                      simStep === -1 ? 'opacity-40 cursor-not-allowed' : ''
                     }`}
+                    disabled={simStep === -1}
                   >
-                    {simPlaying ? '🎬 กำลังแสดงจำลอง...' : '🎬 เล่นอนิเมชันจำลองการพูด'}
+                    🔄 รีเซ็ต (Reset)
                   </button>
 
                   <button
@@ -1816,7 +2046,7 @@ export default function TrangKidsSpeakApp() {
                       audioSynth.playPop();
                       setActiveTab('roleplay');
                     }}
-                    className="btn-3d px-6 py-2.5 bg-purple-400 hover:bg-purple-500 text-white text-xs font-black rounded-2xl border-2 border-purple-500 shadow-purple-300"
+                    className="btn-3d px-5 py-2.5 bg-purple-400 hover:bg-purple-500 text-white text-xs font-black rounded-2xl border-2 border-purple-500 shadow-purple-300 font-kids"
                   >
                     สลับไปโต้ตอบบทบาทสมมติ 🎭
                   </button>
@@ -1830,41 +2060,98 @@ export default function TrangKidsSpeakApp() {
 
         {/* TAB 5: ROLE-PLAY ACTIVITY (กิจกรรมบทบาทสมมติ) */}
         {activeTab === 'roleplay' && (
-          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left">
-            <div className="border-b border-slate-100 pb-4 mb-6">
-              <h2 className="text-2xl font-black text-purple-600 font-kids flex items-center gap-2">
-                <span>🎭</span> กิจกรรมบทบาทสมมติอัจฉริยะ (Role-Play Game)
-              </h2>
-              <p className="text-xs font-extrabold text-slate-400 mt-1">เลือกตัวละครที่ต้องการสวมบทบาท แล้วสลับกันพูดโต้ตอบภาษาอังกฤษกับคอมพิวเตอร์เพื่อปลดล็อคด่านดาวทองคำ!</p>
+          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left animate-fade-in">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <h2 className="text-2xl font-black text-purple-600 font-kids flex items-center gap-2">
+                  <span>🎭</span> กิจกรรมบทบาทสมมติอัจฉริยะ (Role-Play Game)
+                </h2>
+                <p className="text-xs font-extrabold text-slate-400 mt-1">เลือกตัวละครที่ต้องการสวมบทบาท แล้วสลับกันพูดโต้ตอบภาษาอังกฤษกับคอมพิวเตอร์เพื่อปลดล็อคด่านดาวทองคำ!</p>
+              </div>
+
+              {/* Select Lesson buttons */}
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none max-w-full -mx-2 px-2 snap-x snap-mandatory font-kids">
+                {LESSONS.map(lesson => {
+                  const topics = lesson.dialogueTopics || [];
+                  const allTopicsDone = topics.length > 0 && topics.every((t, idx) => completedRoleplays[`${lesson.id}_${idx}`]);
+                  const anyTopicDone = topics.some((t, idx) => completedRoleplays[`${lesson.id}_${idx}`]);
+                  const lessonProg = getLessonOverallProgress(lesson);
+                  
+                  return (
+                    <button
+                      key={lesson.id}
+                      onClick={() => {
+                        audioSynth.playPop();
+                        setActiveRoleplayTopicIdx(0);
+                        startRolePlay(lesson, userRole, false, 0);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-black transition-all border-2 shrink-0 snap-start flex items-center gap-1.5 ${
+                        selectedLesson.id === lesson.id
+                          ? 'bg-purple-500 text-white border-purple-500 shadow-purple-250'
+                          : 'bg-white text-slate-700 hover:bg-purple-50 border-slate-200'
+                      }`}
+                    >
+                      <span>{lesson.emoji} {lesson.title.slice(0, 4)}...</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[8px] font-black ${
+                        selectedLesson.id === lesson.id ? 'bg-purple-650 text-white' : 'bg-purple-50 text-purple-700 border border-purple-100'
+                      }`}>{lessonProg}%</span>
+                      {allTopicsDone ? <span className="text-[10px]">✅</span> : anyTopicDone ? <span className="text-[10px]">⏳</span> : ''}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Topic Selector Buttons for Role-play */}
+            {selectedLesson.dialogueTopics && selectedLesson.dialogueTopics.length > 0 && (
+              <div className="mb-6 p-4 bg-purple-50/60 rounded-3xl border-2 border-purple-100">
+                <p className="text-xs font-black text-purple-950 mb-2 flex items-center gap-1.5 font-kids">
+                  <span>📌</span> เลือกหัวข้อบทสนทนา (Topics):
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedLesson.dialogueTopics.map((topic, idx) => {
+                    const isSelected = activeRoleplayTopicIdx === idx;
+                    const isTopicDone = completedRoleplays[`${selectedLesson.id}_${idx}`];
+                    const topicProg = getTopicProgress(selectedLesson, idx);
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          audioSynth.playPop();
+                          setActiveRoleplayTopicIdx(idx);
+                          startRolePlay(selectedLesson, userRole, false, idx);
+                        }}
+                        className={`px-4 py-2.5 text-xs font-black rounded-2xl border-2 transition active:scale-95 shadow-sm font-kids flex items-center gap-1.5 ${
+                          isSelected
+                            ? 'bg-purple-500 text-white border-purple-600 shadow-purple-200'
+                            : 'bg-white text-purple-850 hover:bg-purple-50/50 border-purple-200 hover:border-purple-300'
+                        }`}
+                      >
+                        <span>{topic.title}</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-black ${
+                          isSelected ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 border border-purple-100'
+                        }`}>{topicProg}%</span>
+                        {isTopicDone || topicProg === 100 ? <span className="text-emerald-500">✅</span> : <span>💬</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Game Setup options */}
             <div className="bg-purple-50/50 p-4 rounded-2xl border-2 border-purple-100 mb-6 flex flex-wrap justify-between items-center gap-4">
               
-              {/* Choose Topic */}
+              {/* Active Lesson Info */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-black text-purple-900">เลือกบทสนทนา:</span>
-                <select
-                  value={selectedLesson.id}
-                  onChange={(e) => {
-                    const l = LESSONS.find(lesson => lesson.id === parseInt(e.target.value));
-                    if (l) startRolePlay(l, userRole);
-                  }}
-                  className="bg-white border-2 border-purple-200 text-purple-900 text-xs font-black rounded-xl px-3 py-1 outline-none cursor-pointer"
-                >
-                  {LESSONS.map(l => {
-                    const isDone = completedRoleplays[String(l.id)] || completedRoleplays[l.id];
-                    return (
-                      <option key={l.id} value={l.id}>
-                        {l.emoji} บทเรียนที่ {l.id}: {l.title} {isDone ? ' (ผ่านแล้ว ✅)' : ''}
-                      </option>
-                    );
-                  })}
-                </select>
+                <span className="text-xs font-black text-purple-900">บทเรียนขณะนี้:</span>
+                <span className="bg-white border-2 border-purple-200 text-purple-900 text-xs font-black rounded-xl px-3 py-1 flex items-center gap-1.5 shadow-sm font-kids">
+                  {selectedLesson.emoji} {selectedLesson.title}
+                </span>
 
                 {/* Completion Status Badge */}
-                {(completedRoleplays[String(selectedLesson.id)] || completedRoleplays[selectedLesson.id]) && (
-                  <span className="bg-amber-100 text-amber-800 border-2 border-amber-300 text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse shadow-sm">
+                {completedRoleplays[`${selectedLesson.id}_${activeRoleplayTopicIdx}`] && (
+                  <span className="bg-amber-100 text-amber-800 border-2 border-amber-300 text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse shadow-sm font-kids">
                     🏆 ด่านดาวทองคำสำเร็จแล้ว!
                   </span>
                 )}
@@ -1923,7 +2210,7 @@ export default function TrangKidsSpeakApp() {
                 
                 {/* Dialogue Progress Stream */}
                 <div className="space-y-3 sm:space-y-4 overflow-y-auto py-2 px-2 max-h-[360px] sm:max-h-[440px] lg:max-h-[500px]">
-                  {selectedLesson.dialogue.map((line, idx) => {
+                  {activeRoleplayDialogue.map((line, idx) => {
                     const isUserTurn = line.character === userRole;
                     const isCurrentStep = idx === rolePlayStep;
                     const isPassed = idx < rolePlayStep;

@@ -1,0 +1,110 @@
+[Unit 1 Hello] [Gate Duty Interactions] T: Good morning! S: Good morning!
+[Unit 1 Hello] [Gate Duty Interactions] T: What’s your name? S: My name is THANAPHOB
+[Unit 1 Hello] [Gate Duty Interactions] T: What’s your nickname? S: My nickname is PHOB
+[Unit 1 Hello] [Gate Duty Interactions] T: How old are you? S: I’m eight years old.
+[Unit 1 Hello] [Gate Duty Interactions] T: How are you? S: I am very well.
+[Unit 1 Hello] [Gate Duty Interactions] T: How did you come to school? S: I came to school by car.
+[Unit 1 Hello] [Gate Duty Interactions] T: Did you have breakfast? S: Yes, I did.
+[Unit 1 Hello] [Gate Duty Interactions] T: What grade are you in? S: I’m grade in Primary 2
+[Unit 1 Hello] [morning ceremony] T: What day is today? S: Today is Monday.
+[Unit 1 Hello] [morning ceremony] T: How do you come to school? S: I come to school by car.
+[Unit 1 Hello] [morning ceremony] T: How many people are there in your room today? S: There are 31 people in my room.
+[Unit 1 Hello] [morning ceremony] T: Are you ready to dance? S: Yes ,we are.
+[Unit 1 Hello] [morning ceremony] T:  O.K. that’s all for now. Walk to the class.  S: Thank you teacher.
+[Unit 1 Hello] [Drinking Milk] T: What is this? S: This is milk.
+[Unit 1 Hello] [Drinking Milk] T: Can you spell it? (Milk) S: M-I-L-K
+[Unit 1 Hello] [Drinking Milk] S: Please, cut the bag for me. T: Yes, of course
+[Unit 1 Hello] [Drinking Milk] T: What color is milk? S: It’s white.
+[Unit 1 Hello] [Drinking Milk] T: Do you like milk? S: Yes, I do.
+[Unit 1 Hello] [Drinking Milk] S: Can I have a straw please? T: Yes, you can.
+[Unit 1 Hello] [Starting and ending the classes] T: Good morning, teacher S: Good morning, students T: How are you? S: I’m very well, and you T: I’m very happy too, thanks a lot and take a seat please. S: Thank you, teacher
+[Unit 1 Hello] [Starting and ending the classes] T: Who is absent today? S: PING is absent today.
+[Unit 1 Hello] [Starting and ending the classes] T: Are you feeling better today, PHU? S: I am feeling good today, thank you
+[Unit 1 Hello] [Starting and ending the classes] T: What is the day today? S: Today is Monday T: And Tomorrow will be? S: Tomorrow will be Tuesday T: The last question. Yesterday was? S: Yesterday was Sunday
+[Unit 1 Hello] [Starting and ending the classes] T: What’s the date today? S: Today it is Monday the 6th of July 2026
+[Unit 1 Hello] [Starting and ending the classes] T: What’s the weather like today? S: Today is sunny.
+[Unit 1 Hello] [Starting and ending the classes] T: Let’s begin today’s lesson S: We are ready to learn.
+[Unit 1 Hello] [Starting and ending the classes] T: Are you ready?  S: Yes, we are.
+[Unit 1 Hello] [Starting and ending the classes] T: I think we can start now. S: Of course,
+[Unit 1 Hello] [Command and request] S: May I come in, please? T: Yes, you can
+[Unit 1 Hello] [Command and request] S: May I go out, please? T: Yes, you may
+[Unit 1 Hello] [Command and request] S: May I go to the toilet, please? T: Yes, you may
+[Unit 1 Hello] [Command and request] S: Can I have a worksheet, please? T: Yes, you can.
+[Unit 1 Hello] [Command and request] S: Can I tell you my ideas, please? T: Yes, you can.
+[Unit 1 Hello] [Command and request] S: Can we take a break, please? T: Yes, you can.
+[Unit 1 Hello] [Command and request] S: Excuse me, teacher T: Yes?
+[Unit 1 Hello] [Command and request] S: Can you repeat that? T: Yes, I can
+[Unit 1 Hello] [Command and request] S: Can we take a break, please? T: Of course,
+[Unit 1 Hello] [Having lunch] T: Are you ready for lunch? S: Yes, we are
+[Unit 1 Hello] [Having lunch] T: What is this? S: It’s a Fried rice
+[Unit 1 Hello] [Having lunch] T: Do you like Fried rice S: Yes, I do
+[Unit 1 Hello] [Having lunch] T: What’s your favorite food?  S: My favorite food is Chicken soup.
+[Unit 1 Hello] [Having lunch] T: What’s your favorite fruit?  S: My favorite fruit is Watermelon.
+[Unit 1 Hello] [Having lunch] T: Can you spell? S: Yes, I can W-A-T-E-R-M-E-L-O-N
+[Unit 1 Hello] [Having lunch] T: Are you ready for lunch? S: Yes, we are
+[Unit 1 Hello] [Preparing before get back to the home] T: Are you ready to go back home? S: Yes, I am
+[Unit 1 Hello] [Preparing before get back to the home] T: Did you enjoy today? S: Yes, I did/ Of course
+[Unit 1 Hello] [Preparing before get back to the home] T: Can you line up, please? S: Yes, I can.
+[Unit 1 Hello] [Preparing before get back to the home] T: Raise your hand when your parents arrive. S: My parents have arrived !
+[Unit 1 Hello] [Preparing before get back to the home] S: My parents are here to pick me up, Can I go now? T: Yes, you can.
+[Unit 1 Hello] [Preparing before get back to the home] S: Good afternoon Mom, glad to see you
+[Unit 2 School] [สถานการณ์ที่ 1: ทายสิ่งของในห้องเรียน] บทที่ 1 A: What’s this? (นี่คืออะไรน่ะ?) B: I don’t know. Is it a pencil? (ฉันไม่รู้เหมือนกัน มันคือดินสอหรือเปล่า?) A: No, it isn’t. It’s a ruler. (ไม่ใช่จ้า มันคือไม้บรรทัด)
+[Unit 2 School] [สถานการณ์ที่ 1: ทายสิ่งของในห้องเรียน] บทที่ 2 A: Is this a school bag? (นี่คือกระเป๋านักเรียนใช่ไหม?) B: Yes, it is. It's beautiful! (ใช่แล้วล่ะ มันสวยมากเลย!)
+[Unit 2 School] [สถานการณ์ที่ 1: ทายสิ่งของในห้องเรียน] บทที่ 3 A: What’s that on the wall? (นั่นคืออะไรบนกำแพงน่ะ?) B: It’s a clock. (มันคือนาฬิกาจ้า) A: Oh, it’s 9 o’clock. (โอ้ เก้าโมงเช้าแล้ว)
+[Unit 2 School] [สถานการณ์ที่ 2: การขอยืมอุปกรณ์การเรียน] บทที่ 4 A: Do you have an eraser? (เธอมียางลบไหม?) B: Yes, I do. Here you are. (มีจ้า นี่ไง) A: Thank you! (ขอบคุณนะ)
+[Unit 2 School] [สถานการณ์ที่ 2: การขอยืมอุปกรณ์การเรียน] บทที่ 5 A: Can I borrow your crayon, please? (ฉันขอยืมสีเทียนหน่อยได้ไหม?) B: Sure! I have a red crayon. (ได้สิ! ฉันมีสีเทียนสีแดงนะ) A: Thanks a lot. (ขอบคุณมาก ๆ เลย)
+[Unit 2 School] [สถานการณ์ที่ 3: หาของไม่เจอ] บทที่ 6 A: Where is my notebook? (สมุดบันทึกของฉันอยู่ไหนนะ?) B: Look! It’s under your chair. (ดูโน่นสิ! มันอยู่ใต้เก้าอี้ของเธอไง) A: Oh, thank you. (อ๊ะ ขอบคุณนะ)
+[Unit 2 School] [สถานการณ์ที่ 3: หาของไม่เจอ] บทที่ 7 A: Is my pen on the table? (ปากกาของฉันอยู่บนโต๊ะไหม?) B: No, it isn’t. It’s in your pencil case. (ไม่นะ มันอยู่ในกระเป๋าดินสอของเธอต่างหาก)
+[Unit 2 School] [สถานการณ์ที่ 4: ทำความสะอาด/จัดห้องเรียน] บทที่ 8 A: Please close the window. It’s raining! (ช่วยปิดหน้าต่างหน่อย ฝนกำลังตกแล้ว!) B: OK, I can do it. (รับทราบ! เดี๋ยวฉันทำเอง)
+[Unit 2 School] [สถานการณ์ที่ 4: ทำความสะอาด/จัดห้องเรียน] บทที่ 9 A: Open the door, please. (ช่วยเปิดประตูให้หน่อยได้ไหมครับ) B: Yes, of course. (ได้เลยแน่นอนจ้า)
+[Unit 2 School] [สถานการณ์ที่ 5: พักกลางวันและโรงอาหาร (Canteen)] บทที่ 10 A: Time for lunch! Let’s go. (ได้เวลาข้าวเที่ยงแล้ว! ไปกันเถอะ) B: Great! I am hungry. (เยี่ยมเลย! ฉันหิวแล้ว)
+[Unit 2 School] [สถานการณ์ที่ 5: พักกลางวันและโรงอาหาร (Canteen)] บทที่ 11 A: What do you have for lunch? (เธอมีอะไรกินเป็นข้าวเที่ยงเหรอ?) B: I have rice and chicken. (ฉันมีข้าวกับไก่จ้า)
+[Unit 2 School] [สถานการณ์ที่ 6: เล่นสนุกที่สนามเด็กเล่น (Playground)] บทที่ 12 A: Let’s go to the playground. (ไปสนามเด็กเล่นกันเถอะ) B: OK! Let’s play a game. (โอเค! มาเล่นเกมกัน)
+[Unit 2 School] [สถานการณ์ที่ 6: เล่นสนุกที่สนามเด็กเล่น (Playground)] บทที่ 13 A: Look at that big ball! (ดูฟุตบอลลูกใหญ่นั่นสิ!) B: Is it your ball? (มันเป็นลูกบอลของเธอเหรอ?) A: No, it isn’t. It’s Sam’s ball. (ไม่ใช่หรอก มันเป็นลูกบอลของแซมน่ะ)
+[Unit 2 School] [สถานการณ์ที่ 7: ไปห้องสมุด (Library)] บทที่ 14 A: Shh... be quiet in the library. (ชู่... เงียบ ๆ ในห้องสมุดนะ) B: Sorry. What is that book? (ขอโทษที หนังสือเล่มนั้นคืออะไรเหรอ?) A:It’s a book about animals. (มันคือหนังสือเกี่ยวกับสัตว์จ้า)
+[Unit 2 School] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 15 A: Do we have homework today? (วันนี้พวกเรามีการบ้านไหม?) B: Yes. We have English homework. (มีจ้า พวกเรามีการบ้านวิชาภาษาอังกฤษ) A: Let’s do it together! (มาทำด้วยกันเถอะนะ!)
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 1: ทักทายและถามที่อยู่  A: Where do you live, B?  B: I live in Trang.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 2: คุยเรื่องสัญชาติ  A: Are you Thai?  B: Yes, I am Thai. And you?  A: My family is Chinese.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 3: ถามเรื่องศาสนา/วัฒนธรรมครอบครัว  A: Is your friend Muslim?  B: Yes, she is. She loves her family.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 4: ชวนคุยเรื่องดอกไม้ประจำจังหวัด  A: What is that purple flower?  B: It is Sri Trang flower. It is beautiful!
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 5: คุยเรื่องต้นยางพารา  A: Look! Many rubber trees.  B: Wow! My grandfather has a rubber farm.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 6: พูดถึงอนุสาวรีย์พระยารัษฎาฯ  A: Who is Phraya Ratsada?  B: He was a great governor of Trang.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 7: อาหารเช้าสุดโปรด (หมูย่าง)  A: Do you like Trang roasted pork?  B: Yes, I do. It is very yummy!
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 8: อาหารเช้าสุดโปรด (ติ่มซำ)  A: Let’s eat Dim Sum this morning.  B: Great idea! I love Dim Sum.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 9: ของฝากเมืองตรัง (เค้ก)  A: This Trang cake is for you.  B: Thank you! I like sweet cake.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 10: เที่ยวหอนาฬิกา  A: Where is the clock tower?  B: It is in Trang city. It is very big!
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 11: ชวนไปเที่ยวเกาะ  A: Do you know Koh Kradan?  B: Yes! The sea is so beautiful there.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 12: ผจญภัยที่ถ้ำมรกต  A: Let’s go to Emerald Cave.  B: Is it scary?  A: No, it is a beautiful cave!
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 13: เล่นน้ำตกโตนเตะ  A: I like Ton Te waterfall.  B: Me too! The water is very cold.
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 14: เทศกาลวิวาห์ใต้สมุทร  A: What is the Underwater Wedding?  B: It is a famous festival in Trang. People marry under the sea!
+[Unit 3 Family] [สถานการณ์ที่ 8: ทำการบ้าน/เตรียมตัวกลับบ้าน] บทที่ 15: ของเล่นพื้นบ้าน (เทศกาลลูกลม)  A: What is that in the wind?  B: It is a Looklom windmill. It goes spin, spin, spin!
+[Unit 4 Color] [สถานการณ์ที่ 1: ทายสีสิ่งของในห้องเรียน] บทที่ 1 A: What color is this pencil case? (กระเป๋าดินสออันนี้สีอะไรเหรอ?) B: It’s bright pink! I like it. (สีชมพูสดใสเลย! ฉันชอบจัง) A: Thank you. It’s my favorite color. (ขอบคุณนะ มันเป็นสีโปรดของฉันเอง)
+[Unit 4 Color] [สถานการณ์ที่ 1: ทายสีสิ่งของในห้องเรียน] บทที่ 2 A: Is your notebook blue? (สมุดของเธอสีน้ำเงินใช่ไหม?) B: No, it isn’t. It’s purple. (ไม่ใช่จ้า มันเป็นสีม่วง)
+[Unit 4 Color] [สถานการณ์ที่ 1: ทายสีสิ่งของในห้องเรียน] บทที่ 3 A: Look at that computer. What color is it? (ดูคอมพิวเตอร์เครื่องนั้นสิ มันคือสีอะไร?) B: It’s black and silver. (มันเป็นสีดำกับสีเงินจ้า)
+[Unit 4 Color] [สถานการณ์ที่ 2: ชั่วโมงศิลปะ (Art Class)] บทที่ 4 A: Can I borrow your green crayon? (ฉันขอยืมสีเทียนสีเขียวหน่อยได้ไหม?) B: Sure. Here you are. (ได้สิ นี่จ้า) A: Thanks. I want to color the grass. (ขอบคุณนะ ฉันจะเอาไประบายสีหญ้าน่ะ)
+[Unit 4 Color] [สถานการณ์ที่ 2: ชั่วโมงศิลปะ (Art Class)] บทที่ 5 A: Let’s mix red and blue paint! (มาผสมสีแดงกับสีน้ำเงินกันเถอะ!) B: Wow! Look! It becomes purple. (ว้าว ดูสิ! มันกลายเป็นสีม่วงแล้ว) A: That’s magic! (มหัศจรรย์มาก!)
+[Unit 4 Color] [สถานการณ์ที่ 2: ชั่วโมงศิลปะ (Art Class)] บทที่ 6 A: What are you drawing? (เธอกำลังวาดรูปอะไรอยู่เหรอ?) B: A yellow banana and a red apple. (กล้วยสีเหลืองกับแอปเปิ้ลสีแดงจ้า)
+[Unit 4 Color] [สถานการณ์ที่ 3: คุยกันเรื่องสีที่ชอบ] บทที่ 7 A: What is your favorite color? (เธอชอบสีอะไรที่สุดเหรอ?) B: I like orange. What about you? (ฉันชอบสีส้ม แล้วเธอระ?) A: I like sky blue. (ฉันชอบสีฟ้าจ้า)
+[Unit 4 Color] [สถานการณ์ที่ 3: คุยกันเรื่องสีที่ชอบ] บทที่ 8 A: Do you like yellow? (เธอชอบสีเหลืองไหม?) B: No, I don’t. I like green. (ไม่ชอบอ่ะ ฉันชอบสีเขียว) A: Green is beautiful too. (สีเขียวก็สวยเหมือนกันนะ)
+[Unit 4 Color] [สถานการณ์ที่ 4: หาของจากสี (แกล้งหาของ / เล่นเกม)] บทที่ 9 A: Where is my pen? (ปากกาของฉันอยู่ไหนนะ?) B: What color is it? (มันสีอะไรล่ะ?) A: It’s red. (มันสีแดงจ้า) B: Oh! It’s under the book. (อ๋อ! มันอยู่ใต้หนังสือไง)
+[Unit 4 Color] [สถานการณ์ที่ 4: หาของจากสี (แกล้งหาของ / เล่นเกม)] บทที่ 10 A: Let’s play a game. Show me something brown! (มาเล่นเกมกัน ชี้ของที่เป็นสีน้ำตาลให้ดูหน่อย!) B: Here! The desk is brown. (นี่ไง! โต๊ะเรียนเป็นสีน้ำตาล)
+[Unit 4 Color] [สถานการณ์ที่ 5: ที่โรงอาหารและสนามเด็กเล่น] บทที่ 11 A: Look at that balloon! (ดูประตูลูกโป่งนั่นสิ!) B: It’s a rainbow balloon! (มันเป็นลูกโป่งหลากสีเหมือนสายรุ้งเลย!) A: Yes, it has many colors. (ใช่แล้ว มีตั้งหลายสีแน่ะ)
+[Unit 4 Color] [สถานการณ์ที่ 5: ที่โรงอาหารและสนามเด็กเล่น] บทที่ 12 A: Is that your school bag? The orange one? (นั่นกระเป๋าของเธอหรือเปล่า? ใบสีส้มน่ะ) B: No, my school bag is dark blue. (ไม่ใช่จ้า กระเป๋าของฉันสีน้ำเงินเข้ม)
+[Unit 4 Color] [สถานการณ์ที่ 5: ที่โรงอาหารและสนามเด็กเล่น] บทที่ 13 A: I have chocolate milk for lunch. (ฉันมีนมช็อกโกแลตสำหรับมื้อเที่ยงด้วยแหละ) B: Yummy! It’s brown and sweet. (อร่อยแน่เลย! มันเป็นสีน้ำตาลและหวานอร่อย)
+[Unit 4 Color] [สถานการณ์ที่ 6: จัดกระเป๋า / เตรียมตัวเรียน] บทที่ 14 A: Do you have a ruler? (เธอมีไม้บรรทัดไหม?) B: Yes, I have a white ruler and a grey ruler. (มีจ้า ฉันมีไม้บรรทัดสีขาวกับสีเทา) A: Can I have the white one, please? (ฉันขอสียืมอันสีขาวหน่อยได้ไหม?)
+[Unit 4 Color] [สถานการณ์ที่ 6: จัดกระเป๋า / เตรียมตัวเรียน] บทที่ 15 A: Look! The teacher has a new book. (ดูสิ คุณครูมีหนังสือเล่มใหม่ด้วย) B: The big gold book? (เล่มใหญ่ ๆ สีทองนั่นใช่ไหม?) A: Yes! It looks very beautiful. (ใช่เลย! ดูสวยงามมาก ๆ)
+[Unit 5 Toys] [สถานการณ์ที่ 1: คุยเรื่องของเล่นทั่วไปในห้องเรียน] บทที่ 1: ทายของเล่นในกระเป๋า A: What’s this in your bag? (นี่คืออะไรอยู่ในกระเป๋าของเธอเหรอ?) B: It’s a toy car. It is red! (มันคือรถของเล่นน่ะ สีแดงด้วยนะ!)
+[Unit 5 Toys] [สถานการณ์ที่ 1: คุยเรื่องของเล่นทั่วไปในห้องเรียน] บทที่ 2: ของเล่นชิ้นโปรด A: What is your favorite toy? (ของเล่นชิ้นโปรดของเธอคืออะไรเหรอ?) B: My favorite toy is a teddy bear. It is soft. (ของเล่นชิ้นโปรดของฉันคือตุ๊กตาหมีจ้า มันนุ่มมากเลย)
+[Unit 5 Toys] [สถานการณ์ที่ 1: คุยเรื่องของเล่นทั่วไปในห้องเรียน] บทที่ 3: ชวนกันเล่นบล็อกไม้ A: Do you have wooden blocks? (เธอมีบล็อกไม้ไหม?) B: Yes, I do. Let’s build a big school! (มีจ้า มาสร้างโรงเรียนหลังใหญ่กันเถอะ!)
+[Unit 5 Toys] [สถานการณ์ที่ 2: การละเล่นว่าว (Kite Flying)] บทที่ 4: ลมว่าวมาแล้ว A: Look! The wind is strong today. (ดูสิ วันนี้ลมแรงมากเลย) B: Wow! Let’s fly a kite in the playground. (ว้าว! ไปเล่นว่าวที่สนามกันเถอะ)
+[Unit 5 Toys] [สถานการณ์ที่ 2: การละเล่นว่าว (Kite Flying)] บทที่ 5: ทายว่าวบนฟ้า A: What’s that in the sky? Is it a bird? (นั่นอะไรบนฟ้าน่ะ? นกหรือเปล่า?) B: No, it isn’t. It’s a beautiful star kite! (ไม่ใช่หรอก มันคือว่าวรูปดาวที่สวยงามต่างหาก)
+[Unit 5 Toys] [สถานการณ์ที่ 3: ลูกลมหมื่นศรี จังหวัดตรัง (Looklom of Trang)] บทที่ 6: เสียงปริศนาในทุ่งนา A: Listen! What is that loud sound? (ฟังดูสิ! นั่นเสียงอะไรดังมากเลย?) B: It is a Looklom from Trang! (มันคือลูกลมของจังหวัดตรังจ้า) A: Oh, it’s amazing! (โอ้โห มันน่าทึ่งมากเลย!)
+[Unit 5 Toys] [สถานการณ์ที่ 3: ลูกลมหมื่นศรี จังหวัดตรัง (Looklom of Trang)] บทที่ 7: กลไกของลูกลม A: Is that a windmill? (นั่นคือกังหันลมใช่ไหม?) B: Yes, it’s a Thai Looklom. It spins in the rice field. (ใช่แล้ว มันคือลูกลมของไทย มันหมุนอยู่ในทุ่งนาน่ะ) A: It makes a very beautiful sound. (มันทำเสียงได้ไพเราะมากเลยนะ)
+[Unit 5 Toys] [สถานการณ์ที่ 3: ลูกลมหมื่นศรี จังหวัดตรัง (Looklom of Trang)] บทที่ 8: ไปเที่ยวงานเทศกาลลูกลม A: Let’s go to the Looklom Festival. (ไปเที่ยวงานเทศกาลลูกลมกันเถอะ) B: Great! I want to see many big Lookloms. (เยี่ยมเลย! ฉันอยากไปดูลูกลมยักษ์เยอะ ๆ)
+[Unit 5 Toys] [สถานการณ์ที่ 4: การละเล่นพื้นบ้านภาคกลางและทั่วไป (Thai Traditional Games)] บทที่ 9: ขี่ม้าก้านกล้วย A: What is that in your hand? (นั่นอะไรอยู่ในมือของเธอเหรอ?) B: It’s a banana rib hobby horse. (มันคือม้าก้านกล้วยจ้า) A: Cool! Let’s ride it together. (เจ๋งไปเลย! มาขี่ด้วยกันนะ)
+[Unit 5 Toys] [สถานการณ์ที่ 4: การละเล่นพื้นบ้านภาคกลางและทั่วไป (Thai Traditional Games)] บทที่ 10: เล่นเดินกะลา A: What are these coconut shells for? (กะลามะพร้าวพวกนี้เอาไว้ทำอะไรเหรอ?) B: They are for the coconut shell walker game! (เอาไว้เล่นเดินกะลาไงล่ะ!) A: Oh, let’s race! (โอ้ มาวิ่งแข่งกันเถอะ!)
+[Unit 5 Toys] [สถานการณ์ที่ 4: การละเล่นพื้นบ้านภาคกลางและทั่วไป (Thai Traditional Games)] บทที่ 11: หมุนลูกข่าง A: Is this your toy top? (นี่คือลูกข่างของเล่นของเธอใช่ไหม?) B: Yes, it is. Look! It can spin fast. (ใช่แล้ว ดูสิ! มันหมุนเร็วมากเลยนะ)
+[Unit 5 Toys] [สถานการณ์ที่ 4: การละเล่นพื้นบ้านภาคกลางและทั่วไป (Thai Traditional Games)] บทที่ 12: ดีดลูกแก้ว A: Do you want to play marbles? (เธออยากเล่นดีดลูกแก้วไหม?) B: Yes, I have ten marbles. Let’s play! (อยากสิ ฉันมีลูกแก้ว 10 ลูก มาเล่นกันเลย!)
+[Unit 5 Toys] [สถานการณ์ที่ 5: แบ่งปันและเก็บของเล่นในห้องเรียน] บทที่ 13: ขอยืมของเล่น A: Can I play with your robot, please? (ฉันขอเล่นหุ่นยนต์ของเธอหน่อยได้ไหม?) B: Sure. Here you are. (ได้สิ อ่ะนี่จ้า) A: Thank you, you are nice! (ขอบคุณนะ เธอใจดีจัง!)
+[Unit 5 Toys] [สถานการณ์ที่ 5: แบ่งปันและเก็บของเล่นในห้องเรียน] บทที่ 14: ปล่อยเครื่องบินกระดาษ A: Look at my paper plane! It can fly. (ดูเครื่องบินกระดาษของฉันสิ! มันบินได้ด้วยนะ) B: Oh! It is on the teacher’s desk now. (อุ๊ย! ตอนนี้มันไปอยู่บนโต๊ะคุณครูแล้วล่ะ)
+[Unit 5 Toys] [สถานการณ์ที่ 5: แบ่งปันและเก็บของเล่นในห้องเรียน] บทที่ 15: ชวนกันเก็บของเล่นหลังเลิกเรียน A: Time to go home. Let’s keep the toys. (ได้เวลากลับบ้านแล้ว มาเก็บของเล่นกันเถอะ) B: OK! Put them in this big box. (โอเค! เอาพวกมันใส่ในกล่องใบใหญ่ใบนี้เลย)

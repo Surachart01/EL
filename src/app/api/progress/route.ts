@@ -20,6 +20,7 @@ export async function GET(request: Request) {
         flashcardScores: {},
         completedRoleplays: {},
         activeRoleplaySteps: {},
+        roleplayScores: {},
         submissions: [],
       });
     }
@@ -31,6 +32,7 @@ export async function GET(request: Request) {
         flashcardScores: Object.fromEntries(progress.flashcardScores || new Map()),
         completedRoleplays: Object.fromEntries(progress.completedRoleplays || new Map()),
         activeRoleplaySteps: Object.fromEntries(progress.activeRoleplaySteps || new Map()),
+        roleplayScores: Object.fromEntries(progress.roleplayScores || new Map()),
         submissions: progress.submissions || [],
       },
     });
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { studentId, flashcardScores, completedRoleplays, activeRoleplaySteps, submission } = body;
+    const { studentId, flashcardScores, completedRoleplays, activeRoleplaySteps, roleplayScores, submission } = body;
 
     if (!studentId) {
       return NextResponse.json({ success: false, error: 'Missing studentId' }, { status: 400 });
@@ -57,6 +59,7 @@ export async function POST(request: Request) {
         flashcardScores: {},
         completedRoleplays: {},
         activeRoleplaySteps: {},
+        roleplayScores: {},
         submissions: [],
       });
     }
@@ -79,6 +82,12 @@ export async function POST(request: Request) {
       }
     }
 
+    if (roleplayScores) {
+      for (const [key, value] of Object.entries(roleplayScores)) {
+        progress.roleplayScores.set(key, value as number);
+      }
+    }
+
     if (submission) {
       progress.submissions.push({
         lessonId: submission.lessonId,
@@ -98,6 +107,7 @@ export async function POST(request: Request) {
         flashcardScores: Object.fromEntries(progress.flashcardScores),
         completedRoleplays: Object.fromEntries(progress.completedRoleplays),
         activeRoleplaySteps: Object.fromEntries(progress.activeRoleplaySteps),
+        roleplayScores: Object.fromEntries(progress.roleplayScores),
         submissions: progress.submissions,
       },
     });
