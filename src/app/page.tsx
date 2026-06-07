@@ -3,20 +3,13 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import CartoonCharacter, { CharacterState, CharacterType } from '../components/CartoonCharacter';
+import CartoonCharacter, { CharacterState } from '../components/CartoonCharacter';
 import Confetti from '../components/Confetti';
 import { calculateSimilarity, computeEnglishWordDiff, WordDiffSegment } from '../utils/similarity';
 import { audioSynth } from '../utils/audio';
-import { LESSONS, LessonData, VocabItem, DialogueLine, SentenceItem } from '../utils/lessons';
+import { LESSONS, LessonData } from '../utils/lessons';
 
-interface SubmissionRecord {
-  id: number;
-  topic: string;
-  type: 'เสียง' | 'วิดีโอ';
-  date: string;
-  status: 'ตรวจแล้ว' | 'กำลังตรวจ' | 'รอส่ง';
-  score?: number;
-}
+
 
 export default function TrangKidsSpeakApp() {
   // Student Auth states
@@ -37,11 +30,9 @@ export default function TrangKidsSpeakApp() {
 
   // Global Speech/Mic Support & Permission
   const [speechSupported, setSpeechSupported] = useState(true);
-  const [micPermissionState, setMicPermissionState] = useState<'prompt' | 'granted' | 'denied'>('prompt');
-  const [errorMessage, setErrorMessage] = useState('');
+
   
-  // Dashboard states
-  const [submissions, setSubmissions] = useState<SubmissionRecord[]>([]);
+
 
   // Flashcards state
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
@@ -130,22 +121,7 @@ export default function TrangKidsSpeakApp() {
             await saveProgressToDB(studentId, { activeRoleplaySteps: parsed });
           }
         }
-        if (data.progress.submissions && data.progress.submissions.length > 0) {
-          const localSubs = data.progress.submissions.map((sub: any, sIdx: number) => {
-            const lesson = LESSONS.find(l => l.id === sub.lessonId);
-            return {
-              id: sIdx + 1,
-              topic: lesson ? lesson.title : `บทเรียนที่ ${sub.lessonId}`,
-              type: sub.mediaType === 'audio' ? 'เสียง' : 'วิดีโอ',
-              date: sub.date,
-              status: sub.status as any,
-              score: sub.score,
-            };
-          });
-          setSubmissions(localSubs);
-        } else {
-          setSubmissions([]);
-        }
+
       }
     } catch (e) {
       console.error('Error fetching progress:', e);
@@ -178,7 +154,7 @@ export default function TrangKidsSpeakApp() {
   const [animationSubtitle, setAnimationSubtitle] = useState<string>('');
 
   // Role Play game states
-  const [userRole, setUserRole] = useState<'dino' | 'bear'>('bear');
+  const [userRole] = useState<'dino' | 'bear'>('bear');
   const [rolePlayStep, setRolePlayStep] = useState<number>(0);
   const [rolePlayScore, setRolePlayScore] = useState<number | null>(null);
   const [rolePlayDiff, setRolePlayDiff] = useState<WordDiffSegment[]>([]);
@@ -188,19 +164,8 @@ export default function TrangKidsSpeakApp() {
   const [bearRoleState, setBearRoleState] = useState<CharacterState>('idle');
   const [rolePlayFeedback, setRolePlayFeedback] = useState<string>('');
 
-  // Speaking Submission tab states
-  const [submitSelectedLesson, setSubmitSelectedLesson] = useState<LessonData>(LESSONS[0]);
-  const [submitMediaType, setSubmitMediaType] = useState<'audio' | 'video'>('audio');
-  const [isSubmittingRecord, setIsSubmittingRecord] = useState(false);
-  const [submittedScore, setSubmittedScore] = useState<number | null>(null);
-  const [submittedTranscript, setSubmittedTranscript] = useState<string>('');
-  const [submittedDiff, setSubmittedDiff] = useState<WordDiffSegment[]>([]);
-  const [isSubmissionListening, setIsSubmissionListening] = useState(false);
-  const [submissionFeedback, setSubmissionFeedback] = useState('');
+
   
-  // Live Camera preview state for Video recording
-  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // References for Web Speech API
   const recognitionRef = useRef<any>(null);
@@ -224,15 +189,6 @@ export default function TrangKidsSpeakApp() {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         setSpeechSupported(false);
-        setErrorMessage('เบราว์เซอร์นี้ไม่รองรับการจำเสียงพูดจ้า แนะนำให้เปิดใน Google Chrome นะจ๊ะ');
-      }
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'microphone' as PermissionName })
-          .then((permissionStatus) => {
-            setMicPermissionState(permissionStatus.state as any);
-            permissionStatus.onchange = () => { setMicPermissionState(permissionStatus.state as any); };
-          })
-          .catch(() => console.log('Permission query not supported'));
       }
     }
   }, []);
@@ -292,34 +248,7 @@ export default function TrangKidsSpeakApp() {
     }
   }, [activeTab, selectedLesson]);
 
-  // Web Camera stream controller
-  useEffect(() => {
-    if (activeTab === 'submission' && submitMediaType === 'video') {
-      startCamera();
-    } else {
-      stopCamera();
-    }
-    return () => stopCamera();
-  }, [activeTab, submitMediaType]);
 
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      setVideoStream(stream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch {
-      console.log('Camera access denied or unavailable');
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoStream) {
-      videoStream.getTracks().forEach(track => track.stop());
-      setVideoStream(null);
-    }
-  };
 
   // Speaks any English phrase using Web Speech Synthesis
   const speakText = (text: string, isDino: boolean = true, onEnd?: () => void) => {
@@ -660,56 +589,6 @@ export default function TrangKidsSpeakApp() {
     }
   };
 
-  // Custom AI speaking assessment in Submission console
-  const recordSubmissionSpeech = async () => {
-    if (!speechSupported) {
-      alert('ขออภัยด้วยจ้า ระบบไมโครโฟนจำคำพูดไม่รองรับบนเบราว์เซอร์นี้');
-      return;
-    }
-    // Abort any existing session and create a fresh instance
-    if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
-    const rec = createRecognition();
-    if (!rec) { alert('ขออภัยด้วยจ้า ระบบไมโครโฟนจำคำพูดไม่รองรับบนเบราว์เซอร์นี้'); return; }
-    recognitionRef.current = rec;
-
-    audioSynth.playPop();
-    setIsSubmissionListening(true);
-    setSubmittedScore(null);
-    setSubmittedTranscript('');
-    setSubmittedDiff([]);
-    setSubmissionFeedback('🎙️ กำลังอัดเสียงประเมิน... ออกเสียงตามบทสนทนาได้เลย!');
-
-    const targetText = submitSelectedLesson.dialogue
-      .filter(line => line.speaker === 'B')
-      .map(line => line.text)
-      .join(' ');
-
-    rec.onresult = (event: any) => {
-      const resultText = event.results[0][0].transcript;
-      setSubmittedTranscript(resultText);
-      const similarityScore = calculateSimilarity(targetText, resultText);
-      setSubmittedScore(similarityScore);
-      setSubmittedDiff(computeEnglishWordDiff(targetText, resultText));
-      if (similarityScore >= 80) {
-        audioSynth.playSuccess();
-        setConfettiActive(true);
-        setSubmissionFeedback('สุดยอดไปเลย! หนูออกเสียงประโยคภาษาอังกฤษของบทเรียนนี้ได้ถูกต้องแม่นยำมาก 🏆');
-      } else {
-        audioSynth.playTryAgain();
-        setSubmissionFeedback('เกือบถูกแล้วคนเก่ง! ดูจุดสะกดไฮไลท์สีแดง แล้วพยายามฝึกออกเสียงใหม่อีกครั้งนะจ๊ะ 💪');
-      }
-    };
-    rec.onerror = () => { setIsSubmissionListening(false); setSubmissionFeedback('⚠️ เอ๊ะ...ไม่ได้ยินเสียงเลยจ้า ลองขยับไมค์และพูดใหม่อีกครั้งนะ'); };
-    rec.onend = () => { setIsSubmissionListening(false); };
-    try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-      rec.start();
-    } catch {
-      alert('กรุณากดเปิดใช้งานไมโครโฟนเพื่อส่งเสียงพูดน้า');
-      setIsSubmissionListening(false);
-    }
-  };
-
   // Keypad login handlers
   const handleKeyPress = (num: string) => { audioSynth.playPop(); if (loginId.length < 10) setLoginId(prev => prev + num); };
   const handleBackspace = () => { audioSynth.playPop(); setLoginId(prev => prev.slice(0, -1)); };
@@ -738,37 +617,6 @@ export default function TrangKidsSpeakApp() {
     } finally {
       setIsLoggingIn(false);
     }
-  };
-
-  // Submit speaking score dynamically to dashboard submissions list
-  const submitToTeacher = () => {
-    if (submittedScore === null) return;
-    setIsSubmittingRecord(true);
-    setTimeout(() => {
-      audioSynth.playSuccess();
-      setConfettiActive(true);
-      const today = new Date();
-      const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-      const formattedDate = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${String(today.getFullYear()+543).slice(-2)}`;
-      const newSub: SubmissionRecord = {
-        id: submissions.length + 1,
-        topic: submitSelectedLesson.title,
-        type: submitMediaType === 'audio' ? 'เสียง' : 'วิดีโอ',
-        date: formattedDate,
-        status: 'ตรวจแล้ว',
-        score: submittedScore
-      };
-      setSubmissions([newSub, ...submissions]);
-      setIsSubmittingRecord(false);
-      if (student) {
-        saveProgressToDB(student.studentId, { submission: { lessonId: submitSelectedLesson.id, score: submittedScore, mediaType: submitMediaType, status: 'ตรวจแล้ว', date: formattedDate } });
-      }
-      alert('ส่งผลงานการพูดของหนูให้คุณครูตรวจผ่านระบบออนไลน์สำเร็จแล้วจ้า! เก่งมากเลยลูก! ⭐');
-      setSubmittedScore(null);
-      setSubmittedTranscript('');
-      setSubmittedDiff([]);
-      setActiveTab('home');
-    }, 1200);
   };
 
   if (!student) {
@@ -993,7 +841,6 @@ export default function TrangKidsSpeakApp() {
                     setFlashcardTranscripts({});
                     setCompletedRoleplays({});
                     setActiveRoleplaySteps({});
-                    setSubmissions([]);
                     setActiveTab('home');
                   }}
                   className="flex-1 py-3 rounded-2xl bg-rose-500 hover:bg-rose-400 text-white font-black text-sm border-2 border-rose-600 border-b-4 active:translate-y-[2px] transition-all"
@@ -1226,7 +1073,7 @@ export default function TrangKidsSpeakApp() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
               
               {/* COLUMN 1: วันนี้ฝึกพูด */}
-              <div className="lg:col-span-3 kids-card rounded-3xl p-5 flex flex-col justify-between text-left bg-white relative">
+              <div className="lg:col-span-4 kids-card rounded-3xl p-5 flex flex-col justify-between text-left bg-white relative">
                 <div>
                   <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100">วันนี้ฝึกพูด</h3>
                   
@@ -1252,8 +1099,8 @@ export default function TrangKidsSpeakApp() {
                 <button
                   onClick={() => {
                     audioSynth.playPop();
-                    setSubmitSelectedLesson(LESSONS[0]);
-                    setActiveTab('submission');
+                    setSelectedLesson(LESSONS[0]);
+                    setActiveTab('roleplay');
                   }}
                   className="btn-3d w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-black rounded-2xl border-2 border-blue-600 shadow-blue-300 mt-2"
                 >
@@ -1262,7 +1109,7 @@ export default function TrangKidsSpeakApp() {
               </div>
 
               {/* COLUMN 2: เทคนิค PRACTICE - EXACT DETAILS */}
-              <div className="lg:col-span-3 kids-card rounded-3xl p-5 bg-white text-left">
+              <div className="lg:col-span-4 kids-card rounded-3xl p-5 bg-white text-left">
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
                   <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider">เทคนิค PRACTICE</h3>
                   <button 
@@ -1307,7 +1154,7 @@ export default function TrangKidsSpeakApp() {
               </div>
 
               {/* COLUMN 3: แนะนำสื่อสำหรับคุณ */}
-              <div className="lg:col-span-3 kids-card rounded-3xl p-5 bg-white text-left flex flex-col justify-between">
+              <div className="lg:col-span-4 kids-card rounded-3xl p-5 bg-white text-left flex flex-col justify-between">
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
                   <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider">แนะนำสื่อสำหรับคุณ</h3>
                   <span className="text-[10px] font-black text-slate-400 cursor-pointer hover:text-sky-500">ดูทั้งหมด &gt;</span>
@@ -1347,62 +1194,6 @@ export default function TrangKidsSpeakApp() {
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
                 </div>
-              </div>
-
-              {/* COLUMN 4: สถานะส่งผลงานล่าสุด */}
-              <div className="lg:col-span-3 kids-card rounded-3xl p-5 bg-white text-left flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
-                    <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider">สถานะการส่งผลงานล่าสุด</h3>
-                    <span className="text-[10px] font-black text-slate-400 cursor-pointer hover:text-sky-500">ดูทั้งหมด &gt;</span>
-                  </div>
-                  
-                  <div className="overflow-x-auto mt-2">
-                    <table className="w-full text-left text-[10px] font-black">
-                      <thead>
-                        <tr className="text-slate-400 border-b border-slate-100 pb-1">
-                          <th className="pb-1.5 font-black">หัวข้อ</th>
-                          <th className="pb-1.5 font-black text-center hidden sm:table-cell">ประเภท</th>
-                          <th className="pb-1.5 font-black text-right hidden md:table-cell">วันที่ส่ง</th>
-                          <th className="pb-1.5 font-black text-right">สถานะ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {submissions.map((sub, idx) => (
-                          <tr key={idx} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/20">
-                            <td className="py-2.5 text-slate-700 font-extrabold truncate max-w-[80px]" title={sub.topic}>
-                              {sub.topic}
-                            </td>
-                            <td className="py-2.5 text-center text-slate-500 font-extrabold hidden sm:table-cell">{sub.type}</td>
-                            <td className="py-2.5 text-right text-slate-400 font-bold hidden md:table-cell">{sub.date}</td>
-                            <td className="py-2.5 text-right">
-                              {sub.status === 'ตรวจแล้ว' ? (
-                                <span className="text-emerald-500 font-black flex items-center justify-end gap-1" title={`${sub.score}%`}>
-                                  ตรวจแล้ว <span className="w-3.5 h-3.5 bg-emerald-500 text-white rounded-full flex items-center justify-center text-[8px] font-bold">✓</span>
-                                </span>
-                              ) : sub.status === 'กำลังตรวจ' ? (
-                                <span className="text-orange-500 font-black flex items-center justify-end gap-1 animate-pulse">
-                                  กำลังตรวจ <span className="w-3.5 h-3.5 rounded-full border-2 border-orange-500 border-t-transparent animate-spin inline-block" />
-                                </span>
-                              ) : (
-                                <span className="text-slate-400 font-black flex items-center justify-end gap-1">
-                                  รอส่ง <span className="w-3.5 h-3.5 rounded-full border-2 border-slate-300 inline-block" />
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => { audioSynth.playPop(); setActiveTab('submission'); }}
-                  className="w-full py-2 bg-white hover:bg-pink-50 text-pink-500 text-[10px] font-black rounded-2xl border-2 border-pink-200 active:scale-95 transition mt-3 text-center"
-                >
-                  ส่งผลงานใหม่
-                </button>
               </div>
 
             </div>
@@ -2246,323 +2037,6 @@ export default function TrangKidsSpeakApp() {
                     )}
                   </div>
                 )}
-
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* TAB 6: ONLINE SPEAKING SUBMISSION */}
-        {activeTab === 'submission' && (
-          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left">
-            <div className="border-b border-slate-100 pb-4 mb-6">
-              <h2 className="text-2xl font-black text-pink-500 font-kids flex items-center gap-2">
-                <span>🎙️</span> ระบบประเมินและส่งผลงานการพูดออนไลน์ (Speaking Submission & AI Score)
-              </h2>
-              <p className="text-xs font-extrabold text-slate-400 mt-1">อัดเสียงพูดโต้ตอบหรืออัดคลิปวิดีโอประเมินผลคะแนนความแม่นยำภาษาอังกฤษแบบ Real-time คำต่อคำ และบันทึกคะแนนส่งครูผ่านออนไลน์ได้ทันที!</p>
-            </div>
-
-            {(!speechSupported || micPermissionState === 'denied') && (
-              <div className="mb-6 bg-rose-50 border-2 border-rose-200 rounded-2xl p-4 text-left animate-pulse">
-                <p className="text-rose-700 text-xs font-black flex items-center gap-2">
-                  <span>⚠️</span> {errorMessage || 'ไมโครโฟนถูกปิดกั้นอยู่จ้า! กรุณาคลิกรูปกุญแจที่ช่อง URL ด้านบนและเลือก อนุญาตการเข้าถึงไมโครโฟน เพื่อให้น้องการ์ตูนประเมินผลการพูดได้นะคนเก่ง!'}
-                </p>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              
-              {/* Left Column: Interactive Mic / Video submission panel */}
-              <div className="lg:col-span-6 bg-gradient-to-b from-pink-50 to-pink-100/50 rounded-3xl p-6 flex flex-col justify-between border-4 border-white shadow-sm min-h-[480px]">
-                
-                <div className="space-y-4">
-                  
-                  {/* Select Lesson Topic */}
-                  <div className="flex flex-col gap-1 text-left">
-                    <label className="text-xs font-black text-pink-900">1. เลือกหัวข้อที่จะส่งผลงาน:</label>
-                    <select
-                      value={submitSelectedLesson.id}
-                      onChange={(e) => {
-                        const l = LESSONS.find(lesson => lesson.id === parseInt(e.target.value));
-                        if (l) {
-                          setSubmitSelectedLesson(l);
-                          setSubmittedScore(null);
-                          setSubmittedTranscript('');
-                          setSubmittedDiff([]);
-                          setSubmissionFeedback('');
-                        }
-                      }}
-                      className="bg-white border-2 border-pink-200 text-pink-900 text-sm font-black rounded-2xl px-4 py-2 outline-none cursor-pointer w-full"
-                    >
-                      {LESSONS.map(l => (
-                        <option key={l.id} value={l.id}>{l.emoji} บทเรียนที่ {l.id}: {l.title} ({l.englishTitle})</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Select Media type: Audio VS Video */}
-                  <div className="flex flex-col gap-1 text-left">
-                    <label className="text-xs font-black text-pink-900">2. เลือกประเภทการส่งงาน:</label>
-                    <div className="grid grid-cols-2 gap-3 bg-white p-1 rounded-2xl border-2 border-pink-200">
-                      <button
-                        onClick={() => {
-                          audioSynth.playPop();
-                          setSubmitMediaType('audio');
-                        }}
-                        className={`py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 ${
-                          submitMediaType === 'audio'
-                            ? 'bg-pink-400 text-white shadow'
-                            : 'text-pink-600 hover:bg-pink-50'
-                        }`}
-                      >
-                        <span>🎙️ อัดคลิปเสียง</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          audioSynth.playPop();
-                          setSubmitMediaType('video');
-                        }}
-                        className={`py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 ${
-                          submitMediaType === 'video'
-                            ? 'bg-rose-500 text-white shadow'
-                            : 'text-rose-600 hover:bg-rose-50'
-                        }`}
-                      >
-                        <span>📹 อัดคลิปวิดีโอ (กล้องสด)</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Target Phrase Box */}
-                  <div className="bg-white rounded-2xl p-4 border border-pink-200 text-left">
-                    <p className="text-[10px] font-black text-slate-400">ประโยคภาษาอังกฤษเป้าหมาย (Target Sentence):</p>
-                    <h4 className="text-lg font-black text-slate-800 my-1">
-                      &ldquo;{submitSelectedLesson.dialogue
-                        .filter(l => l.speaker === 'B')
-                        .map(l => l.text)
-                        .join(' ')}&rdquo;
-                    </h4>
-                    <p className="text-[10px] font-extrabold text-slate-400">คำอ่านไทย: {submitSelectedLesson.dialogue
-                      .filter(l => l.speaker === 'B')
-                      .map(l => l.phonetic)
-                      .join(' ')}</p>
-                    <p className="text-[10px] font-extrabold text-emerald-600 mt-1 border-t border-slate-50 pt-1">คำแปลไทย: {submitSelectedLesson.dialogue
-                      .filter(l => l.speaker === 'B')
-                      .map(l => l.translation)
-                      .join(' ')}</p>
-                  </div>
-
-                </div>
-
-                {/* Simulated Webcam or Waveform Container */}
-                <div className="flex-1 w-full bg-slate-900 rounded-2xl overflow-hidden relative flex items-center justify-center border-2 border-white/40 min-h-[200px] my-4 shadow-inner">
-                  {submitMediaType === 'video' ? (
-                    videoStream ? (
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                        className="w-full h-full object-cover absolute inset-0"
-                      />
-                    ) : (
-                      <div className="text-center text-slate-400 text-xs p-4 space-y-2">
-                        <span className="text-5xl animate-bounce-gentle block">📹</span>
-                        <p className="font-black">กรุณาอนุญาตเข้าถึงกล้องเว็บแคม...</p>
-                        <p className="text-[10px] text-slate-500">ระบบจะแสดงกล้องสดขณะอัดส่งประเมินผลจ้า</p>
-                      </div>
-                    )
-                  ) : (
-                    // Waveform active ripple visualizer
-                    <div className="h-20 flex items-center justify-center gap-1.5 w-full max-w-[220px]">
-                      {isSubmissionListening ? (
-                        Array.from({ length: 9 }).map((_, i) => (
-                          <span
-                            key={i}
-                            className="w-2 bg-gradient-to-t from-pink-400 to-rose-500 rounded-full animate-wave-pulse"
-                            style={{
-                              height: `${[24, 48, 64, 32, 56, 72, 44, 28, 16][i]}px`,
-                              animationDelay: `${i * 0.12}s`,
-                              animationDuration: '1.2s'
-                            }}
-                          />
-                        ))
-                      ) : (
-                        <div className="text-center text-slate-400 text-xs">
-                          <span className="text-4xl block mb-2">🎙️</span>
-                          <span className="font-black text-[10px] tracking-wider">ไมโครโฟนบันทึกเสียงระบบส่งงานพร้อมใช้</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Red flashing dot when listening */}
-                  {isSubmissionListening && (
-                    <div className="absolute top-3 right-3 bg-rose-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 animate-pulse border border-white">
-                      <span className="w-1.5 h-1.5 bg-white rounded-full inline-block" />
-                      REC
-                    </div>
-                  )}
-                </div>
-
-                {/* Micro record triggering button */}
-                <div className="flex flex-col items-center gap-2">
-                  <div className="relative">
-                    {isSubmissionListening && (
-                      <>
-                        <span className="absolute inset-0 rounded-full bg-pink-500 animate-pulse-ring -z-10" />
-                        <span className="absolute inset-0 rounded-full bg-rose-400 animate-pulse-ring -z-10" style={{ animationDelay: '0.6s' }} />
-                      </>
-                    )}
-
-                    <button
-                      onClick={recordSubmissionSpeech}
-                      disabled={isSubmissionListening}
-                      className={`btn-3d w-20 h-20 rounded-full flex items-center justify-center text-3xl shadow-lg transition ${
-                        isSubmissionListening
-                          ? 'bg-rose-600 text-white border-4 border-rose-700'
-                          : 'bg-pink-400 hover:bg-pink-500 text-white border-4 border-pink-400 shadow-pink-300'
-                      }`}
-                    >
-                      {isSubmissionListening ? '⏹️' : '🎙️'}
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] font-black text-pink-700">
-                    {isSubmissionListening ? '🔴 กำลังอัดเสียงพูด... พูดให้เสียงดังชัดเจนนะจ๊ะ' : '👆 กดปุ่มไมค์เพื่อเริ่มพูดและอัดเสียงประเมิน'}
-                  </p>
-                </div>
-
-              </div>
-
-              {/* Right Column: AI Results & submission status table history */}
-              <div className="lg:col-span-6 bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm flex flex-col justify-between">
-                
-                {/* Result Board */}
-                <div className="space-y-5">
-                  <h3 className="font-black text-slate-800 flex items-center gap-2 border-b border-slate-100 pb-3">
-                    <span>📊</span> ผลการประเมินเสียงพูดจากระบบอัจฉริยะ (AI Speaking Score)
-                  </h3>
-
-                  {(submittedTranscript || submittedScore !== null) ? (
-                    <div className="space-y-4">
-                      
-                      {/* Score circular display */}
-                      {submittedScore !== null && (
-                        <div className="flex items-center justify-between bg-sky-50/50 p-4 rounded-2xl border border-sky-100 gap-4">
-                          <div className="text-left flex-1">
-                            <span className="bg-sky-100 text-sky-700 font-black text-[9px] px-2.5 py-0.5 rounded-full">Transcript</span>
-                            <p className="font-black text-base text-slate-800 italic mt-1.5">&ldquo;{submittedTranscript}&rdquo;</p>
-                          </div>
-
-                          <div className="shrink-0 flex flex-col items-center">
-                            <div className={`w-20 h-20 rounded-full border-4 flex flex-col items-center justify-center font-black ${
-                              submittedScore >= 80
-                                ? 'bg-emerald-50 border-emerald-400 text-emerald-600'
-                                : 'bg-orange-50 border-orange-400 text-orange-600'
-                            }`}>
-                              <span className="text-xl">{submittedScore}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">Accuracy</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Word highlighting correct / incorrect */}
-                      {submittedDiff.length > 0 && (
-                        <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left">
-                          <p className="text-[10px] font-black text-slate-400 mb-1.5">เปรียบเทียบคำพูดสะกด (เขียว = ถูก | แดง = ผิด):</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {submittedDiff.map((seg, idx) => (
-                              <span
-                                key={idx}
-                                className={`px-2.5 py-1 rounded-xl text-xs font-black border transition ${
-                                  seg.isMatched
-                                    ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
-                                    : 'bg-rose-100 text-rose-700 border-rose-200 line-through'
-                                }`}
-                              >
-                                {seg.word}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Teacher message */}
-                      {submissionFeedback && (
-                        <div className={`p-4 rounded-2xl border-2 text-center ${
-                          submittedScore !== null && submittedScore >= 80
-                            ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                            : 'bg-orange-50 border-orange-200 text-orange-950'
-                        }`}>
-                          <span className="text-3xl animate-bounce block mb-1">
-                            {submittedScore !== null && submittedScore >= 80 ? '👑🌟🤩' : '🍀💪❤️'}
-                          </span>
-                          <p className="text-xs font-black leading-relaxed">{submissionFeedback}</p>
-                        </div>
-                      )}
-
-                      {/* Pink Submit button */}
-                      {submittedScore !== null && (
-                        <button
-                          onClick={submitToTeacher}
-                          disabled={isSubmittingRecord}
-                          className={`btn-3d w-full py-3 text-white text-sm font-black rounded-2xl border-2 transition ${
-                            isSubmittingRecord
-                              ? 'bg-slate-400 border-slate-500 cursor-not-allowed'
-                              : 'bg-pink-400 hover:bg-pink-500 border-pink-500 shadow-pink-300 active:translate-y-1'
-                          }`}
-                        >
-                          {isSubmittingRecord ? 'กำลังอัปโหลดส่งผลงาน... 📤' : 'ส่งผลงานการประเมินนี้ไปยังคุณครู 💖⭐'}
-                        </button>
-                      )}
-
-                    </div>
-                  ) : (
-                    <div className="text-center text-slate-400 text-xs py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <span className="text-4xl block mb-2">📊</span>
-                      <p className="font-black">ยังไม่มีข้อมูลการประเมินการส่ง</p>
-                      <p className="text-[10px] text-slate-400">กรุณาเลือกหัวข้อบทเรียนและกดไมโครโฟนอัดเสียงซ้ายมือจ้า!</p>
-                    </div>
-                  )}
-
-                </div>
-
-                {/* Summary scoreboard table */}
-                <div className="border-t border-slate-100 pt-5 mt-6">
-                  <h4 className="text-xs font-black text-slate-700 mb-3 text-left">📊 ตารางประวัติการส่งผลงานของน้องออม (Dashboard Feed):</h4>
-                  
-                  <div className="overflow-x-auto rounded-xl border border-slate-200">
-                    <table className="w-full text-left text-[11px] font-black">
-                      <thead className="bg-slate-50 text-slate-400">
-                        <tr>
-                          <th className="p-2 font-black">บทเรียน</th>
-                          <th className="p-2 text-center font-black hidden sm:table-cell">ประเภท</th>
-                          <th className="p-2 text-center font-black">คะแนน</th>
-                          <th className="p-2 text-right font-black">สถานะ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {submissions.map((sub, i) => (
-                          <tr key={i} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50">
-                            <td className="p-2 text-slate-700 font-extrabold truncate max-w-[140px]" title={sub.topic}>{sub.topic}</td>
-                            <td className="p-2 text-center font-bold text-slate-400 hidden sm:table-cell">{sub.type}</td>
-                            <td className="p-2 text-center text-sky-600 font-black">{sub.score ? `${sub.score}%` : '-'}</td>
-                            <td className="p-2 text-right">
-                              {sub.status === 'ตรวจแล้ว' ? (
-                                <span className="text-emerald-600 font-black">ตรวจเสร็จสิ้น ✅</span>
-                              ) : (
-                                <span className="text-orange-500 font-black animate-pulse">กำลังตรวจ... ⏳</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
 
               </div>
 
