@@ -24,6 +24,8 @@ export default function TrangKidsSpeakApp() {
   const [selectedLesson, setSelectedLesson] = useState<LessonData>(LESSONS[0]);
   const [gender, setGender] = useState<'boy' | 'girl'>('girl'); // default matching Nong Aom 👧
   const [isPracticeExpanded, setIsPracticeExpanded] = useState<boolean>(false);
+  const [isReaderOpen, setIsReaderOpen] = useState<boolean>(false);
+  const [readerPage, setReaderPage] = useState<number>(1);
   
   // Confetti celebration state
   const [confettiActive, setConfettiActive] = useState(false);
@@ -201,6 +203,32 @@ export default function TrangKidsSpeakApp() {
       }
     }
   }, []);
+
+  // Reset E-Book Reader state when switching tabs
+  useEffect(() => {
+    if (activeTab !== 'knowledge') {
+      setIsReaderOpen(false);
+    }
+  }, [activeTab]);
+
+  // Keyboard page flipping for E-Book
+  useEffect(() => {
+    if (!isReaderOpen) return;
+    const UNIT_PAGE_COUNTS: Record<number, number> = { 1: 5, 2: 3, 3: 4, 4: 3, 5: 3 };
+    const totalPages = UNIT_PAGE_COUNTS[selectedLesson.id] || 3;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        setReaderPage(p => Math.min(totalPages, p + 1));
+      } else if (e.key === 'ArrowLeft') {
+        setReaderPage(p => Math.max(1, p - 1));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isReaderOpen, selectedLesson.id]);
 
   // Animation simulator state
   const [activeAnimTopicIdx, setActiveAnimTopicIdx] = useState<number>(0);
@@ -1379,180 +1407,343 @@ export default function TrangKidsSpeakApp() {
 
         {/* TAB 2: KNOWLEDGE SHEETS (ใบความรู้) */}
         {activeTab === 'knowledge' && (
-          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-100 pb-4">
-              <div>
-                <h2 className="text-2xl font-black text-sky-600 font-kids flex items-center gap-2">
-                  <span>📖</span> ใบความรู้และแบบฝึกทักษะการพูด (Knowledge Sheets)
-                </h2>
-                <p className="text-xs font-extrabold text-slate-400 mt-1">บทเรียนภาษาอังกฤษและตารางคำอ่าน-คำแปล สำหรับน้องๆ ชั้น ป.2</p>
-              </div>
+          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left animate-fade-in">
+            <style dangerouslySetInnerHTML={{ __html: `
+              .bookshelf-wood {
+                background: linear-gradient(to bottom, #d97706 0%, #b45309 100%);
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06),
+                            0 10px 15px -3px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3);
+              }
+              .bookshelf-shadow {
+                background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 100%);
+              }
+              .book-3d {
+                position: relative;
+                transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+                transform-style: preserve-3d;
+                perspective: 600px;
+              }
+              .book-3d:hover {
+                transform: perspective(600px) rotateY(-18deg) translateZ(12px) scale(1.03);
+                box-shadow: 15px 15px 30px rgba(0,0,0,0.25);
+              }
+              .book-3d-spine {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 14px;
+                background: rgba(0,0,0,0.2);
+                border-radius: 4px 0 0 4px;
+                box-shadow: inset -1px 0 0 rgba(255,255,255,0.1), inset 1px 0 2px rgba(255,255,255,0.1);
+              }
+              .book-3d-pages {
+                position: absolute;
+                right: 2px;
+                top: 3px;
+                bottom: 3px;
+                width: 6px;
+                background: #f8fafc;
+                border-radius: 0 4px 4px 0;
+                box-shadow: inset 1px 0 2px rgba(0,0,0,0.1);
+              }
+              .iframe-tablet {
+                border: 16px solid #1e293b;
+                border-radius: 32px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+                background: #1e293b;
+              }
+              .reading-desk {
+                background-color: #f8fafc;
+                background-image: radial-gradient(#cbd5e1 1px, transparent 0);
+                background-size: 24px 24px;
+                border: 2px solid #e2e8f0;
+              }
+            ` }} />
 
-              {/* Select Lesson dropdown */}
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none max-w-full -mx-2 px-2 snap-x snap-mandatory">
-                {LESSONS.map(lesson => (
-                  <button
-                    key={lesson.id}
-                    onClick={() => { audioSynth.playPop(); setSelectedLesson(lesson); }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all border-2 shrink-0 snap-start ${
-                      selectedLesson.id === lesson.id
-                        ? 'bg-sky-400 text-white border-sky-400'
-                        : 'bg-white text-slate-700 hover:bg-sky-50 border-slate-200'
-                    }`}
-                  >
-                    {lesson.emoji} {lesson.title.slice(0, 4)}...
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Lesson Detail Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Vocabulary Table (Left Side) */}
-              <div className="lg:col-span-7 bg-sky-50/50 p-6 rounded-3xl border-2 border-dashed border-sky-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">{selectedLesson.emoji}</span>
-                  <h3 className="font-black text-slate-700">คำศัพท์บทเรียนที่ {selectedLesson.id}: {selectedLesson.title}</h3>
+            {!isReaderOpen ? (
+              // BOOKSHELF MODE
+              <div className="animate-fade-in">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-slate-100 pb-4">
+                  <div>
+                    <h2 className="text-2xl font-black text-sky-600 font-kids flex items-center gap-2">
+                      <span>📚</span> ชั้นหนังสือใบความรู้ e-Book (Knowledge Shelf)
+                    </h2>
+                    <p className="text-xs font-extrabold text-slate-400 mt-1">เลือกยูนิตที่ต้องการเพื่อเปิดอ่านหนังสือเรียนภาษาอังกฤษแสนสนุกของน้องๆ</p>
+                  </div>
                 </div>
 
-                {/* Desktop View Table - Hidden on Mobile */}
-                <div className="hidden lg:block overflow-x-auto rounded-2xl border-2 border-white bg-white shadow-sm">
-                  <table className="w-full text-left text-xs md:text-sm font-black">
-                    <thead className="bg-sky-100 text-sky-800">
-                      <tr>
-                        <th className="p-3">รูป</th>
-                        <th className="p-3">คำศัพท์ (English)</th>
-                        <th className="p-3">คำอ่านไทย (Phonetic)</th>
-                        <th className="p-3">คำแปลไทย (Translation)</th>
-                        <th className="p-3 text-center">เสียง</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedLesson.vocab.map((v, i) => (
-                        <tr key={i} className="border-b border-sky-50 last:border-0 hover:bg-sky-50/30">
-                          <td className="p-3 text-2xl">{v.emoji}</td>
-                          <td className="p-3 text-slate-800 font-extrabold">{v.word}</td>
-                          <td className="p-3 text-sky-600 font-bold">{v.phonetic}</td>
-                          <td className="p-3 text-emerald-600 font-bold">{v.translation}</td>
-                          <td className="p-3 text-center">
-                            <button
-                              onClick={() => speakText(v.word, true)}
-                              className="p-1.5 rounded-full bg-sky-100 hover:bg-sky-200 transition text-sky-600 active:scale-90"
-                              title="ฟังออกเสียง"
-                            >
-                              🔊
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                {/* virtual shelf */}
+                <div className="relative bg-gradient-to-b from-sky-50/50 to-white border-2 border-slate-200/60 rounded-3xl p-6 md:p-10 pt-16 mb-6 min-h-[420px] flex flex-col justify-end overflow-hidden shadow-inner">
+                  {/* shelf backdrop lines */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:100%_40px] pointer-events-none" />
 
-                {/* Mobile View Interactive Grid Cards - Hidden on Desktop */}
-                <div className="block lg:hidden space-y-3">
-                  {selectedLesson.vocab.map((v, i) => (
-                    <div 
-                      key={i} 
-                      className="bg-white border-2 border-sky-100 rounded-2xl p-3 flex items-center justify-between shadow-sm hover:border-sky-300 transition active:scale-[0.99]"
-                      onClick={() => speakText(v.word, true)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-3xl shrink-0 bg-sky-50 w-12 h-12 flex items-center justify-center rounded-xl border border-sky-100">{v.emoji}</span>
-                        <div className="text-left">
-                          <h4 className="text-base font-black text-slate-800 leading-tight">{v.word}</h4>
-                          <p className="text-[11px] font-extrabold text-sky-600">คำอ่าน: {v.phonetic}</p>
-                          <p className="text-xs font-black text-emerald-600 mt-0.5">แปล: {v.translation}</p>
+                  {/* Books grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 justify-items-center items-end relative z-10 pb-8">
+                    {LESSONS.map((lesson, idx) => {
+                      const colors = [
+                        'from-sky-400 to-sky-600 border-sky-500 hover:from-sky-350 hover:to-sky-550',
+                        'from-emerald-400 to-emerald-600 border-emerald-500 hover:from-emerald-350 hover:to-emerald-550',
+                        'from-pink-400 to-pink-600 border-pink-500 hover:from-pink-350 hover:to-pink-550',
+                        'from-amber-400 to-amber-600 border-amber-500 hover:from-amber-350 hover:to-amber-550',
+                        'from-purple-400 to-purple-600 border-purple-500 hover:from-purple-350 hover:to-purple-550',
+                      ];
+                      const coverColor = colors[idx % colors.length];
+
+                      return (
+                        <div
+                          key={lesson.id}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            setSelectedLesson(lesson);
+                            setReaderPage(1);
+                            setIsReaderOpen(true);
+                          }}
+                          className="flex flex-col items-center group cursor-pointer"
+                        >
+                          {/* 3D Book Cover */}
+                          <div className={`book-3d w-28 h-40 md:w-32 md:h-44 bg-gradient-to-br ${coverColor} border-t-2 border-r-2 rounded-r-xl shadow-md flex flex-col justify-between p-3 text-white`}>
+                            <div className="book-3d-spine" />
+                            <div className="book-3d-pages" />
+                            
+                            {/* Unit tag & Emoji */}
+                            <div className="flex justify-between items-start pl-3">
+                              <span className="text-[10px] font-black bg-white/20 px-1.5 py-0.5 rounded-md">
+                                Unit {lesson.id}
+                              </span>
+                              <span className="text-xl md:text-2xl animate-bounce-gentle">{lesson.emoji}</span>
+                            </div>
+                            
+                            {/* Title */}
+                            <div className="pl-3 pb-2 text-left">
+                              <h4 className="text-xs md:text-sm font-black leading-tight line-clamp-2 drop-shadow-sm font-kids">
+                                {lesson.title}
+                              </h4>
+                              <p className="text-[8px] font-extrabold text-white/80 mt-1 uppercase tracking-wider">
+                                English
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Info under shelf */}
+                          <div className="mt-4 text-center max-w-[120px] z-20">
+                            <p className="text-[11px] font-black text-slate-700 leading-tight group-hover:text-sky-600 transition">
+                              ยูนิต {lesson.id}: {lesson.title}
+                            </p>
+                            <span className="text-[9px] font-black text-slate-400 bg-slate-100 border border-slate-200/50 rounded-full px-2 py-0.5 mt-1 inline-block">
+                              {lesson.vocab.length} คำศัพท์
+                            </span>
+                          </div>
                         </div>
-                      </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Bookshelf wood board */}
+                  <div className="absolute bottom-20 left-0 right-0 z-0 flex flex-col items-center pointer-events-none">
+                    <div className="bookshelf-wood h-5 w-[106%] rounded-lg shadow-lg relative border-b border-amber-950/20" />
+                    <div className="w-[102%] h-3 bg-amber-800 rounded-b-lg shadow-inner opacity-90" />
+                    <div className="bookshelf-shadow h-8 w-[104%] mt-1 opacity-50" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // READER MODE (FULL-WIDTH E-BOOK WITH PAGE FLIPPING)
+              <div className="animate-fade-in">
+                {/* Header controls */}
+                <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-3 border-b border-slate-100 pb-4">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => { audioSynth.playPop(); setIsReaderOpen(false); }}
+                      className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl border-2 border-slate-200 shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                    >
+                      🚪 กลับไปที่ชั้นหนังสือ
+                    </button>
+                    <div>
+                      <h3 className="text-base font-black text-slate-800">
+                        📖 กำลังอ่าน: ยูนิต {selectedLesson.id}
+                      </h3>
+                      <p className="text-[10px] font-extrabold text-slate-400">{selectedLesson.title}</p>
+                    </div>
+                  </div>
+
+                  {/* Quick Lesson switcher */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      disabled={selectedLesson.id === 1}
+                      onClick={() => {
+                        const prevLesson = LESSONS.find(l => l.id === selectedLesson.id - 1);
+                        if (prevLesson) {
+                          audioSynth.playPop();
+                          setSelectedLesson(prevLesson);
+                          setReaderPage(1);
+                        }
+                      }}
+                      className={`p-2 rounded-xl text-xs font-black border-2 transition ${
+                        selectedLesson.id === 1
+                          ? 'opacity-40 pointer-events-none bg-slate-50 text-slate-400 border-slate-200'
+                          : 'bg-white hover:bg-sky-50 text-sky-600 border-sky-100'
+                      }`}
+                    >
+                      ◀ ยูนิตก่อนหน้า
+                    </button>
+                    
+                    <span className="text-xs font-black text-slate-500 px-3 py-1 bg-slate-100 rounded-lg">
+                      {selectedLesson.id} / {LESSONS.length}
+                    </span>
+
+                    <button
+                      disabled={selectedLesson.id === LESSONS.length}
+                      onClick={() => {
+                        const nextLesson = LESSONS.find(l => l.id === selectedLesson.id + 1);
+                        if (nextLesson) {
+                          audioSynth.playPop();
+                          setSelectedLesson(nextLesson);
+                          setReaderPage(1);
+                        }
+                      }}
+                      className={`p-2 rounded-xl text-xs font-black border-2 transition ${
+                        selectedLesson.id === LESSONS.length
+                          ? 'opacity-40 pointer-events-none bg-slate-50 text-slate-400 border-slate-200'
+                          : 'bg-white hover:bg-sky-50 text-sky-600 border-sky-100'
+                      }`}
+                    >
+                      ยูนิตถัดไป ▶
+                    </button>
+                  </div>
+                </div>
+
+                {/* Single Page Reader Workspace */}
+                {(() => {
+                  const UNIT_PAGE_COUNTS: Record<number, number> = { 1: 5, 2: 3, 3: 4, 4: 3, 5: 3 };
+                  const totalPages = UNIT_PAGE_COUNTS[selectedLesson.id] || 3;
+
+                  return (
+                    <div className="relative reading-desk p-4 md:p-8 rounded-3xl flex flex-col items-center">
                       
-                      <button
-                        onClick={(e) => { e.stopPropagation(); speakText(v.word, true); }}
-                        className="w-10 h-10 rounded-full bg-sky-100 hover:bg-sky-200 flex items-center justify-center text-sky-600 active:scale-90 transition shadow-sm border border-sky-200 shrink-0 font-bold text-sm"
-                      >
-                        🔊
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                      {/* Keyboard Tip banner */}
+                      <div className="absolute top-2 text-[9px] font-black text-slate-400 tracking-wider bg-white/60 px-2 py-0.5 rounded-full border border-slate-100/50 hidden md:block">
+                        💡 กดปุ่มลูกศร ซ้าย-ขวา (← →) บนคีย์บอร์ดเพื่อเปลี่ยนหน้าได้นะจ๊ะ
+                      </div>
 
-                <div className="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-2xl mt-5">
-                  <h4 className="text-amber-800 font-black text-xs flex items-center gap-1.5">
-                    <span>💡</span> เคล็ดลับจากคุณครู:
-                  </h4>
-                  <p className="text-amber-900 font-extrabold text-xs mt-1 leading-relaxed">
-                    {selectedLesson.tip}
-                  </p>
-                </div>
-              </div>
-
-              {/* Short Dialogue Section (Right Side) */}
-              <div className="lg:col-span-5 bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm space-y-6">
-                <div className="border-b border-slate-50 pb-3">
-                  <h3 className="font-black text-slate-800 flex items-center gap-1.5">
-                    <span>🗣️</span> บทสนทนาสั้นสำหรับการเรียนรู้
-                  </h3>
-                  <p className="text-[11px] font-extrabold text-slate-400 mt-1">คลิกปุ่มเสียงที่ฟองพูดเพื่อฝึกฟังสำเนียงนำจ้า</p>
-                </div>
-
-                {/* Simulated cartoon chat dialogue box */}
-                <div className="space-y-4 bg-slate-50 p-4 rounded-2xl max-h-[350px] overflow-y-auto border border-slate-100">
-                  {selectedLesson.dialogue.map((line, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex gap-3 items-start ${line.speaker === 'A' ? 'flex-row' : 'flex-row-reverse'}`}
-                    >
-                      {/* Avatar */}
-                      <span className="text-3xl bg-white p-2 rounded-full border border-slate-100 shadow-sm animate-bounce-gentle shrink-0">
-                        {line.character === 'dino' ? '🦖' : '🐻'}
-                      </span>
-
-                      {/* Bubble */}
-                      <div className={`p-3 rounded-2xl max-w-[75%] border shadow-sm text-left relative ${
-                        line.speaker === 'A'
-                          ? 'bg-sky-50 text-sky-950 border-sky-200 rounded-tl-none'
-                          : 'bg-pink-50 text-pink-950 border-pink-200 rounded-tr-none'
-                      }`}>
-                        {/* Bubble hook */}
-                        <span className={`absolute -top-1 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] ${
-                          line.speaker === 'A'
-                            ? '-left-1 border-b-sky-50'
-                            : '-right-1 border-b-pink-50'
-                        }`} />
+                      {/* Main Ebook Viewer Layout */}
+                      <div className="relative w-full max-w-2xl flex items-center justify-center gap-4 py-4">
                         
-                        <div className="flex justify-between items-center gap-3">
-                          <p className="font-black text-sm">{line.text}</p>
-                          <button
-                            onClick={() => speakText(line.text, line.character === 'dino')}
-                            className="text-xs p-1 rounded-full hover:bg-black/5 active:scale-90 select-none shrink-0"
-                            title="ฟังประโยคนี้"
-                          >
-                            🔊
-                          </button>
+                        {/* Page turning arrow buttons (Desktop Left) */}
+                        <button
+                          disabled={readerPage === 1}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            setReaderPage(p => Math.max(1, p - 1));
+                          }}
+                          className={`hidden md:flex absolute -left-16 w-12 h-12 bg-white hover:bg-emerald-50 text-emerald-600 rounded-full border-2 border-slate-200 hover:border-emerald-300 items-center justify-center text-lg shadow-md transition-all active:scale-90 select-none ${
+                            readerPage === 1 ? 'opacity-30 pointer-events-none' : 'hover:scale-105'
+                          }`}
+                          title="หน้าก่อนหน้า"
+                        >
+                          ◀
+                        </button>
+
+                        {/* Tablet Device Frame holding PDF */}
+                        <div className="iframe-tablet p-2 w-full">
+                          <div className="bg-white rounded-2xl overflow-hidden shadow-inner">
+                            <iframe
+                              key={`${selectedLesson.id}_${readerPage}`}
+                              src={`/docs/unit${selectedLesson.id}.pdf#page=${readerPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
+                              className="w-full h-[580px] md:h-[700px] border-none"
+                              scrolling="no"
+                              title={`Unit ${selectedLesson.id} PDF Page ${readerPage}`}
+                            />
+                          </div>
+                          {/* Home Button */}
+                          <div className="flex justify-center pt-2">
+                            <button
+                              onClick={() => { audioSynth.playPop(); setIsReaderOpen(false); }}
+                              className="w-8 h-8 rounded-full border-2 border-slate-600 bg-slate-800 flex items-center justify-center text-[10px] text-slate-400 active:scale-95 transition shadow hover:border-slate-500"
+                              title="กลับชั้นหนังสือ"
+                            >
+                              ⚪
+                            </button>
+                          </div>
                         </div>
-                        <p className="text-[10px] text-slate-400 font-extrabold">{line.phonetic}</p>
-                        <p className="text-[10px] text-emerald-600 font-black mt-1.5 border-t border-black/5 pt-1">{line.translation}</p>
+
+                        {/* Page turning arrow buttons (Desktop Right) */}
+                        <button
+                          disabled={readerPage === totalPages}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            setReaderPage(p => Math.min(totalPages, p + 1));
+                          }}
+                          className={`hidden md:flex absolute -right-16 w-12 h-12 bg-white hover:bg-emerald-50 text-emerald-600 rounded-full border-2 border-slate-200 hover:border-emerald-300 items-center justify-center text-lg shadow-md transition-all active:scale-90 select-none ${
+                            readerPage === totalPages ? 'opacity-30 pointer-events-none' : 'hover:scale-105'
+                          }`}
+                          title="หน้าถัดไป"
+                        >
+                          ▶
+                        </button>
+                      </div>
+
+                      {/* Mobile Page Controls (Visible under the reader frame) */}
+                      <div className="flex items-center justify-between w-full max-w-xs md:hidden mt-3 gap-2">
+                        <button
+                          disabled={readerPage === 1}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            setReaderPage(p => Math.max(1, p - 1));
+                          }}
+                          className={`px-3 py-1.5 bg-white text-slate-700 font-black rounded-lg border border-slate-200 text-xs shadow-sm active:scale-90 ${
+                            readerPage === 1 ? 'opacity-40 pointer-events-none' : ''
+                          }`}
+                        >
+                          ◀ ย้อนกลับ
+                        </button>
+                        
+                        <span className="text-xs font-black text-slate-600 bg-white border border-slate-100 rounded-lg px-2.5 py-1">
+                          หน้า {readerPage} / {totalPages}
+                        </span>
+
+                        <button
+                          disabled={readerPage === totalPages}
+                          onClick={() => {
+                            audioSynth.playPop();
+                            setReaderPage(p => Math.min(totalPages, p + 1));
+                          }}
+                          className={`px-3 py-1.5 bg-white text-slate-700 font-black rounded-lg border border-slate-200 text-xs shadow-sm active:scale-90 ${
+                            readerPage === totalPages ? 'opacity-40 pointer-events-none' : ''
+                          }`}
+                        >
+                          ถัดไป ▶
+                        </button>
+                      </div>
+
+                      {/* Dots & Progress Bar Section */}
+                      <div className="w-full max-w-sm flex flex-col gap-2 mt-4 text-center">
+                        {/* Page Dots Indicator */}
+                        <div className="flex justify-center gap-1.5">
+                          {Array.from({ length: totalPages }).map((_, pageIdx) => (
+                            <button
+                              key={pageIdx}
+                              onClick={() => { audioSynth.playPop(); setReaderPage(pageIdx + 1); }}
+                              className={`w-3 h-3 rounded-full transition-all border-2 ${
+                                readerPage === pageIdx + 1
+                                  ? 'bg-emerald-400 border-emerald-400 scale-110 shadow-sm'
+                                  : 'bg-slate-200 border-transparent hover:bg-slate-350'
+                              }`}
+                              title={`หน้า ${pageIdx + 1}`}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Page Label */}
+                        <span className="text-xs font-black text-slate-400 hidden md:inline">
+                          หน้า {readerPage} จากทั้งหมด {totalPages} หน้า
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                <div className="flex justify-center gap-3">
-                  <button
-                    onClick={() => {
-                      audioSynth.playPop();
-                      setActiveTab('flashcards');
-                    }}
-                    className="btn-3d px-6 py-2.5 bg-orange-400 hover:bg-orange-500 text-orange-950 text-xs font-black rounded-2xl border-2 border-orange-500 shadow-orange-350"
-                  >
-                    ไปฝึกคำศัพท์ต่อ 🍎
-                  </button>
-                </div>
-
+                  );
+                })()}
               </div>
-
-            </div>
+            )}
           </div>
         )}
 
