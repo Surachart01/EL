@@ -1429,7 +1429,7 @@ export default function TrangKidsSpeakApp() {
 
         {/* TAB 2: KNOWLEDGE SHEETS (ใบความรู้) */}
         {activeTab === 'knowledge' && (
-          <div className="kids-card rounded-3xl p-6 md:p-8 bg-white text-left animate-fade-in">
+          <div className="kids-card rounded-3xl p-4 md:p-8 bg-white text-left animate-fade-in">
             <style dangerouslySetInnerHTML={{ __html: `
               .bookshelf-wood {
                 background: linear-gradient(to bottom, #d97706 0%, #b45309 100%);
@@ -1470,10 +1470,17 @@ export default function TrangKidsSpeakApp() {
                 box-shadow: inset 1px 0 2px rgba(0,0,0,0.1);
               }
               .iframe-tablet {
-                border: 16px solid #1e293b;
-                border-radius: 32px;
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+                border: 8px solid #1e293b;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
                 background: #1e293b;
+              }
+              @media (min-width: 768px) {
+                .iframe-tablet {
+                  border: 16px solid #1e293b;
+                  border-radius: 32px;
+                  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+                }
               }
               .reading-desk {
                 background-color: #f8fafc;
@@ -1493,15 +1500,18 @@ export default function TrangKidsSpeakApp() {
                     </h2>
                     <p className="text-xs font-extrabold text-slate-400 mt-1">เลือกยูนิตที่ต้องการเพื่อเปิดอ่านหนังสือเรียนภาษาอังกฤษแสนสนุกของน้องๆ</p>
                   </div>
+                  <span className="text-[10px] md:hidden font-black text-amber-500 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full animate-pulse">
+                    👉 เลื่อน ซ้าย-ขวา เพื่อดูเล่มอื่น
+                  </span>
                 </div>
 
-                {/* virtual shelf */}
-                <div className="relative bg-gradient-to-b from-sky-50/50 to-white border-2 border-slate-200/60 rounded-3xl p-6 md:p-10 pt-16 mb-6 min-h-[420px] flex flex-col justify-end overflow-hidden shadow-inner">
+                {/* virtual shelf - scroll horizontally on mobile to keep all books aligned on the wood plank */}
+                <div className="relative bg-gradient-to-b from-sky-50/50 to-white border-2 border-slate-200/60 rounded-3xl p-4 md:p-10 pt-16 mb-6 min-h-[360px] md:min-h-[420px] flex flex-col justify-end overflow-hidden shadow-inner">
                   {/* shelf backdrop lines */}
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:100%_40px] pointer-events-none" />
 
-                  {/* Books grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 justify-items-center items-end relative z-10 pb-8">
+                  {/* Books flex row */}
+                  <div className="flex overflow-x-auto md:overflow-visible gap-8 justify-start md:justify-center items-end relative z-10 pb-8 px-6 md:px-10 scrollbar-none snap-x snap-mandatory">
                     {LESSONS.map((lesson, idx) => {
                       const colors = [
                         'from-sky-400 to-sky-600 border-sky-500 hover:from-sky-350 hover:to-sky-550',
@@ -1521,7 +1531,7 @@ export default function TrangKidsSpeakApp() {
                             setReaderPage(1);
                             setIsReaderOpen(true);
                           }}
-                          className="flex flex-col items-center group cursor-pointer"
+                          className="flex flex-col items-center group cursor-pointer snap-center shrink-0"
                         >
                           {/* 3D Book Cover */}
                           <div className={`book-3d w-28 h-40 md:w-32 md:h-44 bg-gradient-to-br ${coverColor} border-t-2 border-r-2 rounded-r-xl shadow-md flex flex-col justify-between p-3 text-white`}>
@@ -1641,7 +1651,7 @@ export default function TrangKidsSpeakApp() {
                   const totalPages = UNIT_PAGE_COUNTS[selectedLesson.id] || 3;
 
                   return (
-                    <div className="relative reading-desk p-4 md:p-8 rounded-3xl flex flex-col items-center">
+                    <div className="relative reading-desk p-2 md:p-8 rounded-3xl flex flex-col items-center">
                       
                       {/* Keyboard Tip banner */}
                       <div className="absolute top-2 text-[9px] font-black text-slate-400 tracking-wider bg-white/60 px-2 py-0.5 rounded-full border border-slate-100/50 hidden md:block">
@@ -1649,7 +1659,7 @@ export default function TrangKidsSpeakApp() {
                       </div>
 
                       {/* Main Ebook Viewer Layout */}
-                      <div className="relative w-full max-w-2xl flex items-center justify-center gap-4 py-4">
+                      <div className="relative w-full max-w-2xl flex items-center justify-center gap-4 py-2 md:py-4">
                         
                         {/* Page turning arrow buttons (Desktop Left) */}
                         <button
@@ -1666,15 +1676,14 @@ export default function TrangKidsSpeakApp() {
                           ◀
                         </button>
 
-                        {/* Tablet Device Frame holding PDF */}
-                        <div className="iframe-tablet p-2 w-full">
-                          <div className="bg-white rounded-2xl overflow-hidden shadow-inner">
-                            <iframe
+                        {/* Tablet Device Frame holding converted JPEG page */}
+                        <div className="iframe-tablet p-1 md:p-2 w-full">
+                          <div className="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-inner flex items-center justify-center min-h-[300px]">
+                            <img
                               key={`${selectedLesson.id}_${readerPage}`}
-                              src={`/docs/unit${selectedLesson.id}.pdf#page=${readerPage}&toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                              className="w-full h-[580px] md:h-[700px] border-none"
-                              scrolling="no"
-                              title={`Unit ${selectedLesson.id} PDF Page ${readerPage}`}
+                              src={`/docs/unit${selectedLesson.id}_page_${readerPage}.jpg`}
+                              className="w-full h-auto max-h-[60vh] md:max-h-[700px] object-contain mx-auto select-none rounded-lg md:rounded-xl shadow-sm"
+                              alt={`Unit ${selectedLesson.id} Page ${readerPage}`}
                             />
                           </div>
                           {/* Home Button */}
