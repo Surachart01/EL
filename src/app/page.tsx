@@ -96,6 +96,7 @@ export default function TrangKidsSpeakApp() {
       submission?: { lessonId: number; score: number; mediaType: 'audio' | 'video'; status: string; date: string };
     }
   ) => {
+    if (studentId === 'guest') return; // Skip saving to DB for guest
     try {
       await fetch('/api/progress', {
         method: 'POST',
@@ -109,6 +110,7 @@ export default function TrangKidsSpeakApp() {
 
   // Helper to fetch student progress from DB with Local Storage fallback
   const fetchStudentProgress = async (studentId: string) => {
+    if (studentId === 'guest') return; // Skip fetching from DB for guest
     try {
       const res = await fetch(`/api/progress?studentId=${studentId}`);
       const data = await res.json();
@@ -814,6 +816,22 @@ export default function TrangKidsSpeakApp() {
   const handleKeyPress = (num: string) => { audioSynth.playPop(); if (loginId.length < 10) setLoginId(prev => prev + num); };
   const handleBackspace = () => { audioSynth.playPop(); setLoginId(prev => prev.slice(0, -1)); };
   const handleClear = () => { audioSynth.playPop(); setLoginId(''); };
+
+  const handleGuestLogin = () => {
+    audioSynth.playSuccess();
+    setConfettiActive(true);
+    const guestStudent = {
+      studentId: 'guest',
+      name: 'บุคคลทั่วไป (Guest)',
+      classroom: 'ห้องทดสอบ (Test Room)'
+    };
+    setStudent(guestStudent);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('el_student', JSON.stringify(guestStudent));
+    }
+    setGender('boy');
+  };
+
   const handleLoginSubmit = async () => {
     if (!loginId.trim()) { setLoginError('กรุณากรอกรหัสนักเรียนจ้า'); return; }
     setIsLoggingIn(true);
@@ -892,6 +910,10 @@ export default function TrangKidsSpeakApp() {
                 isLoggingIn ? 'bg-emerald-400 border-emerald-500 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-400 border-emerald-600'
               }`}>
               {isLoggingIn ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />กำลังเข้าสู่ระบบ...</>) : <>เข้าสู่ระบบ 🚀</>}
+            </button>
+            <button type="button" disabled={isLoggingIn} onClick={handleGuestLogin}
+              className="w-full text-slate-700 bg-slate-100 hover:bg-slate-200 border-2 border-slate-200 border-b-4 active:border-b-0 hover:border-slate-350 active:translate-y-[2px] font-black text-sm font-kids py-2.5 rounded-2xl mt-3 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+              🔑 เข้าเล่นแบบบุคคลทั่วไป (Guest Mode)
             </button>
           </div>
         </div>
