@@ -9,7 +9,38 @@ import { calculateSimilarity, computeEnglishWordDiff, WordDiffSegment } from '..
 import { audioSynth } from '../utils/audio';
 import { LESSONS, LessonData } from '../utils/lessons';
 
-
+const GALLERY_IMAGES = [
+  'S__58138640_0.jpg',
+  'S__58138642_0.jpg',
+  'S__58138643_0.jpg',
+  'S__58138644_0.jpg',
+  'S__58138645_0.jpg',
+  'S__58138646_0.jpg',
+  'S__58138647_0.jpg',
+  'S__58138648_0.jpg',
+  'S__58138649_0.jpg',
+  'S__58138650_0.jpg',
+  'S__58138651_0.jpg',
+  'S__58138653_0.jpg',
+  'S__58138654_0.jpg',
+  'S__58138655_0.jpg',
+  'S__58138656_0.jpg',
+  'S__58138657_0.jpg',
+  'S__58138658_0.jpg',
+  'S__58138659_0.jpg',
+  'S__58138660_0.jpg',
+  'S__58138661_0.jpg',
+  'S__58138662_0.jpg',
+  'S__58138664_0.jpg',
+  'S__58138665_0.jpg',
+  'S__58138666_0.jpg',
+  'S__58138667_0.jpg',
+  'S__58138668_0.jpg',
+  'S__58138669_0.jpg',
+  'S__58138670_0.jpg',
+  'S__58138671_0.jpg',
+  'S__58138672_0.jpg'
+];
 
 export default function TrangKidsSpeakApp() {
   // Student Auth states
@@ -26,6 +57,7 @@ export default function TrangKidsSpeakApp() {
   const [isPracticeExpanded, setIsPracticeExpanded] = useState<boolean>(false);
   const [isReaderOpen, setIsReaderOpen] = useState<boolean>(false);
   const [readerPage, setReaderPage] = useState<number>(1);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState<number | null>(null);
   
   // Confetti celebration state
   const [confettiActive, setConfettiActive] = useState(false);
@@ -1424,6 +1456,112 @@ export default function TrangKidsSpeakApp() {
 
             </div>
 
+            {/* 📸 GALLERY SECTION: ภาพกิจกรรมการนำระบบไปใช้จริง */}
+            <div className="kids-card rounded-3xl p-6 md:p-8 bg-white border-2 border-slate-100 text-left shadow-sm mt-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-slate-100 gap-4">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-black text-sky-600 font-kids flex items-center gap-2">
+                    <span>📸</span> ภาพกิจกรรมการนำระบบไปทดลองใช้งานจริง
+                  </h2>
+                  <p className="text-xs font-extrabold text-slate-400 mt-1">
+                    ภาพความสำเร็จและรอยยิ้มของน้องๆ ชั้นประถมศึกษาปีที่ 2 ในการเรียนรู้และฝึกพูดภาษาอังกฤษ
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-200/50 rounded-full px-3 py-1 shadow-sm">
+                    ✨ กิจกรรมบทบาทสมมติ (Role-Play)
+                  </span>
+                  <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-200/50 rounded-full px-3 py-1 shadow-sm">
+                    🏫 นวัตกรรมเพื่อการเรียนรู้
+                  </span>
+                </div>
+              </div>
+
+              {/* Slider Row 1: Leftward Scrolling */}
+              <div className="marquee-container relative rounded-2xl overflow-hidden py-2 bg-gradient-to-r from-sky-50/20 via-white to-sky-50/20">
+                <div className="marquee-track-left">
+                  {/* First Set of 15 images */}
+                  {GALLERY_IMAGES.slice(0, 15).map((imgName, idx) => (
+                    <div
+                      key={`r1-first-${idx}`}
+                      onClick={() => {
+                        audioSynth.playPop();
+                        setActiveGalleryIndex(idx);
+                      }}
+                      className="w-40 h-28 md:w-48 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-md cursor-pointer transition transform hover:scale-105 active:scale-95 flex-shrink-0"
+                    >
+                      <img
+                        src={`/gallery/${imgName}`}
+                        alt="กิจกรรมฝึกพูดภาษาอังกฤษ"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                  {/* Duplicated Set of 15 images for infinite loop */}
+                  {GALLERY_IMAGES.slice(0, 15).map((imgName, idx) => (
+                    <div
+                      key={`r1-second-${idx}`}
+                      onClick={() => {
+                        audioSynth.playPop();
+                        setActiveGalleryIndex(idx);
+                      }}
+                      className="w-40 h-28 md:w-48 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-md cursor-pointer transition transform hover:scale-105 active:scale-95 flex-shrink-0"
+                    >
+                      <img
+                        src={`/gallery/${imgName}`}
+                        alt="กิจกรรมฝึกพูดภาษาอังกฤษ"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Slider Row 2: Rightward Scrolling */}
+              <div className="marquee-container relative rounded-2xl overflow-hidden py-2 bg-gradient-to-r from-sky-50/20 via-white to-sky-50/20 mt-4">
+                <div className="marquee-track-right">
+                  {/* Second Set of 15 images */}
+                  {GALLERY_IMAGES.slice(15, 30).map((imgName, idx) => (
+                    <div
+                      key={`r2-first-${idx}`}
+                      onClick={() => {
+                        audioSynth.playPop();
+                        setActiveGalleryIndex(idx + 15);
+                      }}
+                      className="w-40 h-28 md:w-48 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-md cursor-pointer transition transform hover:scale-105 active:scale-95 flex-shrink-0"
+                    >
+                      <img
+                        src={`/gallery/${imgName}`}
+                        alt="กิจกรรมฝึกพูดภาษาอังกฤษ"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                  {/* Duplicated Set of 15 images for infinite loop */}
+                  {GALLERY_IMAGES.slice(15, 30).map((imgName, idx) => (
+                    <div
+                      key={`r2-second-${idx}`}
+                      onClick={() => {
+                        audioSynth.playPop();
+                        setActiveGalleryIndex(idx + 15);
+                      }}
+                      className="w-40 h-28 md:w-48 md:h-36 rounded-2xl overflow-hidden border-4 border-white shadow-md cursor-pointer transition transform hover:scale-105 active:scale-95 flex-shrink-0"
+                    >
+                      <img
+                        src={`/gallery/${imgName}`}
+                        alt="กิจกรรมฝึกพูดภาษาอังกฤษ"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
@@ -2640,6 +2778,89 @@ export default function TrangKidsSpeakApp() {
             <span className="hover:text-sky-500 cursor-pointer">นโยบายความเป็นส่วนตัว</span>
           </div>
         </footer>
+
+        {/* 🖼️ GALLERY LIGHTBOX MODAL */}
+        {activeGalleryIndex !== null && (
+          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fade-in">
+            {/* Close button */}
+            <button
+              onClick={() => {
+                audioSynth.playPop();
+                setActiveGalleryIndex(null);
+              }}
+              className="absolute top-4 right-4 md:top-8 md:right-8 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border-2 border-white/20 flex items-center justify-center text-white text-xl transition active:scale-95 font-bold z-10"
+              title="ปิดหน้าต่าง"
+            >
+              ✕
+            </button>
+
+            {/* Lightbox Workspace */}
+            <div className="relative w-full max-w-4xl flex items-center justify-center">
+              {/* Prev Image Arrow (Desktop) */}
+              <button
+                onClick={() => {
+                  audioSynth.playPop();
+                  setActiveGalleryIndex(prev => (prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : null));
+                }}
+                className="hidden md:flex absolute -left-16 w-14 h-14 bg-white/15 hover:bg-white/25 border-2 border-white/20 rounded-full items-center justify-center text-white text-2xl transition active:scale-95 z-10 shadow-lg"
+                title="ภาพก่อนหน้า"
+              >
+                ◀
+              </button>
+
+              {/* Main Image Container */}
+              <div className="relative max-w-full max-h-[75vh] flex flex-col items-center select-none bg-zinc-950 p-2 rounded-3xl border border-white/10 shadow-2xl">
+                <img
+                  src={`/gallery/${GALLERY_IMAGES[activeGalleryIndex]}`}
+                  alt={`รูปภาพกิจกรรมที่ ${activeGalleryIndex + 1}`}
+                  className="max-w-full max-h-[70vh] md:max-h-[65vh] object-contain rounded-2xl shadow-inner"
+                />
+              </div>
+
+              {/* Next Image Arrow (Desktop) */}
+              <button
+                onClick={() => {
+                  audioSynth.playPop();
+                  setActiveGalleryIndex(prev => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : null));
+                }}
+                className="hidden md:flex absolute -right-16 w-14 h-14 bg-white/15 hover:bg-white/25 border-2 border-white/20 rounded-full items-center justify-center text-white text-2xl transition active:scale-95 z-10 shadow-lg"
+                title="ภาพถัดไป"
+              >
+                ▶
+              </button>
+            </div>
+
+            {/* Lightbox Controls below image */}
+            <div className="flex flex-col items-center gap-3 mt-4 text-center">
+              {/* Page info tag */}
+              <span className="text-white/80 text-xs font-black bg-white/10 px-4 py-1.5 rounded-full border border-white/10 tracking-wide">
+                ภาพที่ {activeGalleryIndex + 1} จากทั้งหมด {GALLERY_IMAGES.length} ภาพ
+              </span>
+
+              {/* Navigation buttons for Mobile viewports */}
+              <div className="flex md:hidden gap-4 mt-2">
+                <button
+                  onClick={() => {
+                    audioSynth.playPop();
+                    setActiveGalleryIndex(prev => (prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : null));
+                  }}
+                  className="px-5 py-2.5 bg-white/15 hover:bg-white/25 border border-white/20 rounded-xl text-white text-sm font-black active:scale-95 transition"
+                >
+                  ◀ ย้อนกลับ
+                </button>
+                <button
+                  onClick={() => {
+                    audioSynth.playPop();
+                    setActiveGalleryIndex(prev => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : null));
+                  }}
+                  className="px-5 py-2.5 bg-white/15 hover:bg-white/25 border border-white/20 rounded-xl text-white text-sm font-black active:scale-95 transition"
+                >
+                  ถัดไป ▶
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
