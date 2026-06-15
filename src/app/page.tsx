@@ -503,6 +503,11 @@ export default function TrangKidsSpeakApp() {
       alert('ขออภัยด้วยจ้า ระบบถอดความเสียงไม่พร้อมทำงานบนบราวเซอร์นี้');
       return;
     }
+    if (activeCardMic === indexKey) {
+      if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
+      setActiveCardMic(null);
+      return;
+    }
     // Abort any existing session and create a fresh instance
     if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
     const rec = createRecognition();
@@ -730,6 +735,14 @@ export default function TrangKidsSpeakApp() {
     const lines = selectedLesson.dialogueTopics?.[activeTopicIdx]?.dialogue || selectedLesson.dialogue;
     const targetLine = lines[rolePlayStep];
     if (targetLine.character !== userRole) { alert('ตาของคู่หูคุณพูดอยู่จ้า รอแป๊บน้า!'); return; }
+
+    if (isRolePlayListening) {
+      if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
+      setIsRolePlayListening(false);
+      setDinoRoleState('idle');
+      setBearRoleState('idle');
+      return;
+    }
 
     // Abort any existing session and create a fresh instance
     if (recognitionRef.current) { try { recognitionRef.current.abort(); } catch { /* ignore */ } }
@@ -2047,7 +2060,7 @@ export default function TrangKidsSpeakApp() {
                               e.stopPropagation();
                               recordFlashcard(v.word, cardKey);
                             }}
-                            disabled={isMicActive}
+                            disabled={activeCardMic !== null && activeCardMic !== cardKey}
                             className={`btn-3d w-full py-2 flex items-center justify-center gap-1.5 text-xs font-black rounded-xl border-2 transition ${
                               isMicActive
                                 ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
@@ -2165,7 +2178,7 @@ export default function TrangKidsSpeakApp() {
                                 e.stopPropagation();
                                 recordFlashcard(v.word, cardKey);
                               }}
-                              disabled={isMicActive}
+                              disabled={activeCardMic !== null && activeCardMic !== cardKey}
                               className={`btn-3d w-full py-2 flex items-center justify-center gap-1.5 text-xs font-black rounded-xl border-2 transition ${
                                 isMicActive
                                   ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
@@ -2691,7 +2704,6 @@ export default function TrangKidsSpeakApp() {
                             isUserTurn ? (
                               <button
                                 onClick={recordRolePlayLine}
-                                disabled={isRolePlayListening}
                                 className={`btn-3d px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-black border-2 transition ${
                                   isRolePlayListening
                                     ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
