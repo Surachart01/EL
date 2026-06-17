@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-// import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CartoonCharacter, { CharacterState } from '../components/CartoonCharacter';
 import Confetti from '../components/Confetti';
 import { calculateSimilarity, computeEnglishWordDiff, WordDiffSegment } from '../utils/similarity';
